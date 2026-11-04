@@ -1,0 +1,10 @@
+{
+  "name": "atlas-developer-studio",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "npx --yes http-server . -p 5173 -c-1"
+  }
+}

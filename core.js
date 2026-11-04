@@ -1,0 +1,5 @@
+export function normalize(r,extra={}){return{name:r.name,url:r.html_url,description:r.description||extra.description||'',language:r.language||'GitHub',updated:r.pushed_at||r.updated_at||null,stars:r.stargazers_count||0,category:extra.category||'tool',featured:!!extra.featured,preview:extra.preview||'',symbol:extra.symbol||'◇',label:extra.label||r.name};}
+export function filtered(items,q='',category='all'){q=q.trim().toLocaleLowerCase();return items.filter(p=>(category==='all'||p.category===category)&&(!q||[p.name,p.description,p.language,p.label].some(s=>String(s||'').toLocaleLowerCase().includes(q))));}
+export function sorted(items,key='latest'){return [...items].sort((a,b)=>key==='name'?a.name.localeCompare(b.name):key==='stars'?b.stars-a.stars:new Date(b.updated||0)-new Date(a.updated||0));}
+export function summary(items,now=Date.now()){return{total:items.length,live:items.filter(x=>!!x.preview).length,active:items.filter(x=>x.updated&&now-new Date(x.updated).getTime()<=30*864e5).length};}
+export function ago(date,now=Date.now()){if(!date)return'未知';const d=Math.max(0,Math.floor((now-new Date(date).getTime())/864e5));return d===0?'今天':d===1?'昨天':d+' 天前';}
