@@ -64,3 +64,9 @@ Node.js 20+：
 
 
 《SPACEFORTRESS · 星际前哨》系 [Jaredcastorena/spacefortress](https://github.com/Jaredcastorena/spacefortress) MIT 开源项目的独立 Fork；AincFh 的 [Pages](https://aincfh.github.io/spacefortress/) 已通过主分支 4 组 CI + deploy，真实浏览器打开过初始殖民地、显示七名船员并验证游戏时间推进。**属于可玩的开发中模拟游戏，不代表上游 roadmap 中所有系统均已完成。**
+
+## 发布缓存与版本一致性
+
+GitHub Pages 可能将静态 JS/CSS 在浏览器缓存约 600 秒。为避免出现“CI 已成功，但用户仍看到旧版游戏大厅”的情况，`npm run build` 只在 `dist/` 发布产物中给入口脚本、CSS 和每一层本地 ES import 增加 `?v=<commit>-<run>` 发布指纹；源代码保持整洁。
+
+`dist/data/build.json` 保存指纹；`scripts/verify-dist.mjs` 会确认首页与全部依赖统一使用同一个版本，并禁止缺失模块。如果用户长期不刷新已缓存的旧 HTML，仍需按 GitHub Pages 的缓存 TTL 获取新入口；此机制避免新首页继续引用旧 JS/CSS，不能改变服务端 HTTP 缓存策略。
