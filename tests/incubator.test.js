@@ -41,7 +41,7 @@ test('backup format validates and roundtrips, importing matching record intentio
 });
 test('issue drafts never pretend a candidate is already released or a real PR',()=>{
  const item=patchCandidate(addCandidate([],'a/fishing'),'a/fishing',{stage:'ready',note:'Build an accessible fishing sim',checks:{license:true}});
- const draft=issueDraft(item);
+ const draft=issueDraft(item[0]);
  assert.match(draft.body,/第三方来源/);
  assert.match(draft.body,/\[x\] 代码许可证/);
  assert.match(draft.body,/未通过完整 Playtest/);
