@@ -83,8 +83,13 @@ function openEditor(name){
  $('candidateEditorTitle').textContent=c.name;$('candidateEditorGenre').textContent=c.genre;
  $('candidateEditStage').value=c.stage;$('candidateEditNote').value=c.note;
  for(const g of CHECKS)$('candidateCheck_'+g.id).checked=c.checks[g.id];
- const draft=issueDraft(c);$('candidateIssue').href=draft.url;
+ updateIssueDraft();
  $('candidateEditor').showModal();
+}
+function updateIssueDraft(){
+ const c=items.find(x=>x.name===editing);if(!c)return;
+ const checks=Object.fromEntries(CHECKS.map(x=>[x.id,$('candidateCheck_'+x.id).checked]));
+ $('candidateIssue').href=issueDraft({...c,stage:$('candidateEditStage').value,note:$('candidateEditNote').value,checks}).url;
 }
 function closeEditor(){$('candidateEditor').close();editing=null}
 function exportBackup(){
@@ -110,12 +115,15 @@ export function initIncubator(){
  $('candidateExport').onclick=exportBackup;
  $('candidateImport').addEventListener('change',e=>importBackup(e.target.files?.[0]));
  $('candidateEditorClose').onclick=closeEditor;
+ $('candidateForm').addEventListener('input',updateIssueDraft);
+ $('candidateForm').addEventListener('change',updateIssueDraft);
+ $('candidateEditor').addEventListener('close',()=>{editing=null});
  $('candidateEditor').addEventListener('click',e=>{if(e.target===$('candidateEditor'))closeEditor()});
  $('candidateForm').addEventListener('submit',e=>{
   e.preventDefault();if(!editing)return;
   const checks=Object.fromEntries(CHECKS.map(x=>[x.id,$('candidateCheck_'+x.id).checked]));
   items=patchCandidate(items,editing,{stage:$('candidateEditStage').value,note:$('candidateEditNote').value,checks});
-  save();render();feedback('已保存研究记录：'+editing);closeEditor();
+  const persisted=save();render();if(persisted)feedback('已保存研究记录：'+editing);closeEditor();
  });
  $('candidateDelete').onclick=()=>{
   if(!editing)return;
