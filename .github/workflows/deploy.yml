@@ -33,10 +33,13 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-      - name: Verify deployment artifacts
+      - name: Verify deployment artifacts and browser import graph
         run: |
           test -s dist/index.html
+          test -s dist/arcade.js
           test -s dist/data/status.json
+          node --check scripts/verify-dist.mjs
+          node scripts/verify-dist.mjs
           node --input-type=module -e "import fs from 'node:fs'; const d=JSON.parse(fs.readFileSync('dist/data/status.json','utf8')); if(!d.publicOnly || !Array.isArray(d.projects))process.exit(1);"
       - uses: actions/upload-artifact@v4
         with:
