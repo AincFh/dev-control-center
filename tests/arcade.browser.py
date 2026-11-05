@@ -62,9 +62,9 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         cards=driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card")
         assert len(cards)==11, f"Arcade cards missing: {len(cards)}"
         live=driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid a.arcade-play")
-        assert len(live)==9, f"Incorrect playable count: {len(live)}"
+        assert len(live)==10, f"Incorrect playable count: {len(live)}"
         assert len(driver.find_elements(By.CSS_SELECTOR,"[data-game='qube'] a.arcade-play"))==1
-        assert len(driver.find_elements(By.CSS_SELECTOR,"[data-game='spacefortress'] a.arcade-play"))==0
+        assert len(driver.find_elements(By.CSS_SELECTOR,"[data-game='spacefortress'] a.arcade-play"))==1
         assert len(driver.find_elements(By.CSS_SELECTOR,"[data-game='citylife'] a.arcade-play"))==1
         driver.save_screenshot(str(OUT/"01-arcade-desktop.png"))
         search=driver.find_element(By.ID,"arcadeSearch")
@@ -75,7 +75,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         driver.execute_script("arguments[0].dispatchEvent(new Event('input',{bubbles:true}))",search)
         click_visible("#arcadePlayable")
         count=len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))
-        assert count==9, f"Playable filter expected 9, got {count}; search={search.get_attribute('value')!r}"
+        assert count==10, f"Playable filter expected 10, got {count}; search={search.get_attribute('value')!r}"
         click_visible("#arcadePlayable")
         click_visible("#arcadeGenres button[data-genre='life']")
         assert len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))>=2

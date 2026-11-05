@@ -4,7 +4,7 @@
 
 访问 [ATLAS 游戏大厅](https://aincfh.github.io/dev-control-center/#arcade) —— 汇总多个独立游戏仓库。提供类型筛选、关键词搜索、仅看可试玩、浏览器本地收藏，以及直达每款游戏的源码和在线运行入口。所有入口都基于实际 GitHub Pages 部署记录核验；未发布或未通过 Playtest 的项目只给出源代码链接，不提供虚假的可玩按钮。游戏封面仅有注明的真实仓库截图，其余是主题动效，不冒充游戏实拍。
 
-当前游戏大厅收录 11 个独立项目，其中 9 款已有本账号 GitHub Pages 部署与浏览器验收记录。《Qubecraft 方块世界》已通过完整 Playtest 并进入可游玩状态，但仍属于开发中版本；其中 MORI 在缺少 WebGL 的浏览器会自动显示安全降级画面。项目覆盖《日落餐馆》《天堂小岛》《山野钓行 NEXT》《湖光物语》《Qubecraft》《Cimulity》《Mori》《午夜工厂》《小城人生》《蔚蓝海岸》等 10 款独立项目。页面使用 `arcade.js` 的可测试注册表，另有 `tests/arcade.test.js` 和真实 Chrome 手机/桌面测试。
+当前游戏大厅收录 11 个独立项目，其中 10 款已有本账号 GitHub Pages 部署与浏览器验收记录。《Qubecraft 方块世界》已通过完整 Playtest 并进入可游玩状态，但仍属于开发中版本；其中 MORI 在缺少 WebGL 的浏览器会自动显示安全降级画面。项目覆盖《日落餐馆》《天堂小岛》《山野钓行 NEXT》《湖光物语》《Qubecraft》《Cimulity》《Mori》《午夜工厂》《小城人生》《蔚蓝海岸》等 10 款独立项目。页面使用 `arcade.js` 的可测试注册表，另有 `tests/arcade.test.js` 和真实 Chrome 手机/桌面测试。
 
 
 公开只读的 GitHub 多项目开发控制台。已从纯仓库展示页升级为**真实构建状态、项目任务与交付监控**。
@@ -61,3 +61,6 @@ Node.js 20+：
 ## Edition 03 · Creator Workspace 视觉重构
 
 采用独立的 8 个工作区视图，不再将游戏、研究、所有仓库及 CI 全部堆在同一长页面上。默认浅色 Apple 式精密工作台，游戏展示使用独立深色艺术区域；系统组件、选项卡与 GitHub 实时数据统一排版。支持手机横向导航、永久保存浅色/深色主题、Cmd/Ctrl+K 快捷搜索与 `#arcade` 等可直接分享的页面地址。所有页面仍只读、不存储 GitHub Token，也不把 Fork 误称为原创作品。
+
+
+《SPACEFORTRESS · 星际前哨》系 [Jaredcastorena/spacefortress](https://github.com/Jaredcastorena/spacefortress) MIT 开源项目的独立 Fork；AincFh 的 [Pages](https://aincfh.github.io/spacefortress/) 已通过主分支 4 组 CI + deploy，真实浏览器打开过初始殖民地、显示七名船员并验证游戏时间推进。**属于可玩的开发中模拟游戏，不代表上游 roadmap 中所有系统均已完成。**
