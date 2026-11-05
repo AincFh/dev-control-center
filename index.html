@@ -160,13 +160,15 @@
   <div class="mission-kpi"><span>待核验</span><strong id="missionUnknown">—</strong><small>未知与中立工作流</small></div>
   <div class="mission-kpi"><span>HTTP 可达</span><strong id="missionProbeGood">—</strong><small>HTML 与首批静态资源</small></div>
   <div class="mission-kpi" data-state="failure"><span>线上资源异常</span><strong id="missionProbeBad">—</strong><small>需要进一步打开诊断</small></div>
+  <div class="mission-kpi"><span>实际游戏浏览器通过</span><strong id="missionGameQAPass">—</strong><small>仅已执行的具名场景</small></div>
+  <div class="mission-kpi" data-state="failure"><span>游戏运行验收失败</span><strong id="missionGameQAFail">—</strong><small>独立 Chromium 操作</small></div>
  </section>
  <p id="missionFreshness" class="mission-freshness" data-state="missing" role="status" aria-live="polite">正在读取状态快照…</p>
  <div class="mission-body">
   <section class="mission-main" aria-label="跨项目操作清单">
    <div class="mission-section-head"><div><span class="eyebrow">ACTIONABLE REPOSITORIES</span><h2>跨项目行动队列</h2></div><span id="missionMatches">载入中…</span></div>
    <div class="mission-controls"><label class="mission-search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input type="search" id="missionSearch" autocomplete="off" placeholder="搜索项目名称、类型、说明…" aria-label="搜索总控项目"></label>
-    <select id="missionFilter" aria-label="筛选项目关注类型"><option value="all">全部项目</option><option value="action">需要处理</option><option value="failure">构建失败</option><option value="review">待审 PR</option><option value="unverified">待核验</option><option value="game">游戏项目</option><option value="site_error">线上资源异常</option></select>
+    <select id="missionFilter" aria-label="筛选项目关注类型"><option value="all">全部项目</option><option value="action">需要处理</option><option value="failure">构建失败</option><option value="review">待审 PR</option><option value="unverified">待核验</option><option value="game">游戏项目</option><option value="site_error">线上资源异常</option><option value="game_qa_failed">浏览器玩法验收失败</option></select>
     <select id="missionSort" aria-label="排序"><option value="urgency">风险优先</option><option value="updated">最新推送</option><option value="name">项目名称</option></select>
     <button type="button" id="missionOnlyPinned" aria-pressed="false">☆ 我的关注</button>
    </div>
