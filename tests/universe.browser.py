@@ -94,7 +94,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   driver.save_screenshot(str(OUT/"04-global-search.png"))
   input.send_keys(Keys.ESCAPE)
   assert not driver.execute_script("return document.getElementById('commandDialog').open")
-    severe=[x['message'] for x in driver.get_log("browser") if x["level"]=="SEVERE"]
+  severe=[x['message'] for x in driver.get_log("browser") if x["level"]=="SEVERE"]
   critical=[s for s in severe if "Uncaught" in s or ("/universe" in s and "404" in s)]
   assert not critical,critical
   # Connect the real GitHub source directory to the local research Kanban.
