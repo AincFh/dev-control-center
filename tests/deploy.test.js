@@ -1,5 +1,5 @@
 import test from'node:test';import assert from'node:assert/strict';
-import{planDeploymentChecks,normalizeDeploymentEvidence,applyDeploymentEvidence}from'../deploy-core.js';
+import{planDeploymentChecks,normalizeDeploymentEvidence,applyDeploymentEvidence,planBranchDeployment}from'../deploy-core.js';
 const SHA='a'.repeat(40),OTHER='b'.repeat(40);
 test('only exact merged commit sha and github-pages environment are eligible',()=>{
  const prs=[{number:4,state:'merged',mergeSha:SHA,baseBranch:'main'},{number:5,state:'open',mergeSha:OTHER,baseBranch:'main'}];
@@ -32,4 +32,14 @@ test('evidence attaches only to merged PR, preserves original trace and unknowns
  const next=applyDeploymentEvidence(trace,[{prNumber:2,evidence:proof}]);
  assert.equal(next.prs[1].deployment,proof);assert.equal(next.prs[2].deployment,null);
  assert.equal(next.prs[0].deployment,undefined);assert.equal(trace.prs[1].deployment,undefined);
+});
+
+
+test('repository Pages evidence needs the latest deployment on exact default branch',()=>{
+ const rows=[{id:2,sha:SHA,ref:'feature',environment:'github-pages',created_at:'2026-11-05T09:00:00Z'},
+ {id:3,sha:SHA,ref:'main',environment:'github-pages',created_at:'2026-11-05T08:00:00Z'},
+ {id:4,sha:OTHER,ref:'main',environment:'github-pages',created_at:'2026-11-05T09:30:00Z'}];
+ const proof=planBranchDeployment(rows,'AincFh','spacefortress','main');
+ assert.equal(proof.id,4);assert.equal(proof.ref,'main');assert.equal(proof.sha,OTHER);
+ assert.equal(planBranchDeployment(rows,'AincFh','spacefortress','missing'),null);
 });
