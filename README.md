@@ -232,3 +232,8 @@ ATLAS 的研发总控现在读取每日公开 Chromium 游戏验收记录，按�
 在既有十款独立 Selenium/Chromium 游戏测试基础上，每一款在**完成真实核心操作后**捕获一张桌面游戏截图，在**完成真实移动布局/交互后**再捕获一张移动端截图。失败时保留原有错误现场截图和逐项失败报告。使用独立浏览器 Profile，不涉及真实用户数据。
 公开 game-runtime.json 新增 screenshot 文件名列表与实测执行时间、最后一次页面导航 DOM 就绪耗时及资源数量，提供可追溯的证据元数据。截图文件归档到对应 GitHub Actions run 的 Artifacts（默认保留 10 天），官网仅提供运行记录链接，不把图片伪装为 CDN 长期可用资源。
 所有文件名经固定已知游戏 ID 白名单过滤，拒绝外部 URL、任意路径和用户可控 HTML 注入。页面显示浏览器运行耗时、抽样截图张数及原始 Actions 下载入口；这些数字仅是观察值，**不能单凭一次 DOM 就绪时间来认定帧率、FPS、游戏性能或发布质量达标**。
+
+## Edition 18 · 游戏测试代码发生变更时自动运行实机验收
+
+除每日 UTC 03:27 定时执行与显式 workflow_dispatch 以外，ATLAS 实际游戏 Chromium 验收在以下代码合并到 main 后自动执行：live-game-qa.yml 工作流本身、tests/live_games.browser.py。
+工作流不会对公开结果 data/game-runtime.json 的自动提交再次触发，避免递归排队和无意义的 Actions 消耗。真实运行完成后，继续提交公开通过/失败证据并触发 Pages 更新；实际游戏失败仍会将该 QA 运行标记为失败。
