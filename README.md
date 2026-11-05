@@ -1,18 +1,45 @@
 # ATLAS · Developer Studio
 
-可实际运行的 ChatGPT × GitHub 多仓库控制台。
+公开只读的 GitHub 多项目开发控制台。已从纯仓库展示页升级为**真实构建状态、项目任务与交付监控**。
+
+## 在线访问
+
+https://aincfh.github.io/dev-control-center/
 
 ## 已实现
-- Apple 风格响应式工作空间；公开 GitHub 仓库实时索引，私有仓库不泄露。
-- 项目卡片、快速导航、搜索、分类、Star 排序、详情、公开活动。
-- GitHub API 不可用时离线回退，无需在浏览器存储 Token。
-- Node.js 原生测试，推送自动验证，并通过 GitHub Actions 部署 Pages。
 
-## 运行
-Node.js 20+：`npm test`；`npm run start`（开发服务器端口 5173）。
+- 公开仓库发现、搜索、分类筛选、排序、响应式项目详情；
+- GitHub Actions 最近一次主分支运行状态，区分通过/失败/运行中/未知；
+- 公开 Issues 和 PR 数量、各仓库任务入口与失败运行链接；
+- Pages 发布状态与预览入口（只有已确认发布才标记已发布）；
+- 每小时由 Actions 收集安全公开数据并构建页面；
+- 单仓库详情可直接调用 GitHub 公共 API 实时核验；
+- GitHub Token 仅存在于 Actions 的运行时环境，**不存放于静态网站**；
+- Node.js 22 原生测试，提交后验证并部署 GitHub Pages。
 
-## 部署
-GitHub 仓库 Settings → Pages → Build and deployment → Source 选 **GitHub Actions**；主分支 push 后由工作流部署。
+## 本地运行
 
-## 新项目
-公开仓库自动发现。要指定分类/预览，请编辑 `app.js` 的 `catalog` 配置。公开控制台只读，不保存访问令牌。
+Node.js 20+：
+
+    npm test
+    npm run start
+
+静态页面可直接运行，缺少 data/status.json 时会显示公开仓库索引以及“暂无 CI 数据”，而不会伪造成功状态。
+
+### 构建状态快照（需要 GitHub API 网络）
+
+    GITHUB_TOKEN=<GitHub Actions 临时令牌> npm run build
+
+生成 dist/index.html 和 dist/data/status.json，后者只含公开仓库元信息。GitHub Actions 已内置这一步，日常无需自行运行。
+
+## 正规开发工作流
+
+详细规则、项目清单与跨聊天恢复指令：docs/DEVELOPMENT_PROTOCOL.md。
+推荐每项独立任务均遵循 Issue → branch → PR → test → review → merge → deploy。自动测试成功不代表已通过完整 UI、性能和终端设备验收。
+
+## 限制与说明
+
+- 不显示私有仓库；需要私有任务视图时应另建受认证保护的后台，不能往公开 Pages 中塞 PAT。
+- 快照一般每小时更新，不等同于实时推送；部分 API 数据可能不可用或被限流。
+- 这个网站不执行后台 Agent、远程命令或授权写操作。
+- 游戏项目互为独立仓库，未经比较不要合并/删除。

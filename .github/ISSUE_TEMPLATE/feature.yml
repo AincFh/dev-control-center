@@ -1,0 +1,30 @@
+name: "产品功能 / Feature"
+description: "提出可验证的功能需求"
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: value
+    attributes:
+      label: 业务背景与用户价值
+      description: 哪个用户在什么场景需要这项功能？
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 实现范围与明确排除
+      placeholder: "实现……；本次不包含……"
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 验收标准
+      placeholder: "- [ ] 行为可以被复现和测试\n- [ ] 自动测试成功\n- [ ] 线上页面验证通过"
+    validations:
+      required: true
+  - type: textarea
+    id: risk
+    attributes:
+      label: 风险、依赖与回滚
