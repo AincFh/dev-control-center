@@ -1,35 +1,130 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d121e"><meta name="description" content="ATLAS 多仓库开发控制中心：GitHub 项目和发布实时追踪"><title>ATLAS — Developer Studio</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"></head><body>
-<div class="shell"><aside class="side"><a class="brand" href="#home"><span class="logo">A</span><span>ATLAS<small>DEVELOPER STUDIO</small></span></a><div class="navlabel">WORKSPACE</div><a class="nav active" href="#projects">◈　项目总览</a><a class="nav" href="#workstreams">▦　项目工作台</a><a class="nav" href="#arcade">▣　在线游戏大厅</a><a class="nav" href="#discovery">✳　游戏发现实验室</a><a class="nav" href="#pipeline">⌘　自动化管线</a><a class="nav" href="#delivery">◷　交付状态</a><a class="nav" href="#activity">◷　开发动态</a><div class="navlabel">LINKS</div><a class="nav" target="_blank" rel="noopener" href="https://github.com/AincFh">↗　GitHub 主页</a><a class="nav" target="_blank" rel="noopener" href="https://github.com/AincFh?tab=repositories">▤　全部仓库</a><div class="connection"><span class="led"></span><div>GITHUB CONNECTED<small id="connection">正在连接公开 API</small></div></div></aside>
-<main id="home" class="content"><header class="toolbar"><div class="crumbs">AincFh <span>/</span> Workspace <span>/</span> Overview</div><div class="right"><span id="clock"></span><button id="refresh" class="round" title="刷新项目数据">↻</button><a href="https://github.com/AincFh" target="_blank" rel="noopener" class="avatar">AF</a></div></header>
-<section class="hero"><div class="eyebrow">✦ YOUR DEVELOPMENT UNIVERSE <span>— 2026 / ATLAS</span></div><h1>构建<span>下一种</span>可能。</h1><p>让每一个想法，都有自己的代码、进度与线上入口。一个工作空间，连接所有创意。</p><div class="buttons"><a href="#projects" class="primary">探索项目 ↗</a><a target="_blank" rel="noopener" href="https://github.com/new" class="outline">创建新仓库 ＋</a></div><div class="sphere"><span>✦</span></div><div class="herofoot">CHOOSE · BUILD · SHIP</div></section>
-<section class="stats"><div class="stat"><div>已连接项目 <span>▦</span></div><strong id="total">—</strong><small>公开仓库实时索引</small></div><div class="stat"><div>构建通过 <span>◉</span></div><strong id="live">—</strong><small>最近一次主分支运行结果</small></div><div class="stat"><div>需要关注 <span>⌁</span></div><strong id="active">—</strong><small id="syncCaption">失败 / 运行中</small></div><div class="stat"><div>上次同步 <span>↻</span></div><strong id="synced" class="tiny">—</strong><small>状态快照生成时间</small></div></section>
-<section id="workstreams" class="workstreams"><div class="sectionheading"><div><div class="eyebrow">00 — MULTI-PROJECT WORKSPACE</div><h2>正在并行开发<span>.</span></h2></div><p>多个独立产品 · 统一观察与验收 · 不混淆构建和发布</p></div><div class="workstream-grid" id="workstreamGrid"><div class="placeholder">正在读取项目路线图…</div></div><div class="workstream-footnote">成熟度来自人工维护的产品路线图；构建状态来自 GitHub。CI 成功不意味着游戏已经完成，私有项目不会在公开页面展示。</div></section>
-<section id="arcade" class="arcade-section" aria-label="ATLAS 在线游戏大厅">
- <div class="sectionheading">
-  <div><div class="eyebrow">01 — PLAYABLE MULTI-GAME PORTFOLIO</div><h2>打开一个世界<span>.</span></h2></div>
-  <p>独立仓库 · 独立存档 · 独立发布 · 统一入口</p>
- </div>
- <p class="arcade-intro">这里只把有独立部署证据的游戏开放“进入游戏”；尚未通过验收的沙盒、城市和生活模拟项目仍可查看代码，但不会假装已经发布。收藏仅保存在当前浏览器。</p>
- <div class="arcade-toolbar">
-  <label class="arcade-search"><span>⌕</span><input id="arcadeSearch" type="search" placeholder="搜索料理、建造、人生、钓鱼…" aria-label="搜索网页游戏" autocomplete="off"></label>
-  <label class="arcade-only"><input id="arcadePlayable" type="checkbox"><span>仅看可试玩</span></label>
-  <div id="arcadeGenres" class="arcade-filters" aria-label="游戏类型筛选"></div>
- </div>
- <div id="arcadeCount" class="arcade-count" aria-live="polite">正在读取游戏目录…</div>
- <div id="arcadeGrid" class="arcade-grid"><div class="placeholder">正在载入多游戏入口…</div></div>
- <div class="arcade-footnote">游戏封面中引用的仓库截图属于对应项目；其他卡片背景仅是主题动效，不是游戏实机画面。Fork 均保留上游作者及许可证。CI 通过不等于游戏成熟完工。</div>
+<!doctype html>
+<html lang="zh-CN" data-theme="light"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f6f4">
+<meta name="description" content="ATLAS — 独立游戏与开发项目的统一工作空间，探索作品、追踪进度、查看真实 GitHub 发布状态。">
+<title>ATLAS · 创造者工作台</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg"><link rel="stylesheet" href="./atlas-v3.css">
+</head><body><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="svg-defs">
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.7"/><rect x="14" y="3" width="7" height="7" rx="1.7"/><rect x="3" y="14" width="7" height="7" rx="1.7"/><rect x="14" y="14" width="7" height="7" rx="1.7"/></symbol>
+<symbol id="i-game" viewBox="0 0 24 24"><path d="M7 8h10a4 4 0 0 1 3.9 3.1l1 5.4a2.5 2.5 0 0 1-3.9 2.5l-3.4-2.6H9.4L6 19a2.5 2.5 0 0 1-3.9-2.5l1-5.4A4 4 0 0 1 7 8Z"/><path d="M7 12v5M4.5 14.5h5M16 12.5h.01M19 15h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 17l9 5 9-5"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7V5.8A2 2 0 0 1 5 4h5l2.1 2H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M3 10h18"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.4 4.8-4.8 2.4 2.4-4.8Z"/></symbol>
+<symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2 12h5l3-7 4 14 3-7h5"/></symbol>
+<symbol id="i-flow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><path d="M10 6.5h4.5a3 3 0 0 1 3 3V14M6.5 10v7.5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-activity" viewBox="0 0 24 24"><path d="M3 20V9M8 20V4M13 20v-8M18 20V7M22 20H2"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+<symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M10 14 20 4M20 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.7" cy="10.7" r="7.2"/><path d="m16 16 5 5"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20.5 8a8.6 8.6 0 0 0-14.5-2L4 8m0-5v5h5M3.5 16a8.6 8.6 0 0 0 14.5 2l2-2m0 5v-5h-5"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+<symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5Z"/></symbol>
+</svg>
+<div class="shell">
+<aside class="side" id="sidebar" aria-label="主导航">
+  <div class="sidebar-top">
+   <a class="brand" href="#home" aria-label="ATLAS 首页"><span class="brand-glyph"><span class="brand-line"></span><span class="brand-core">A</span></span><span class="brand-type">ATLAS<small>CREATOR WORKSPACE</small></span></a>
+   <div class="side-edition">INDEPENDENT STUDIO <span>2026 / 01</span></div>
+  </div>
+  <nav class="nav-scroll" aria-label="工作空间">
+   <div class="navlabel">WORKSPACE</div>
+   <a class="nav active" href="#home" data-view-link="home" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-grid"></use></svg><span>总览</span></a>
+<a class="nav" href="#arcade" data-view-link="arcade" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-game"></use></svg><span>游戏大厅</span><small class="nav-counter">PLAY</small></a>
+<a class="nav" href="#workstreams" data-view-link="workstreams" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-layers"></use></svg><span>项目路线</span></a>
+<a class="nav" href="#projects" data-view-link="projects" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-folder"></use></svg><span>全部仓库</span></a>
+<a class="nav" href="#discovery" data-view-link="discovery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>发现实验室</span></a>
+<a class="nav" href="#delivery" data-view-link="delivery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>交付健康</span></a>
+<a class="nav" href="#pipeline" data-view-link="pipeline" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>构建流程</span></a>
+<a class="nav" href="#activity" data-view-link="activity" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-activity"></use></svg><span>开发动态</span></a>
+  </nav>
+  <div class="sidebar-bottom">
+    <a class="side-github" href="https://github.com/AincFh" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg><span>GitHub · AincFh</span><svg class="i" aria-hidden="true"><use href="#i-external"></use></svg></a>
+    <div class="connection"><span class="led" aria-hidden="true"></span><div><strong>PUBLIC GITHUB</strong><small id="connection">连接中…</small></div></div>
+    <span class="side-copyright">© ATLAS STUDIO 2026</span>
+  </div>
+</aside>
+<div class="app-column">
+<header class="toolbar">
+ <div class="toolbar-left"><span class="toolbar-studio">ATLAS</span><svg class="i" aria-hidden="true"><use href="#i-chevron"></use></svg><strong id="pageTitle">总览</strong><span class="toolbar-subtitle" id="pageSubtitle">你的创造者工作空间</span></div>
+ <div class="right"><span class="toolbar-clock" id="clock"></span><button class="toolbar-button" id="quickFind" aria-label="搜索全部仓库" title="搜索仓库"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg></button><button class="toolbar-button" id="themeBtn" aria-label="切换浅色或深色主题" title="切换主题"><svg class="i" aria-hidden="true"><use href="#i-sun"></use></svg></button><button id="refresh" class="toolbar-button" aria-label="刷新公开 GitHub 状态" title="刷新项目状态"><svg class="i" aria-hidden="true"><use href="#i-refresh"></use></svg></button><a href="https://github.com/AincFh" target="_blank" rel="noopener" class="avatar" title="打开 GitHub 主页">AF</a></div>
+</header>
+<main class="content" id="content">
+<section class="view view-home is-active" id="home" aria-label="工作台总览">
+  <div class="eyebrow home-overline"><span class="tiny-dot"></span> THE INDEPENDENT CREATOR WORKSPACE <span> / 2026</span></div>
+  <section class="hero">
+   <div class="hero-copy"><span class="hero-index">PORTFOLIO / 001</span><h1>让想法，<br><em>真正运行起来。</em></h1><p>游戏、产品与实验。不止于代码仓库，把每一个想法变成能够打开、体验和持续成长的作品。</p>
+   <div class="buttons"><a class="primary" href="#arcade">探索游戏作品 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a><a class="outline" href="#projects">查看开发项目 <svg class="i" aria-hidden="true"><use href="#i-chevron"></use></svg></a></div>
+   <div class="hero-meta"><span class="hero-signal"></span> INDEPENDENTLY BUILT · CONTINUOUSLY IMPROVED</div></div>
+   <div class="hero-art" aria-hidden="true"><div class="art-noise"></div><div class="art-disc disc-outer"></div><div class="art-disc disc-mid"></div><div class="art-disc disc-inner"></div><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div><div class="art-center">A<span>T</span></div><div class="art-caption">CREATIVE SYSTEMS<br>IN MOTION <b>↗</b></div><div class="art-coordinates">37° 52' / 122° 19'</div></div>
+  </section>
+  <section class="stats" aria-label="实时项目概要">
+   <article class="stat"><div>公开项目 <span class="stat-suffix">01 / TOTAL</span></div><strong id="total">—</strong><small>已连接 GitHub 仓库</small></article>
+   <article class="stat"><div>构建通过 <span class="stat-suffix">02 / PASS</span></div><strong id="live">—</strong><small>主分支最新运行结果</small></article>
+   <article class="stat"><div>需要关注 <span class="stat-suffix">03 / REVIEW</span></div><strong id="active">—</strong><small id="syncCaption">失败、运行中或未知状态</small></article>
+   <article class="stat"><div>最近同步 <span class="stat-suffix">04 / SYNC</span></div><strong id="synced" class="tiny">—</strong><small>来自公开 GitHub 状态快照</small></article>
+  </section>
+  <div class="home-section-caption"><div><span class="eyebrow">FEATURED / OUR WORK</span><h2>从这里开始探索。</h2></div><a href="#arcade" class="inline-link">查看所有游戏 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div>
+  <div class="home-feature-layout">
+   <article class="home-featured"><div class="feature-scenery" aria-hidden="true"><div class="feature-sun"></div><div class="feature-ridge r1"></div><div class="feature-ridge r2"></div><div class="feature-lake"></div><div class="feature-lake-glow"></div></div><div class="featured-content"><span class="feature-kicker">EDITOR'S PICK · EXPLORATION</span><h3>WILDLANDS.</h3><p>山野钓行｜走进山林，感受湖面的每一次微小变化。</p><div class="feature-actions"><a href="https://aincfh.github.io/wildlands-anglerfishing-world-3d/" target="_blank" rel="noopener">开始探索 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a><a href="https://github.com/AincFh/wildlands-anglerfishing-world-3d" target="_blank" rel="noopener">开发记录 <svg class="i" aria-hidden="true"><use href="#i-external"></use></svg></a></div></div><span class="feature-corner">01 / FEATURED</span></article>
+   <div class="home-feature-side">
+    <a class="home-mini" href="https://aincfh.github.io/cozy-bistro-sim/" target="_blank" rel="noopener"><span class="mini-art mini-bistro">01</span><span><small>MANAGEMENT · PLAYABLE</small><strong>日落餐馆</strong><span>经营一间属于自己的街角小店</span></span><svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+    <a class="home-mini" href="https://aincfh.github.io/City-of-Small-Chances/" target="_blank" rel="noopener"><span class="mini-art mini-city">02</span><span><small>LIFE SIMULATION · FORK</small><strong>小城人生</strong><span>在自由的 3D 城市里开启新一天</span></span><svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+    <a class="home-mini" href="https://aincfh.github.io/paradise-isle/" target="_blank" rel="noopener"><span class="mini-art mini-island">03</span><span><small>COZY LIFE · FORK</small><strong>天堂小岛</strong><span>种田、钓鱼、宠物和岛屿生活</span></span><svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+   </div>
+  </div>
+  <div class="home-lower">
+    <article class="home-info-panel"><div class="home-panel-heading"><span class="eyebrow">WORKFLOW / SYSTEM</span><h3>从灵感到发布，<br>每一步都有记录。</h3></div><p>所有作品独立维护、独立构建；公开可查看，研发过程可追踪。</p><div class="home-timeline"><div><span>01</span><strong>计划与开发</strong><small>Issue / Branch</small></div><div><span>02</span><strong>质量验收</strong><small>Test / Review</small></div><div><span>03</span><strong>上线迭代</strong><small>Pages / Release</small></div></div><a class="inline-link" href="#pipeline">查看交付流程 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a></article>
+    <article class="home-info-panel home-now"><div class="home-panel-heading"><span class="eyebrow">CURRENT STATUS / GITHUB</span><h3>每一个状态，<br>都来自真实记录。</h3></div><p id="homeHealth">正在同步最新公开项目数据…</p><div class="now-badges" id="homeStatusPills"><span class="status-token">正在读取状态快照</span></div><a class="inline-link" href="#delivery">查看交付健康 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a></article>
+  </div>
+  <div class="home-footer">ATLAS · A WORKING COLLECTION, NOT JUST A SHOWCASE <span>BUILD SOMETHING WORTH USING.</span></div>
 </section>
-<section id="discovery" class="discovery-section"><div class="sectionheading"><div><div class="eyebrow">01 — OPEN-SOURCE GAME LAB</div><h2>值得继续玩的世界<span>.</span></h2></div><p>真正的上游游戏 · 清晰许可 · 独立 Fork 开发</p></div>
-<p class="discovery-intro">不再为了项目数量制造空仓库。研究有真实系统和内容深度的游戏，分别标注“已引入 Fork”与“仅供参考”；Fork 保留原作者、许可证和完整历史。</p>
-<div class="discovery-filters"><label class="discovery-search"><span>⌕</span><input id="discoverySearch" type="search" placeholder="搜索生活模拟、建造、沙盒、工厂…" aria-label="搜索 GitHub 游戏实验室" autocomplete="off"></label><div id="discoveryGenres" class="discovery-genres" aria-label="游戏类型筛选"></div></div>
-<div class="discovery-count" id="discoveryCount">正在整理游戏项目…</div><div id="discoveryGrid" class="discovery-grid" aria-live="polite"></div>
-<p class="discovery-disclaimer">特别说明：原项目、源代码和原站试玩均属于各自作者；Fork 不是原创声明。没有核验许可的仓库只用于调研，不能直接复制其素材或代码。上游试玩链接不等于我们的发布验收通过。</p></section><section id="projects"><div class="sectionheading"><div><div class="eyebrow">01 — PORTFOLIO</div><h2>正在创造的项目<span>.</span></h2></div><p>从想法到发布，每一步都清晰可见。</p></div><div class="filters"><label class="search"><span>⌕</span><input type="search" id="query" placeholder="搜索仓库、描述、技术栈" autocomplete="off" aria-label="搜索项目"></label><div class="tabs" id="tabs"><button data-type="all" class="selected">全部</button><button data-type="game">游戏</button><button data-type="web">网站</button><button data-type="tool">工具</button></div><select id="sort" aria-label="排序"><option value="latest">最近更新</option><option value="stars">最多 Stars</option><option value="name">按名称</option></select></div><div id="grid" class="grid"><div class="placeholder">正在连接 GitHub…</div></div><div class="noresults" id="noresults" hidden>没有匹配的项目。<button id="reset">清除筛选</button></div></section>
-<section id="delivery" class="delivery">
-<div class="sectionheading"><div><div class="eyebrow">02 — DELIVERY INTELLIGENCE</div><h2>真实交付状态<span>.</span></h2></div><p>公开 GitHub Actions · 不含私有代码</p></div>
-<div class="deliverygrid">
- <article class="deliverypane"><div class="deliverytop"><span class="eyebrow">CI / PROJECT HEALTH</span><strong id="healthSummary">加载中</strong></div><div id="deliveryList" aria-live="polite"></div><p class="healthnote" id="healthNote">等待状态快照</p></article>
- <article class="deliverypane queuepane"><div class="deliverytop"><span class="eyebrow">TASK QUEUE / OPEN WORK</span><a class="more" href="https://github.com/issues" target="_blank" rel="noopener">全部 Issues ↗</a></div><div id="queueList" aria-live="polite"></div>
-  <div class="queuefooter"><p>从需求到部署：Issue → 开发分支 → PR → 自动测试 → 合并发布。写入、审批和合并仍需在已授权 GitHub 会话中完成。</p><a href="https://github.com/AincFh/dev-control-center/issues/new/choose" target="_blank" rel="noopener">创建开发任务 ↗</a></div>
- </article></div>
-</section><section class="lower"><article id="pipeline" class="pane"><div class="eyebrow">03 — DELIVERY PIPELINE</div><h2>自动化交付<span>.</span></h2><div class="step"><b>01</b><div><strong>Build</strong><small>每次提交自动校验</small></div><span>→</span></div><div class="step"><b>02</b><div><strong>Test</strong><small>运行代码与数据测试</small></div><span>→</span></div><div class="step"><b>03</b><div><strong>Deploy</strong><small>自动发布到 GitHub Pages</small></div><span>✓</span></div><a class="more" target="_blank" rel="noopener" href="https://github.com/AincFh/dev-control-center/actions">查看工作流 ↗</a></article><article id="activity" class="pane accent"><div class="eyebrow">04 — LIVE ACTIVITY</div><h2>最近开发动态<span>.</span></h2><div id="events" class="events">正在载入公开活动…</div><a class="more" href="https://github.com/AincFh" target="_blank" rel="noopener">前往 GitHub ↗</a></article></section><footer><b>✦ ATLAS STUDIO</b><span>PUBLIC READ-ONLY PORTFOLIO · PRIVATE REPOS EXCLUDED · © 2026</span></footer></main></div>
-<dialog id="details"><button id="close" aria-label="关闭详情">×</button><div id="detailBody"></div></dialog><script type="module" src="app.js"></script></body></html>
+<section class="view" id="arcade" aria-label="游戏大厅">
+ <header class="view-header"><span class="eyebrow">COLLECTION 01 / PLAY</span><div class="view-heading-row"><div><h1>游戏大厅<span>.</span></h1><p>每个游戏都是一个独立世界。挑选一个，马上开始体验。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-game"></use></svg></div></div></header>
+ <div class="arcade-section"><div class="arcade-banner"><div><span class="eyebrow">THE GAME COLLECTION</span><strong>Play more.<br><em>Stay curious.</em></strong><p>只开放已核验的真实试玩入口，开发中的项目可以浏览源代码。</p></div><div class="arcade-banner-art" aria-hidden="true"><div class="banner-sphere"></div><div class="banner-track t1"></div><div class="banner-track t2"></div></div></div>
+  <div class="arcade-toolbar"><label class="arcade-search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input id="arcadeSearch" type="search" placeholder="搜索游戏、类型或玩法" aria-label="搜索网页游戏" autocomplete="off"></label><label class="arcade-only"><input id="arcadePlayable" type="checkbox"><span>仅显示可试玩</span></label><div id="arcadeGenres" class="arcade-filters" aria-label="游戏类型筛选"></div></div>
+  <div id="arcadeCount" class="results-count" aria-live="polite">正在读取游戏目录…</div><div id="arcadeGrid" class="arcade-grid"><div class="placeholder">正在载入多游戏入口…</div></div>
+  <p class="footnote">部分游戏为保留原作者署名的 MIT 开源 Fork，卡片会单独注明。CI 构建成功不代表已通过实际游玩验收。游戏收藏只保存在当前浏览器。</p>
+ </div>
+</section>
+<section class="view" id="workstreams" aria-label="项目路线">
+ <header class="view-header"><span class="eyebrow">COLLECTION 02 / WORKSTREAMS</span><div class="view-heading-row"><div><h1>项目路线<span>.</span></h1><p>每一个产品都拥有独立节奏、下一目标和完整研发轨迹。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-layers"></use></svg></div></div></header>
+ <div class="workstream-heading"><span class="eyebrow">IN FOCUS / ACTIVE TRACKS</span><span>按产品成熟度独立管理，不将 CI 通过等同于正式发行。</span></div><div class="workstream-grid" id="workstreamGrid"><div class="placeholder">正在同步研发路线…</div></div><p class="footnote">成熟度来自公开维护的项目路线图；CI 状态由 GitHub Actions 提供，未知即未知。</p>
+</section>
+<section class="view" id="projects" aria-label="全部仓库">
+ <header class="view-header"><span class="eyebrow">COLLECTION 03 / REPOSITORIES</span><div class="view-heading-row"><div><h1>所有项目<span>.</span></h1><p>真实仓库、清楚的更新记录以及独立发布和构建状态。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-folder"></use></svg></div></div></header>
+ <div class="filters"><label class="search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input type="search" id="query" placeholder="搜索项目名称、描述或技术栈" autocomplete="off" aria-label="搜索项目"></label><div class="tabs" id="tabs"><button data-type="all" class="selected">全部</button><button data-type="game">游戏</button><button data-type="web">网站</button><button data-type="tool">工具</button></div><select id="sort" aria-label="项目排序"><option value="latest">最近更新</option><option value="stars">最多 Stars</option><option value="name">按名称</option></select></div><div id="grid" class="grid"><div class="placeholder">正在连接 GitHub…</div></div><div class="noresults" id="noresults" hidden>没有匹配的项目。<button id="reset">清除筛选</button></div>
+</section>
+<section class="view" id="discovery" aria-label="游戏发现">
+ <header class="view-header"><span class="eyebrow">COLLECTION 04 / RESEARCH LAB</span><div class="view-heading-row"><div><h1>发现实验室<span>.</span></h1><p>挖掘值得深入开发的开源作品，而不是复制一堆空壳项目。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg></div></div></header>
+ <p class="discovery-intro">收藏、研究与 Fork 是不同阶段。所有原始作品保留作者及许可证信息；未完成许可核验的作品只作调研。</p>
+ <div class="discovery-filters"><label class="discovery-search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input id="discoverySearch" type="search" placeholder="寻找生活养成、建造、沙盒、工厂…" aria-label="搜索 GitHub 游戏实验室" autocomplete="off"></label><div id="discoveryGenres" class="discovery-genres" aria-label="游戏类型筛选"></div></div>
+ <div class="results-count" id="discoveryCount">正在整理游戏项目…</div><div id="discoveryGrid" class="discovery-grid" aria-live="polite"></div><p class="footnote">上游试玩链接不等于我们已经发布；Fork 不代表原创。未核验许可的源码或资产不会直接复制到本平台。</p>
+</section>
+<section class="view" id="delivery" aria-label="交付状态">
+ <header class="view-header"><span class="eyebrow">OPERATIONS 01 / DELIVERY</span><div class="view-heading-row"><div><h1>交付健康<span>.</span></h1><p>以 GitHub Actions 为依据，区分构建成功、部署完成与产品真正可用。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg></div></div></header>
+ <div class="deliverygrid"><article class="deliverypane"><div class="deliverytop"><div><span class="eyebrow">BUILD & RELEASE STATUS</span><strong id="healthSummary">加载中</strong></div><span class="mini-status">LIVE DATA</span></div><div id="deliveryList" aria-live="polite"></div><p class="healthnote" id="healthNote">等待状态快照</p></article>
+ <article class="deliverypane queuepane"><div class="deliverytop"><div><span class="eyebrow">DEVELOPMENT TASKS</span><strong>需要处理的任务</strong></div><a class="more" href="https://github.com/issues" target="_blank" rel="noopener">GitHub Issues ↗</a></div><div id="queueList" aria-live="polite"></div><div class="queuefooter"><p>Issue → 开发分支 → PR → 自动测试 → 验收。此界面只读，写入仍通过授权 GitHub 工具完成。</p><a href="https://github.com/AincFh/dev-control-center/issues/new/choose" target="_blank" rel="noopener">新建研发任务 ↗</a></div></article></div>
+</section>
+<section class="view" id="pipeline" aria-label="构建流程">
+ <header class="view-header"><span class="eyebrow">OPERATIONS 02 / PROCESS</span><div class="view-heading-row"><div><h1>从代码到作品<span>.</span></h1><p>发布不是按下按钮，而是一条可复核的完整质量流程。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg></div></div></header>
+ <div class="pipeline-hero"><span>HOW IT WORKS</span><h2>Build with intention.<br><em>Ship with confidence.</em></h2><p>每一次开发都关联代码提交、自动检查和真实的使用结果。</p></div>
+ <div class="pipeline-steps">
+  <article><span>01 / PLAN</span><div class="step-icon"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg></div><h3>明确需求</h3><p>形成独立的 Issue 与验收清单。</p></article>
+  <article><span>02 / BUILD</span><div class="step-icon"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg></div><h3>提交代码</h3><p>在功能分支开发，保持变更可追踪。</p></article>
+  <article><span>03 / TEST</span><div class="step-icon"><svg class="i" aria-hidden="true"><use href="#i-check"></use></svg></div><h3>质量检查</h3><p>单测、真实浏览器和移动端验证。</p></article>
+  <article><span>04 / SHIP</span><div class="step-icon"><svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></div><h3>独立发布</h3><p>通过门禁后合并，确认线上部署。</p></article>
+ </div><a class="process-link" href="https://github.com/AincFh/dev-control-center/actions" target="_blank" rel="noopener">查看 ATLAS 自动化工作流 <svg class="i" aria-hidden="true"><use href="#i-external"></use></svg></a>
+</section>
+<section class="view" id="activity" aria-label="开发动态">
+ <header class="view-header"><span class="eyebrow">OPERATIONS 03 / ACTIVITY</span><div class="view-heading-row"><div><h1>最近发生的事<span>.</span></h1><p>来自公开 GitHub 活动的更新记录，不编造进度。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-activity"></use></svg></div></div></header>
+ <article class="activity-pane"><div class="deliverytop"><div><span class="eyebrow">DEVELOPMENT FEED</span><strong>公开活动时间线</strong></div><a class="more" href="https://github.com/AincFh" target="_blank" rel="noopener">GitHub 主页 ↗</a></div><div class="events" id="events">正在载入公开活动…</div></article>
+</section>
+<footer class="global-footer"><span>ATLAS © 2026 · CRAFTED TO BUILD</span><span>PUBLIC REPOSITORIES ONLY · UPSTREAM AUTHORS CREDITED</span></footer>
+</main></div></div>
+<dialog id="details" aria-label="项目详情"><button id="close" aria-label="关闭详情">×</button><div id="detailBody"></div></dialog>
+<script type="module" src="./app.js"></script>
+</body></html>

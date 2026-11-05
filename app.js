@@ -43,7 +43,7 @@ function statPill(p){
 }
 function card(p){
  const root=n('article','','project'+(p.featured?' featured':'')),top=n('div','','cardtop');
- top.append(n('span',p.symbol,'symbol'),statPill(p));root.append(top);
+ top.append(n('span',(p.label.match(/[A-Za-z]/)?.[0]||p.label[0]||'A').toUpperCase(),'symbol'),statPill(p));root.append(top);
  root.append(n('h3',p.label),n('p',p.description||'独立开发仓库。'));
  const sub=n('div','','projectmeta');
  sub.append(n('span','Issues '+(p.openIssues??'—')),n('span','PR '+(p.openPRs??'—')));if(p.maturity)sub.append(n('span',p.maturity,'prototype'));if(p.isFork)sub.append(n('span','上游署名保留','fork-label'));
@@ -64,6 +64,16 @@ function render(){
  const h=summarizeHealth(projects),s=summary(projects);
  $('total').textContent=s.total;$('live').textContent=h.success;$('active').textContent=h.failure+h.running;
  $('syncCaption').textContent=(h.failure?'失败 '+h.failure+' · ':'')+'运行中 '+h.running+' · 未知 '+h.unknown;
+ const ready=GAMES.filter(playableGame).length;
+ const warning=h.failure+h.running;
+ const home=$('homeHealth');
+ if(home)home.textContent=projects.length+' 个公开仓库持续跟踪，其中 '+h.success+' 个最近一次主分支 CI 通过；'+warning+' 个存在失败或正在运行。最新状态请到交付健康核验。';
+ const tokens=$('homeStatusPills');
+ if(tokens)tokens.replaceChildren(
+   n('span','已开放 '+ready+' 款试玩','status-token'),
+   n('span','开放任务 '+h.openIssues+' 项','status-token'),
+   n('span','等待 PR '+h.openPRs+' 项','status-token')
+ );
  renderWorkstreams();renderArcade();renderDelivery(h);renderQueue();renderDiscovery();
 }
 function renderWorkstreams(){
@@ -71,7 +81,7 @@ function renderWorkstreams(){
  for(const t of trackedWorkstreams(projects)){
   const p=t.project,box=n('article','','workstream-card'+(t.priority===1?' prioritized':''));
   const head=n('div','','workstream-head'),id=n('div','','workstream-identity');
-  id.append(n('span',t.symbol,'workstream-mark'),n('b',t.short));head.append(id,n('span','P'+t.priority,'workstream-priority'));box.append(head);
+  id.append(n('span',t.short.slice(0,2).toUpperCase(),'workstream-mark'),n('b',t.short));head.append(id,n('span','P'+t.priority,'workstream-priority'));box.append(head);
   box.append(n('h3',t.title),n('p',t.goal,'workstream-goal'));
   const label=n('div','','workstream-state');label.append(n('span',readiness(t.maturity),'workstream-maturity '+t.maturity));
   label.append(n('span',repoHealthLabel(t.ci),'workstream-ci '+t.ci));box.append(label);
@@ -164,7 +174,7 @@ function renderDiscovery(){
  grid.replaceChildren();
  $('discoveryCount').textContent=entries.length+' 项 / 已引入 '+discoverySummary().forks+' 个 Fork';
  if(!entries.length){grid.append(n('p','没有找到匹配的游戏项目。','placeholder'));return;}
- const symbols={life:'❀',builder:'▦',survival:'◫',industry:'⚙',stories:'◈'};
+ const symbols={life:'LF',builder:'CT',survival:'SV',industry:'FA',stories:'ST'};
  for(const p of entries){
   const card=n('article','','discovery-card'),hd=n('div','','discovery-top');
   hd.append(n('span',symbols[p.genre]||'✦','discovery-symbol'),n('span',p.forkName?'已引入 Fork':'参考项目','discovery-kind'+(p.forkName?' imported':'')));
@@ -252,6 +262,54 @@ function detailPanel(name){
 $('close').onclick=()=>$('details').close();
 $('details').addEventListener('click',e=>{if(e.target===$('details'))$('details').close()});
 function clock(){$('clock').textContent=new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});}clock();setInterval(clock,60_000);
+// Focused product navigation: only one workspace view at a time.
+// Keep existing DOM nodes and data; switching views never discards game favorites or status.
+const VIEWS={
+ home:['总览','你的创造者工作空间'],
+ arcade:['游戏大厅','独立游戏与在线试玩'],
+ workstreams:['项目路线','持续开发与下一目标'],
+ projects:['全部仓库','公开 GitHub 项目索引'],
+ discovery:['发现实验室','值得深入研究的开源游戏'],
+ delivery:['交付健康','CI、PR 和发布状态'],
+ pipeline:['构建流程','从开发到验收发布'],
+ activity:['开发动态','来自 GitHub 的公开活动']
+};
+function route(){
+ const raw=decodeURIComponent(location.hash.replace(/^#/,'')),key=VIEWS[raw]?raw:'home';
+ document.querySelectorAll('.view').forEach(el=>{
+  const active=el.id===key;el.classList.toggle('is-active',active);
+  el.setAttribute('aria-hidden',String(!active));
+ });
+ document.querySelectorAll('[data-view-link]').forEach(el=>{
+  const active=el.dataset.viewLink===key;el.classList.toggle('active',active);
+  if(active)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');
+ });
+ $('pageTitle').textContent=VIEWS[key][0];
+ $('pageSubtitle').textContent=VIEWS[key][1];
+ document.title='ATLAS · '+VIEWS[key][0];
+ $('content').scrollTop=0;
+}
+window.addEventListener('hashchange',route);
+route();
+function setTheme(mode){
+ const next=mode==='dark'?'dark':'light';
+ document.documentElement.dataset.theme=next;
+ document.querySelector('meta[name="theme-color"]')?.setAttribute('content',next==='dark'?'#121b1c':'#f5f6f4');
+ $('themeBtn').setAttribute('aria-pressed',String(next==='dark'));
+ $('themeBtn').title=next==='dark'?'切换浅色主题':'切换深色主题';
+ try{localStorage.setItem('atlas-v3-theme',next)}catch{}
+}
+let initialTheme='light';try{initialTheme=localStorage.getItem('atlas-v3-theme')||'light'}catch{}
+setTheme(initialTheme);
+$('themeBtn').onclick=()=>setTheme(document.documentElement.dataset.theme==='light'?'dark':'light');
+function jumpToProjects(){location.hash='#projects';requestAnimationFrame(()=>$('query').focus({preventScroll:true}));}
+$('quickFind').onclick=jumpToProjects;
+document.addEventListener('keydown',e=>{
+ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){
+  e.preventDefault();jumpToProjects();
+ }
+});
+
 async function load(){
  if(syncing)return;syncing=true;$('refresh').disabled=true;$('connection').textContent='正在更新项目状态…';
  const fetchJson=async(url)=>{const res=await fetch(url,{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);return res.json();};
