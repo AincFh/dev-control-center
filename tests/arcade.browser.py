@@ -78,7 +78,12 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         driver.save_screenshot(str(OUT/"02-arcade-mobile.png"))
         severe=[x["message"] for x in driver.get_log("browser") if x["level"]=="SEVERE" and "favicon" not in x["message"]]
         # External image/CDN/API access is best-effort; app code must still load locally.
-        local_errors=[x for x in severe if "127.0.0.1" in x and (".js" in x or "Uncaught" in x)]
+        # Local development intentionally lacks the generated GitHub status
+        # snapshot: data/status.json is created by the deployment job.
+        # Its 404 is a supported offline fallback, not an arcade app error.
+        local_errors=[x for x in severe
+                      if ("127.0.0.1" in x and (".js" in x or "Uncaught" in x)
+                          and "/data/status.json" not in x)]
         assert not local_errors,local_errors
         report={"cards":len(cards),"playable":len(live),"mobile":mobile,
                 "favorites_persisted":True,"severe_console":severe[:12]}
