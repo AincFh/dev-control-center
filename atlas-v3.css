@@ -737,3 +737,9 @@ html.atlas-restricted-selection textarea{
 @media(max-width:980px){.trace-layout{grid-template-columns:1fr}.trace-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.trace-aside{display:grid;grid-template-columns:1fr 1fr;align-items:start}.trace-hero-mark{display:none}.trace-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:670px){.trace-hero{padding:24px 20px}.trace-grid,.trace-aside{grid-template-columns:1fr}.trace-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.trace-stats>div{padding:13px}.trace-stats strong{font-size:31px}.trace-filters>*{flex:1 1 auto;max-width:none}.trace-filters label{flex:1 1 100%;max-width:none}.trace-heading{align-items:flex-start;flex-direction:column}.trace-stage-open{white-space:normal}}
 @media(prefers-reduced-motion:reduce){.trace-card,.trace-feedback,.trace-hero-actions>*{transition:none!important}}
+
+/* Exact-SHA deployment evidence adds a sixth operational metric. */
+.trace-stats{grid-template-columns:repeat(6,minmax(0,1fr))}
+.trace-stats>div:last-child strong{color:#368568}
+@media(max-width:1150px){.trace-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:670px){.trace-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
