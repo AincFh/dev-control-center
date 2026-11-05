@@ -30,12 +30,6 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
     options.set_capability("goog:loggingPrefs",{"browser":"ALL"})
     driver=webdriver.Chrome(options=options)
     driver.set_page_load_timeout(45)
-    def click_visible(selector):
-        element=driver.find_element(By.CSS_SELECTOR,selector)
-        driver.execute_script("arguments[0].scrollIntoView({block:'center',inline:'nearest',behavior:'instant'})",element)
-        time.sleep(.12)
-        element.click()
-        return element
     try:
         driver.get(f"http://127.0.0.1:{server.server_address[1]}/")
         driver.execute_script("document.querySelector('#arcade').scrollIntoView()")
@@ -45,7 +39,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         cards=driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card")
         assert len(cards)==10, f"Arcade cards missing: {len(cards)}"
         live=driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid a.arcade-play")
-        assert len(live)==4, f"Incorrect playable count: {len(live)}"
+        assert len(live)==7, f"Incorrect playable count: {len(live)}"
         assert len(driver.find_elements(By.CSS_SELECTOR,"[data-game='qube'] a.arcade-play"))==0
         driver.save_screenshot(str(OUT/"01-arcade-desktop.png"))
         search=driver.find_element(By.ID,"arcadeSearch")
@@ -54,15 +48,22 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         assert driver.find_element(By.CSS_SELECTOR,"#arcadeGrid .arcade-card").get_attribute("data-game")=="bistro"
         search.clear()
         driver.execute_script("arguments[0].dispatchEvent(new Event('input',{bubbles:true}))",search)
-        click_visible("#arcadePlayable")
+        driver.find_element(By.ID,"arcadePlayable").click()
         count=len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))
-        assert count==4, f"Playable filter expected 4, got {count}; search={search.get_attribute('value')!r}"
-        click_visible("#arcadePlayable")
-        click_visible("#arcadeGenres button[data-genre='life']")
+        assert count==7, f"Playable filter expected 7, got {count}; search={search.get_attribute('value')!r}"
+        driver.find_element(By.ID,"arcadePlayable").click()
+        driver.find_element(By.CSS_SELECTOR,"#arcadeGenres button[data-genre='life']").click()
         assert len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))>=2
-        click_visible("#arcadeGenres button[data-genre='all']")
+        driver.find_element(By.CSS_SELECTOR,"#arcadeGenres button[data-genre='all']").click()
         fav=driver.find_element(By.CSS_SELECTOR,"[data-game='paradise'] .arcade-favorite")
-        click_visible("[data-game='paradise'] .arcade-favorite")
+        # The arcade lives below multiple sticky full-screen panels; Selenium
+        # auto-scroll sometimes leaves the favorite button under the fixed
+        # HUD, reporting click-intercepted even though the UI works.
+        # Explicitly center it and click as a real user would.
+        driver.execute_script("arguments[0].scrollIntoView({behavior:'instant',block:'center',inline:'center'})",fav)
+        time.sleep(.4)
+        fav=driver.find_element(By.CSS_SELECTOR,"[data-game='paradise'] .arcade-favorite")
+        fav.click()
         # Favorites re-render the entire card grid; requery the new DOM node.
         fav=driver.find_element(By.CSS_SELECTOR,"[data-game='paradise'] .arcade-favorite")
         assert fav.get_attribute("aria-pressed")=="true"

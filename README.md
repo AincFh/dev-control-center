@@ -4,7 +4,7 @@
 
 访问 [ATLAS 游戏大厅](https://aincfh.github.io/dev-control-center/#arcade) —— 汇总多个独立游戏仓库。提供类型筛选、关键词搜索、仅看可试玩、浏览器本地收藏，以及直达每款游戏的源码和在线运行入口。所有入口都基于实际 GitHub Pages 部署记录核验；未发布或未通过 Playtest 的项目只给出源代码链接，不提供虚假的可玩按钮。游戏封面仅有注明的真实仓库截图，其余是主题动效，不冒充游戏实拍。
 
-目前覆盖《日落餐馆》《天堂小岛》《山野钓行 NEXT》《湖光物语》《Qubecraft》《Cimulity》《Mori》《午夜工厂》《小城人生》《蔚蓝海岸》等 10 款独立项目。页面使用 `arcade.js` 的可测试注册表，另有 `tests/arcade.test.js` 和真实 Chrome 手机/桌面测试。
+目前已有 7 款经主分支 Pages 发布确认可试玩（另新增《Cimulity 城市模拟》）（新增《Mori 宠物日记》《午夜工厂》）。其中 MORI 在缺少 WebGL 的浏览器会自动显示安全降级画面。项目覆盖《日落餐馆》《天堂小岛》《山野钓行 NEXT》《湖光物语》《Qubecraft》《Cimulity》《Mori》《午夜工厂》《小城人生》《蔚蓝海岸》等 10 款独立项目。页面使用 `arcade.js` 的可测试注册表，另有 `tests/arcade.test.js` 和真实 Chrome 手机/桌面测试。
 
 
 公开只读的 GitHub 多项目开发控制台。已从纯仓库展示页升级为**真实构建状态、项目任务与交付监控**。
@@ -16,7 +16,7 @@ https://aincfh.github.io/dev-control-center/
 ## 已实现
 
 - 公开仓库发现、搜索、分类筛选、排序、响应式项目详情；
-- 开源游戏发现实验室：17 个已核验来源、8 个真实 MIT Fork，按类型搜索筛选；清晰区分原创仓库、Fork 与仅参考；
+- 开源游戏发现实验室：21 个经筛选来源、10 个 MIT Fork，按类型搜索筛选；清晰区分原创仓库、Fork 与仅参考；
 - 多项目工作台与人工维护的项目成熟度路线图（WILDLANDS、COZY BISTRO、AZURE COAST 等），每个项目独立显示实际 CI、任务和下一目标；
 - GitHub Actions 最近一次主分支运行状态，区分通过/失败/运行中/未知；
 - 公开 Issues 和 PR 数量、各仓库任务入口与失败运行链接；
