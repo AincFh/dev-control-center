@@ -4,6 +4,7 @@ from http.server import SimpleHTTPRequestHandler
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
 
 ROOT=pathlib.Path(__file__).resolve().parents[1];OUT=ROOT/"test-artifacts"/"universe";OUT.mkdir(parents=True,exist_ok=True)
 class Server(SimpleHTTPRequestHandler):
@@ -94,7 +95,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   assert driver.find_element(By.ID,"candidateIssue").get_attribute("href").startswith("https://github.com/AincFh/dev-control-center/issues/new?")
   driver.find_element(By.ID,"candidateEditNote").send_keys("ATLAS browser verified research note")
   assert "ATLAS%20browser" in driver.find_element(By.ID,"candidateIssue").get_attribute("href")
-  driver.find_element(By.CSS_SELECTOR,"#candidateEditStage option[value='review']").click()
+  Select(driver.find_element(By.ID,'candidateEditStage')).select_by_value('review')
   driver.find_element(By.CSS_SELECTOR,"#candidateForm button[type='submit']").click()
   until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#candidateBoard .candidate-card"))==1)
   assert driver.execute_script("return document.querySelector('#candidateEditor').open") is False
