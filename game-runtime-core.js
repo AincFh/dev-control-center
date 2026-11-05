@@ -30,8 +30,16 @@ export function normalizeGameReport(raw){
   seen.add(target.id);
   const checks=(Array.isArray(rawItem.checks)?rawItem.checks:[]).map(normalizeCheck).filter(Boolean).slice(0,14);
   const status=checks.some(x=>x.status==='fail')?'fail':checks.some(x=>x.status==='timeout')?'timeout':rawItem.status;
-  results.push({...target,status,checks,
-   elapsedMs:Number.isFinite(rawItem.elapsedMs)?Math.min(600000,Math.max(0,Math.round(rawItem.elapsedMs))):null,
+  const allowedShots=new Set([target.id+'-game.png',target.id+'-mobile.png',target.id+'-failure.png']);
+  const screenshots=[...new Set(Array.isArray(rawItem.screenshots)?rawItem.screenshots.filter(x=>typeof x==='string'&&allowedShots.has(x)):[])];
+  const finiteBound=(x,max)=>Number.isFinite(x)&&x>=0?Math.min(max,Math.round(x)):null;
+  const navigation=rawItem.navigation&&typeof rawItem.navigation==='object'?{
+   domContentLoadedMs:finiteBound(rawItem.navigation.domContentLoadedMs,600000),
+   loadEventMs:finiteBound(rawItem.navigation.loadEventMs,600000),
+   resourceCount:finiteBound(rawItem.navigation.resourceCount,10000)
+  }:null;
+  results.push({...target,status,checks,screenshots,navigation,
+   elapsedMs:finiteBound(rawItem.elapsedMs,600000),
    message:String(rawItem.message||'').slice(0,350)});
  }
  const runUrl=SAFE_URL.test(raw.runUrl||'')?raw.runUrl:null;
