@@ -19,7 +19,7 @@ export function assetCandidates(html,page,repo,limit=6){
   const isJs=/^<script\b/i.test(tag),isCss=/^<link\b/i.test(tag)&&/\brel\s*=\s*(?:"[^"]*\bstylesheet\b[^"]*"|'[^']*\bstylesheet\b[^']*'|stylesheet\b)/i.test(tag);
   if(!isJs&&!isCss)continue;
   const key=isJs?'src':'href';
-  const hit=tag.match(new RegExp('\\b'+key+'\\s*=\\s*(?:"([^"]+)"|\\'([^\\']+)\\')','i'));
+  const hit=tag.match(isJs?/\bsrc\s*=\s*(?:"([^"]+)"|'([^']+)')/i:/\bhref\s*=\s*(?:"([^"]+)"|'([^']+)')/i);
   const value=hit?.[1]||hit?.[2];
   if(!value||value.includes('&amp;'))continue;
   try{
