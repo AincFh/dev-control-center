@@ -70,3 +70,9 @@ Node.js 20+：
 GitHub Pages 可能将静态 JS/CSS 在浏览器缓存约 600 秒。为避免出现“CI 已成功，但用户仍看到旧版游戏大厅”的情况，`npm run build` 只在 `dist/` 发布产物中给入口脚本、CSS 和每一层本地 ES import 增加 `?v=<commit>-<run>` 发布指纹；源代码保持整洁。
 
 `dist/data/build.json` 保存指纹；`scripts/verify-dist.mjs` 会确认首页与全部依赖统一使用同一个版本，并禁止缺失模块。如果用户长期不刷新已缓存的旧 HTML，仍需按 GitHub Pages 的缓存 TTL 获取新入口；此机制避免新首页继续引用旧 JS/CSS，不能改变服务端 HTTP 缓存策略。
+
+## Edition 04 · Galaxy Universe + Kinetic Workspace
+
+- **GitHub 星图**：按真实 GitHub 搜索结果收录 1,580 个外部仓库参考。八个方向、36 组来源检索、去重。来源从不归为自有产品或 Fork，许可证与可玩性必须按需查询并审核。
+- 可交互 Canvas 星图、类别与作者检索、按类别交错展示、24 张卡片分页、本机关注列表、点击详情读取实时 GitHub Stars／许可证／最新更新时间（不伪造元信息）。
+- UI 增加轻量交互反馈、尊重减少动画设置的视觉动效，并按要求在普通页面禁止复制、粘贴、右键和文字选中（浏览器端体验限制，不是对公开源码的访问保护）。

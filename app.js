@@ -3,6 +3,8 @@ import {summarizeHealth,repoHealthLabel,isoAge,workflowState,latestWorkflow} fro
 import {trackedWorkstreams,readiness} from './roadmap.js';
 import {DISCOVERY,GENRES,searchDiscovery,discoverySummary} from './discovery.js';
 import {GAMES,GAME_GENRES,filterGames,sortGames,playableGame,arcadeStats,statusText} from './arcade.js';
+import {initUniverse} from './universe.js';
+import {initStudioExperience} from './studio-motion.js';
 const OWNER='AincFh', API='https://api.github.com';
 const CATALOG={
  'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,description:'多项目状态、开发任务与交付管理'},
@@ -270,6 +272,7 @@ const VIEWS={
  workstreams:['项目路线','持续开发与下一目标'],
  projects:['全部仓库','公开 GitHub 项目索引'],
  discovery:['发现实验室','值得深入研究的开源游戏'],
+ universe:['GitHub 星图','数千条外部游戏与模拟项目索引'],
  delivery:['交付健康','CI、PR 和发布状态'],
  pipeline:['构建流程','从开发到验收发布'],
  activity:['开发动态','来自 GitHub 的公开活动']
@@ -348,4 +351,4 @@ $('query').addEventListener('input',e=>{selection.query=e.target.value;render()}
 $('sort').addEventListener('change',e=>{selection.sort=e.target.value;render()});
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;selection.type=b.dataset.type;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x===b));render();});
 $('reset').onclick=()=>{selection.query='';selection.type='all';$('query').value='';document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.type==='all'));render();};
-$('refresh').onclick=load;initDiscovery();initArcade();load();
+$('refresh').onclick=load;initDiscovery();initArcade();initUniverse();initStudioExperience();load();

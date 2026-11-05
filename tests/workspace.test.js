@@ -1,13 +1,13 @@
 import test from 'node:test';import assert from 'node:assert/strict';import{readFileSync}from'node:fs';
 const html=readFileSync('index.html','utf8'),css=readFileSync('atlas-v3.css','utf8'),app=readFileSync('app.js','utf8'),build=readFileSync('scripts/build-status.mjs','utf8');
-const pages=['home','arcade','workstreams','projects','discovery','delivery','pipeline','activity'];
+const pages=['home','arcade','workstreams','projects','discovery','universe','delivery','pipeline','activity'];
 test('information architecture has eight separate navigable views',()=>{
  for(const id of pages){assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,new RegExp('data-view-link="'+id+'"'));assert.match(app,new RegExp('(?:^|\\n) '+id+":\\['"));}
  assert.match(css,/\.view\.is-active\s*\{display:block\}/);
  assert.match(app,/window\.addEventListener\('hashchange',route\)/);
 });
 test('important functional widgets are preserved',()=>{
- for(const id of ['arcadeGrid','arcadePlayable','arcadeSearch','arcadeGenres','discoveryGrid','discoverySearch','grid','query','sort','tabs','deliveryList','queueList','events','workstreamGrid','details','close','refresh','total','live','active','synced','connection'])assert.ok(html.includes('id="'+id+'"'),id);
+ for(const id of ['arcadeGrid','arcadePlayable','arcadeSearch','arcadeGenres','discoveryGrid','discoverySearch','grid','query','sort','tabs','deliveryList','queueList','events','workstreamGrid','universeGrid','universeSearch','universeCanvas','universePrev','universeNext','details','close','refresh','total','live','active','synced','connection'])assert.ok(html.includes('id="'+id+'"'),id);
 });
 test('real website uses original bundled CSS without remote fonts',()=>{
  assert.match(html,/href="\.\/atlas-v3\.css"/);assert.doesNotMatch(css,/@import\s+url\(https?:/);

@@ -37,6 +37,7 @@
 <a class="nav" href="#workstreams" data-view-link="workstreams" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-layers"></use></svg><span>项目路线</span></a>
 <a class="nav" href="#projects" data-view-link="projects" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-folder"></use></svg><span>全部仓库</span></a>
 <a class="nav" href="#discovery" data-view-link="discovery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>发现实验室</span></a>
+<a class="nav" href="#universe" data-view-link="universe"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>GitHub 星图</span><small class="nav-counter">1K+</small></a>
 <a class="nav" href="#delivery" data-view-link="delivery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>交付健康</span></a>
 <a class="nav" href="#pipeline" data-view-link="pipeline" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>构建流程</span></a>
 <a class="nav" href="#activity" data-view-link="activity" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-activity"></use></svg><span>开发动态</span></a>
@@ -80,6 +81,7 @@
     <article class="home-info-panel"><div class="home-panel-heading"><span class="eyebrow">WORKFLOW / SYSTEM</span><h3>从灵感到发布，<br>每一步都有记录。</h3></div><p>所有作品独立维护、独立构建；公开可查看，研发过程可追踪。</p><div class="home-timeline"><div><span>01</span><strong>计划与开发</strong><small>Issue / Branch</small></div><div><span>02</span><strong>质量验收</strong><small>Test / Review</small></div><div><span>03</span><strong>上线迭代</strong><small>Pages / Release</small></div></div><a class="inline-link" href="#pipeline">查看交付流程 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a></article>
     <article class="home-info-panel home-now"><div class="home-panel-heading"><span class="eyebrow">CURRENT STATUS / GITHUB</span><h3>每一个状态，<br>都来自真实记录。</h3></div><p id="homeHealth">正在同步最新公开项目数据…</p><div class="now-badges" id="homeStatusPills"><span class="status-token">正在读取状态快照</span></div><a class="inline-link" href="#delivery">查看交付健康 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a></article>
   </div>
+  <a class="universe-home-cta" href="#universe"><div class="universe-home-orbit" aria-hidden="true"><span></span><span></span><span></span></div><div><span>EXPLORE THE GITHUB UNIVERSE</span><strong><span id="universeHomeCount">1,000+</span> 个真实项目，下一步等你决定。</strong><p>从生活模拟到 3D 沙盒，筛选、关注、研究，再建立自己的开发路线。</p></div><span class="universe-home-arrow">↗</span></a>
   <div class="home-footer">ATLAS · A WORKING COLLECTION, NOT JUST A SHOWCASE <span>BUILD SOMETHING WORTH USING.</span></div>
 </section>
 <section class="view" id="arcade" aria-label="游戏大厅">
@@ -104,6 +106,21 @@
  <div class="discovery-filters"><label class="discovery-search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input id="discoverySearch" type="search" placeholder="寻找生活养成、建造、沙盒、工厂…" aria-label="搜索 GitHub 游戏实验室" autocomplete="off"></label><div id="discoveryGenres" class="discovery-genres" aria-label="游戏类型筛选"></div></div>
  <div class="results-count" id="discoveryCount">正在整理游戏项目…</div><div id="discoveryGrid" class="discovery-grid" aria-live="polite"></div><p class="footnote">上游试玩链接不等于我们已经发布；Fork 不代表原创。未核验许可的源码或资产不会直接复制到本平台。</p>
 </section>
+<section class="view" id="universe" aria-label="GitHub 千项探索星图">
+ <header class="view-header"><span class="eyebrow">ATLAS / EXTERNAL GITHUB UNIVERSE</span><div class="view-heading-row"><div><h1>GitHub 星图<span>.</span></h1><p>从真实 GitHub 仓库中发现值得研究的游戏与模拟项目，不只是一个仓库列表。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg></div></div></header>
+ <section class="universe-hero">
+  <div class="universe-intro"><div class="universe-kicker">AN OPEN SOURCE UNIVERSE · INDEX 001</div><h2><strong id="universeTotal">—</strong><small>条真实 GitHub 仓库索引</small></h2><p>收录的每一个名称都来自 GitHub 搜索。它们是第三方参考项目，<b>不是 ATLAS 已开发或已授权复用的作品</b>。</p><div class="universe-facts"><div><b id="universeGenresCount">—</b><span>项目方向</span></div><div><b id="universeSaved">0</b><span>本地关注</span></div><div><b id="universeQueryCount">—</b><span>GitHub 搜索主题</span></div></div><span id="universeUpdated" class="universe-updated">正在读取 GitHub 参考索引…</span></div>
+  <div class="universe-map-wrap"><canvas id="universeCanvas" role="img" aria-label="交互式项目星图：八种游戏方向及其真实仓库数量。也可以通过下方类别按钮切换。" width="640" height="330"></canvas><div class="universe-map-label">INTERACTIVE CONSTELLATION <span>移动鼠标或点击星系筛选类别</span></div></div>
+ </section>
+ <section class="universe-controls" aria-label="千项仓库筛选">
+  <div class="universe-control-top"><label class="universe-search"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><input type="search" id="universeSearch" autocomplete="off" placeholder="搜索仓库名称、作者或项目类型…" aria-label="搜索外部 GitHub 项目"></label><select id="universeSort" aria-label="排序外部项目"><option value="balanced">多类别交替展示</option><option value="name">仓库名称 A–Z</option><option value="owner">作者名称 A–Z</option></select><button id="universeOnlySaved" type="button" aria-pressed="false" class="universe-filter-save">☆　我的关注</button><button id="universeRandom" type="button" class="universe-random">发现一个项目 ↗</button></div>
+  <div class="universe-genres" id="universeCategories" aria-label="按游戏方向过滤"></div>
+ </section>
+ <div class="universe-result-head"><div><span class="eyebrow">CURATED BY SEARCH / VERIFIED LINKS</span><h3 id="universeMatches">正在装载项目索引…</h3></div><span id="universeRange">加载中</span></div>
+ <div id="universeGrid" class="universe-grid"><div class="placeholder">正在读取 GitHub 搜索得到的真实仓库…</div></div>
+ <nav class="universe-pagination" aria-label="项目结果翻页"><button id="universePrev" type="button" disabled>← 上一页</button><span id="universePage">—</span><button id="universeNext" type="button" disabled>下一页 →</button></nav>
+ <p class="universe-disclaimer">索引采集于 GitHub 公开仓库搜索结果；可能包含未完成、已停更、非游戏或存在使用限制的项目。页面默认不推断 Star 数、许可证、可运行性或商业使用权；点击“查看资料”才读取 GitHub 当前公开元数据。收藏仅保存在此浏览器。</p>
+</section>
 <section class="view" id="delivery" aria-label="交付状态">
  <header class="view-header"><span class="eyebrow">OPERATIONS 01 / DELIVERY</span><div class="view-heading-row"><div><h1>交付健康<span>.</span></h1><p>以 GitHub Actions 为依据，区分构建成功、部署完成与产品真正可用。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg></div></div></header>
  <div class="deliverygrid"><article class="deliverypane"><div class="deliverytop"><div><span class="eyebrow">BUILD & RELEASE STATUS</span><strong id="healthSummary">加载中</strong></div><span class="mini-status">LIVE DATA</span></div><div id="deliveryList" aria-live="polite"></div><p class="healthnote" id="healthNote">等待状态快照</p></article>
@@ -125,6 +142,8 @@
 </section>
 <footer class="global-footer"><span>ATLAS © 2026 · CRAFTED TO BUILD</span><span>PUBLIC REPOSITORIES ONLY · UPSTREAM AUTHORS CREDITED</span></footer>
 </main></div></div>
+<div id="universeNotice" class="universe-notice" role="status" aria-live="polite"></div>
+<dialog id="universeDetail" aria-label="GitHub 外部项目资料"><button id="universeDetailClose" aria-label="关闭项目资料">×</button><div id="universeDetailBody"></div></dialog>
 <dialog id="details" aria-label="项目详情"><button id="close" aria-label="关闭详情">×</button><div id="detailBody"></div></dialog>
 <script type="module" src="./app.js"></script>
 </body></html>
