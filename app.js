@@ -1,8 +1,11 @@
 import {normalize,filtered,sorted,summary,ago} from './core.js';
 import {summarizeHealth,repoHealthLabel,isoAge,workflowState,latestWorkflow} from './status.js';
+import {trackedWorkstreams,readiness} from './roadmap.js';
 const OWNER='AincFh', API='https://api.github.com';
 const CATALOG={
  'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,description:'多项目状态、开发任务与交付管理'},
+ 'cozy-bistro-sim':{label:'COZY BISTRO · 日落餐馆',symbol:'✦',category:'game',featured:true,maturity:'可玩基础版',description:'单机餐馆经营：订单、食材、厨房升级与多日收益'},
+ 'azure-coast':{label:'AZURE COAST · 海滨都市',symbol:'⌘',category:'game',featured:true,maturity:'开发中 · 未发布',description:'海滨开放世界原型，正式发布门禁尚未满足'},
  'fishing-world-3d':{label:'FISHING WORLD · 湖光物语',symbol:'♒',category:'game',featured:true,maturity:'可玩原型',description:'轻休闲 3D 钓鱼原型；非完整游戏，地图与玩法深度仍有限'},
  'wildlands-anglerfishing-world-3d':{label:'WILDLANDS · 山野钓行',symbol:'♒',category:'game',featured:true,maturity:'可玩原型',description:'第一人称 3D 钓鱼开发中；非完整游戏，质量与内容尚未全面验收'},
  'Saintlaurent':{label:'圣罗兰平台',symbol:'✦',category:'web'},
@@ -49,7 +52,25 @@ function render(){
  const h=summarizeHealth(projects),s=summary(projects);
  $('total').textContent=s.total;$('live').textContent=h.success;$('active').textContent=h.failure+h.running;
  $('syncCaption').textContent=(h.failure?'失败 '+h.failure+' · ':'')+'运行中 '+h.running+' · 未知 '+h.unknown;
- renderDelivery(h);renderQueue();
+ renderWorkstreams();renderDelivery(h);renderQueue();
+}
+function renderWorkstreams(){
+ const holder=$('workstreamGrid');if(!holder)return;holder.replaceChildren();
+ for(const t of trackedWorkstreams(projects)){
+  const p=t.project,box=n('article','','workstream-card'+(t.priority===1?' prioritized':''));
+  const head=n('div','','workstream-head'),id=n('div','','workstream-identity');
+  id.append(n('span',t.symbol,'workstream-mark'),n('b',t.short));head.append(id,n('span','P'+t.priority,'workstream-priority'));box.append(head);
+  box.append(n('h3',t.title),n('p',t.goal,'workstream-goal'));
+  const label=n('div','','workstream-state');label.append(n('span',readiness(t.maturity),'workstream-maturity '+t.maturity));
+  label.append(n('span',repoHealthLabel(t.ci),'workstream-ci '+t.ci));box.append(label);
+  const note=n('div','','workstream-next');note.append(n('small','NEXT MILESTONE'),n('strong',t.next));box.append(note);
+  const actions=n('div','','workstream-links');
+  const page='https://github.com/'+OWNER+'/'+encodeURIComponent(t.repo);
+  actions.append(link(page,'源代码 ↗'),link(page+'/issues','任务 ↗'));
+  if(p?.preview)actions.append(link(p.preview,'试玩 ↗'));
+  if(!t.known)box.append(n('span','尚未在公开仓库索引中识别到此项目','workstream-unseen'));
+  box.append(actions);holder.append(box);
+ }
 }
 function renderDelivery(health){
  const holder=$('deliveryList');holder.replaceChildren();

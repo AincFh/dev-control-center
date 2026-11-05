@@ -28,3 +28,18 @@
 .liveRefresh:disabled{opacity:.5;cursor:wait}#details .mutedtext{margin-top:12px}
 @media(max-width:1180px){.deliverygrid{grid-template-columns:1fr}.healthrow{gap:8px}.healthname strong{font-size:10px}}
 @media(max-width:550px){.deliverypane{padding:16px}.deliverytop{align-items:flex-start;flex-wrap:wrap}.healthrow .ci{font-size:8px;padding:5px}.healthlink{font-size:8px}.delivery{margin-top:38px}.queuefooter{padding:12px}}
+
+/* ATLAS · Multi-repository roadmap workspace */
+.workstreams{scroll-margin-top:32px;margin:44px 0 38px}
+.workstream-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.workstream-card{display:flex;flex-direction:column;min-height:228px;background:linear-gradient(145deg,#1d3044,#172336 80%);border:1px solid #e0eff032;border-radius:16px;padding:21px;box-shadow:0 18px 34px #070b1714}
+.workstream-card.prioritized{border-color:#98b9e34d;background:linear-gradient(130deg,#233950,#172337)}
+.workstream-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.workstream-identity{display:flex;align-items:center;gap:9px;min-width:0}.workstream-identity b{font-size:9px;letter-spacing:1.5px;color:#e2ebff;white-space:nowrap}.workstream-mark{font-size:22px;color:#cbceee}.workstream-priority{border:1px solid #a8bdd04d;border-radius:10px;padding:5px 8px;font-size:9px;color:#b9cbea}
+.workstream-card h3{margin:15px 0 8px;font-size:15px;letter-spacing:.2px}.workstream-goal{font-size:10px;color:#a6b8cf;line-height:1.9;margin:0 0 15px;min-height:31px}
+.workstream-state{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}.workstream-state span{border:1px solid #8ea9be3c;border-radius:7px;font-size:9px;padding:5px 7px;color:#bdd0e5;background:#ffffff08}
+.workstream-state .blocked{border-color:#d7a09185;color:#eec1ae}.workstream-state .success{border-color:#73b5a15c;color:#8cdfb6}.workstream-state .failure{border-color:#d8908a7e;color:#f0aca7}.workstream-state .running{border-color:#c8b57787;color:#e8ce96}
+.workstream-next{display:grid;gap:5px;border-top:1px solid #b2c8dc26;padding-top:12px;margin-top:auto}.workstream-next small{font-size:8px;letter-spacing:1.2px;color:#7e9fbc}.workstream-next strong{font-size:10px;line-height:1.7;color:#e2eaf4;font-weight:600}
+.workstream-links{display:flex;flex-wrap:wrap;gap:13px;margin-top:13px}.workstream-links a{font-size:10px;color:#b8cdf4}.workstream-links a:hover{color:white}.workstream-unseen{font-size:9px;color:#bf9290;margin-top:7px}
+.workstream-footnote{font-size:10px;color:#899bb6;margin-top:14px;line-height:1.8}
+@media(max-width:1320px){.workstream-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.workstream-grid{grid-template-columns:1fr}.workstream-card{min-height:190px}.workstreams{margin:30px 0}.workstream-card h3{font-size:14px}}
