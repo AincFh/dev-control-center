@@ -8,6 +8,7 @@ import {initStudioExperience} from './studio-motion.js';
 import {initIncubator} from './incubator.js';
 import {initMission} from './mission.js';
 import {initCommandPalette} from './command.js';
+import {initTrace} from './trace.js';
 const OWNER='AincFh', API='https://api.github.com';
 const CATALOG={
  'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,description:'多项目状态、开发任务与交付管理'},
@@ -41,6 +42,7 @@ function fromRepo(repo,st){
  p.ci=st?.ci||{state:'unknown'};p.openIssues=Number.isInteger(st?.openIssues)?st.openIssues:null;
  p.openPRs=Number.isInteger(st?.openPRs)?st.openPRs:null;p.countsTruncated=!!st?.countsTruncated;
  p.issuePreview=Array.isArray(st?.issuePreview)?st.issuePreview:null;p.prPreview=Array.isArray(st?.prPreview)?st.prPreview:null;
+ p.trace=st?.trace&&st.trace.repo===repo.name?st.trace:null;
  p.site=st?.site||{state:'unknown',url:null};p.preview=p.site.state==='published'?p.site.url:null;p.maturity=CATALOG[repo.name]?.maturity||null;
  p.branch=st?.defaultBranch||'main';p.upstream=CATALOG[repo.name]?.upstream||null;p.isFork=!!(repo.fork||st?.fork||p.upstream);return p;
 }
@@ -80,7 +82,7 @@ function render(){
    n('span','开放任务 '+h.openIssues+' 项','status-token'),
    n('span','等待 PR '+h.openPRs+' 项','status-token')
  );
- renderWorkstreams();renderArcade();renderDelivery(h);renderQueue();renderDiscovery();updateMission(projects,snapshot);
+ renderWorkstreams();renderArcade();renderDelivery(h);renderQueue();renderDiscovery();updateMission(projects,snapshot);updateTrace(projects,snapshot);
 }
 function renderWorkstreams(){
  const holder=$('workstreamGrid');if(!holder)return;holder.replaceChildren();
@@ -278,6 +280,7 @@ const VIEWS={
  discovery:['发现实验室','值得深入研究的开源游戏'],
  incubator:['项目孵化','外部项目研究、人工核验与立项计划'],
  mission:['研发总控','跨项目 CI、问题、审查和产品人工核验'],
+ trace:['开发链路','真实 Issue、PR、CI 和部署证据追踪'],
  universe:['GitHub 星图','数千条外部游戏与模拟项目索引'],
  delivery:['交付健康','CI、PR 和发布状态'],
  pipeline:['构建流程','从开发到验收发布'],
@@ -360,4 +363,4 @@ $('query').addEventListener('input',e=>{selection.query=e.target.value;render()}
 $('sort').addEventListener('change',e=>{selection.sort=e.target.value;render()});
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;selection.type=b.dataset.type;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x===b));render();});
 $('reset').onclick=()=>{selection.query='';selection.type='all';$('query').value='';document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.type==='all'));render();};
-$('refresh').onclick=load;initDiscovery();initArcade();initIncubator();initUniverse();const updateMission=initMission();initStudioExperience();load();
+$('refresh').onclick=load;initDiscovery();initArcade();initIncubator();initUniverse();const updateMission=initMission();const updateTrace=initTrace();initStudioExperience();load();
