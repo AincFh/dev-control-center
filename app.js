@@ -43,7 +43,7 @@ function fromRepo(repo,st){
  p.openPRs=Number.isInteger(st?.openPRs)?st.openPRs:null;p.countsTruncated=!!st?.countsTruncated;
  p.issuePreview=Array.isArray(st?.issuePreview)?st.issuePreview:null;p.prPreview=Array.isArray(st?.prPreview)?st.prPreview:null;
  p.trace=st?.trace&&st.trace.repo===repo.name?st.trace:null;
- p.site=st?.site||{state:'unknown',url:null};p.preview=p.site.state==='published'?p.site.url:null;p.maturity=CATALOG[repo.name]?.maturity||null;
+ p.site=st?.site||{state:'unknown',url:null};p.probe=st?.probe||null;p.preview=p.site.state==='published'?p.site.url:null;p.maturity=CATALOG[repo.name]?.maturity||null;
  p.branch=st?.defaultBranch||'main';p.upstream=CATALOG[repo.name]?.upstream||null;p.isFork=!!(repo.fork||st?.fork||p.upstream);return p;
 }
 function siteLabel(site){
@@ -62,6 +62,8 @@ function card(p){
  const sub=n('div','','projectmeta');
  sub.append(n('span','Issues '+(p.openIssues??'—')),n('span','PR '+(p.openPRs??'—')));if(p.maturity)sub.append(n('span',p.maturity,'prototype'));if(p.isFork)sub.append(n('span','上游署名保留','fork-label'));
  if(p.site.state==='published')sub.append(n('span',p.site.source==='github_deployment'?'● 部署证实':'● Pages 已发布','published'));
+ if(p.probe?.state==='reachable')sub.append(n('span','● HTTP 静态资源可达','probe-good'));
+ if(['http_error','resource_error','network_error','content_error'].includes(p.probe?.state))sub.append(n('span','● 在线资源检测异常','probe-bad'));
  root.append(sub);
  const bottom=n('div','','cardbottom'),language=n('span',p.language,'language'),links=n('div','','cardlinks');
  links.append(link(p.url,'⌘'));if(p.preview)links.append(link(p.preview,'↗'));
@@ -245,7 +247,7 @@ function detailPanel(name){
  const p=projects.find(x=>x.name===name);if(!p)return;
  const body=$('detailBody');body.replaceChildren(n('div','PROJECT HEALTH / GITHUB','eyebrow'),n('h2',p.label),n('p',p.description||'GitHub 项目'));
  const list=n('div','','detailsstats');
- list.append(dataLine('主分支',p.branch),dataLine('构建状态',repoHealthLabel(p.ci?.state)),dataLine('最近更新',isoAge(p.ci?.updatedAt)),dataLine('打开 Issues',p.openIssues??'未知'),dataLine('打开 PR',p.openPRs??'未知'),dataLine('Pages',siteLabel(p.site)));
+ list.append(dataLine('主分支',p.branch),dataLine('构建状态',repoHealthLabel(p.ci?.state)),dataLine('最近更新',isoAge(p.ci?.updatedAt)),dataLine('打开 Issues',p.openIssues??'未知'),dataLine('打开 PR',p.openPRs??'未知'),dataLine('Pages',siteLabel(p.site)),dataLine('在线 HTTP 资源',p.probe?.state==='reachable'?'网页与首批资源可达':p.probe?'探针状态：'+p.probe.state:'尚无检测数据'));
  if(p.maturity)list.append(dataLine('产品成熟度',p.maturity+'（仍需开发）'));if(p.isFork)list.append(dataLine('项目来源','Fork · '+(p.upstream||'GitHub 上游项目')));
  body.append(list);
  const links=n('div','','detailactions');links.append(link(p.url,'源代码 ↗'),link(p.ci?.url||ghUrl(p.name,'/actions'),'Actions ↗'),link(ghUrl(p.name,'/issues'),'Issues ↗'),link(ghUrl(p.name,'/pulls'),'PR ↗'));
