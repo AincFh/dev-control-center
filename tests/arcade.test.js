@@ -23,7 +23,7 @@ test('only known deployed entries display working-owned Pages links',()=>{
 test('search, filter and status control work independently',()=>{
  assert.ok(filterGames(GAMES,'餐馆','management').some(g=>g.repo==='cozy-bistro-sim'));
  assert.ok(filterGames(GAMES,'种田','life').some(g=>g.repo==='paradise-isle'));
- assert.equal(filterGames(GAMES,'','builder','playable').length,1);
+ assert.equal(filterGames(GAMES,'','builder','playable').length,2);
  assert.ok(filterGames(GAMES,'','all','playable').every(playableGame));
  assert.ok(filterGames(GAMES,'','all','fork').every(g=>g.source==='fork'));
 });
@@ -36,14 +36,14 @@ test('favorites get priority without mutating source manifest',()=>{
 });
 test('blocked games cannot inherit success from unrelated CI',()=>{
  const x=GAMES.find(x=>x.repo==='qubecraft');
- assert.equal(x.status,'blocked');
- assert.equal(playableGame(x),false);
- assert.equal(statusText(x.status),'发布受阻');
+ assert.equal(x.status,'playable');
+ assert.equal(playableGame(x),true);
+ assert.equal(statusText(x.status),'可玩 · 开发中');
  const metrics=arcadeStats();
  assert.equal(metrics.total,GAMES.length);
- assert.equal(metrics.playable,8);
+ assert.equal(metrics.playable,9);
  assert.equal(metrics.total,11);
  assert.ok(metrics.blocked>=1);
- for(const repo of ['Midnight-Factory','Tamagochi---Open-Source-Game','cimulity','City-of-Small-Chances']) assert.ok(playableGame(GAMES.find(g=>g.repo===repo)));
+ for(const repo of ['Midnight-Factory','Tamagochi---Open-Source-Game','cimulity','City-of-Small-Chances','qubecraft']) assert.ok(playableGame(GAMES.find(g=>g.repo===repo)));
  assert.equal(GAMES.find(g=>g.repo==='spacefortress').play,null,'space colony must stay unverified until deployment');
 });
