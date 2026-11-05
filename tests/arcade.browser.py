@@ -30,6 +30,12 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
     options.set_capability("goog:loggingPrefs",{"browser":"ALL"})
     driver=webdriver.Chrome(options=options)
     driver.set_page_load_timeout(45)
+    def click_visible(selector):
+        element=driver.find_element(By.CSS_SELECTOR,selector)
+        driver.execute_script("arguments[0].scrollIntoView({block:'center',inline:'nearest',behavior:'instant'})",element)
+        time.sleep(.12)
+        element.click()
+        return element
     try:
         driver.get(f"http://127.0.0.1:{server.server_address[1]}/")
         driver.execute_script("document.querySelector('#arcade').scrollIntoView()")
@@ -48,13 +54,13 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         assert driver.find_element(By.CSS_SELECTOR,"#arcadeGrid .arcade-card").get_attribute("data-game")=="bistro"
         search.clear()
         driver.execute_script("arguments[0].dispatchEvent(new Event('input',{bubbles:true}))",search)
-        driver.find_element(By.ID,"arcadePlayable").click()
+        click_visible("#arcadePlayable")
         count=len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))
         assert count==4, f"Playable filter expected 4, got {count}; search={search.get_attribute('value')!r}"
-        driver.find_element(By.ID,"arcadePlayable").click()
-        driver.find_element(By.CSS_SELECTOR,"#arcadeGenres button[data-genre='life']").click()
+        click_visible("#arcadePlayable")
+        click_visible("#arcadeGenres button[data-genre='life']")
         assert len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))>=2
-        driver.find_element(By.CSS_SELECTOR,"#arcadeGenres button[data-genre='all']").click()
+        click_visible("#arcadeGenres button[data-genre='all']")
         fav=driver.find_element(By.CSS_SELECTOR,"[data-game='paradise'] .arcade-favorite")
         fav.click()
         # Favorites re-render the entire card grid; requery the new DOM node.
