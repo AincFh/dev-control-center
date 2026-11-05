@@ -4,7 +4,7 @@
 
 访问 [ATLAS 游戏大厅](https://aincfh.github.io/dev-control-center/#arcade) —— 汇总多个独立游戏仓库。提供类型筛选、关键词搜索、仅看可试玩、浏览器本地收藏，以及直达每款游戏的源码和在线运行入口。所有入口都基于实际 GitHub Pages 部署记录核验；未发布或未通过 Playtest 的项目只给出源代码链接，不提供虚假的可玩按钮。游戏封面仅有注明的真实仓库截图，其余是主题动效，不冒充游戏实拍。
 
-目前已有 6 款经主分支 Pages 发布确认可试玩（新增《Mori 宠物日记》《午夜工厂》）。其中 MORI 在缺少 WebGL 的浏览器会自动显示安全降级画面。项目覆盖《日落餐馆》《天堂小岛》《山野钓行 NEXT》《湖光物语》《Qubecraft》《Cimulity》《Mori》《午夜工厂》《小城人生》《蔚蓝海岸》等 10 款独立项目。页面使用 `arcade.js` 的可测试注册表，另有 `tests/arcade.test.js` 和真实 Chrome 手机/桌面测试。
+目前已有 7 款经主分支 Pages 发布确认可试玩（另新增《Cimulity 城市模拟》）（新增《Mori 宠物日记》《午夜工厂》）。其中 MORI 在缺少 WebGL 的浏览器会自动显示安全降级画面。项目覆盖《日落餐馆》《天堂小岛》《山野钓行 NEXT》《湖光物语》《Qubecraft》《Cimulity》《Mori》《午夜工厂》《小城人生》《蔚蓝海岸》等 10 款独立项目。页面使用 `arcade.js` 的可测试注册表，另有 `tests/arcade.test.js` 和真实 Chrome 手机/桌面测试。
 
 
 公开只读的 GitHub 多项目开发控制台。已从纯仓库展示页升级为**真实构建状态、项目任务与交付监控**。
