@@ -41,9 +41,9 @@ test('blocked games cannot inherit success from unrelated CI',()=>{
  assert.equal(statusText(x.status),'可玩 · 开发中');
  const metrics=arcadeStats();
  assert.equal(metrics.total,GAMES.length);
- assert.equal(metrics.playable,9);
+ assert.equal(metrics.playable,10);
  assert.equal(metrics.total,11);
  assert.ok(metrics.blocked>=1);
- for(const repo of ['Midnight-Factory','Tamagochi---Open-Source-Game','cimulity','City-of-Small-Chances','qubecraft']) assert.ok(playableGame(GAMES.find(g=>g.repo===repo)));
- assert.equal(GAMES.find(g=>g.repo==='spacefortress').play,null,'space colony must stay unverified until deployment');
+ for(const repo of ['Midnight-Factory','Tamagochi---Open-Source-Game','cimulity','City-of-Small-Chances','qubecraft','spacefortress']) assert.ok(playableGame(GAMES.find(g=>g.repo===repo)));
+ assert.ok(playableGame(GAMES.find(g=>g.repo==='spacefortress')),'colony CI and independent Pages are now verified');
 });
