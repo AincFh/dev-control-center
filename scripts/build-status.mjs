@@ -1,4 +1,4 @@
-import {mkdir,copyFile,writeFile} from 'node:fs/promises';
+import {mkdir,copyFile,writeFile,readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {latestWorkflow,workflowState,safeRepositoryPath} from '../status.js';
@@ -52,13 +52,46 @@ async function describe(r){
   site:pages?.html_url&&pages?.status==='built'?{state:'published',url:pages.html_url}:{state:pages?.status==='building'?'building':pages?'not_published':'unknown',url:null}
  };
 }
+// Copy the actual relative module dependency graph, not a manually curated
+// list. A stale list once excluded arcade.js: CI was green, Pages deployed,
+// but app.js failed at runtime because the ES module returned 404.
+export async function copyFrontendModules(root,dest,entrypoints=['index.html','style.css','app.js','favicon.svg']){
+ const pending=[...entrypoints],copied=new Set();
+ while(pending.length){
+  const filename=pending.shift();
+  const normalized=path.posix.normalize(filename.replaceAll('\\','/'));
+  if(normalized.startsWith('../')||normalized.startsWith('/')||normalized==='..')
+    throw new Error('Refusing to bundle module outside project root: '+filename);
+  if(copied.has(normalized))continue;
+  const input=path.join(root,normalized),output=path.join(dest,normalized);
+  await mkdir(path.dirname(output),{recursive:true});
+  if(normalized.endsWith('.js')){
+   const source=await readFile(input,'utf8');
+   // Supports named imports, namespace imports, export-from and side-effect imports.
+   const imports=source.matchAll(/(?:\bfrom\s*|\bimport\s*)['"]((?:\.\/|\.\.\/)[^'"]+)['"]/g);
+   for(const m of imports){
+     const relative=path.posix.normalize(path.posix.join(path.posix.dirname(normalized),m[1]));
+     if(!relative.endsWith('.js'))throw new Error('Unsupported runtime ES import '+m[1]+' in '+normalized);
+     if(relative.startsWith('../')||relative.startsWith('/'))
+       throw new Error('Runtime import escaped project root: '+m[1]);
+     pending.push(relative);
+   }
+  }
+  await copyFile(input,output);
+  copied.add(normalized);
+ }
+ return [...copied];
+}
+
 async function main(){
  let repos;
  try{repos=await listRepos()}catch(e){console.error('Public repo discovery failed:',e.message);process.exitCode=1;return;}
  const projects=await mapLimited(repos,4,describe);
  const data={schemaVersion:2,owner:OWNER,generatedAt:new Date().toISOString(),source:'GitHub Actions / GitHub REST API',refreshIntervalMinutes:60,publicOnly:true,projects,errors};
  await mkdir(path.join(ROOT,'dist','data'),{recursive:true});
- for(const file of ['index.html','style.css','app.js','core.js','status.js','roadmap.js','discovery.js','favicon.svg'])await copyFile(path.join(ROOT,file),path.join(ROOT,'dist',file));
+ const copied=await copyFrontendModules(ROOT,path.join(ROOT,'dist'));
+ if(!copied.includes('arcade.js'))throw Error('Game arcade module missing from generated Pages artifact');
+ console.log('Bundled frontend files:',copied.join(', '));
  await writeFile(path.join(ROOT,'dist','data','status.json'),JSON.stringify(data,null,2));
  console.log('Public project snapshot:',projects.length,'repositories;',errors.length,'nonfatal API errors.');
 }
