@@ -47,7 +47,7 @@ function fromRepo(repo,st){
  p.branch=st?.defaultBranch||'main';p.upstream=CATALOG[repo.name]?.upstream||null;p.isFork=!!(repo.fork||st?.fork||p.upstream);return p;
 }
 function siteLabel(site){
- if(site?.state==='published')return site.source==='github_deployment'?'GitHub Pages · SHA 部署已证实':'GitHub Pages · API 已证实';
+ if(site?.state==='published')return site.source?.startsWith('github_deployment')?'GitHub Pages · 主分支部署已证实':'GitHub Pages · API 已证实';
  if(site?.state==='building')return 'GitHub Pages · 构建中';
  if(site?.state==='error')return 'GitHub Pages · 构建失败';
  return 'GitHub Pages · 暂无可核验证据';
@@ -61,7 +61,7 @@ function card(p){
  root.append(n('h3',p.label),n('p',p.description||'独立开发仓库。'));
  const sub=n('div','','projectmeta');
  sub.append(n('span','Issues '+(p.openIssues??'—')),n('span','PR '+(p.openPRs??'—')));if(p.maturity)sub.append(n('span',p.maturity,'prototype'));if(p.isFork)sub.append(n('span','上游署名保留','fork-label'));
- if(p.site.state==='published')sub.append(n('span',p.site.source==='github_deployment'?'● 部署证实':'● Pages 已发布','published'));
+ if(p.site.state==='published')sub.append(n('span',p.site.source?.startsWith('github_deployment')?'● 部署证实':'● Pages 已发布','published'));
  root.append(sub);
  const bottom=n('div','','cardbottom'),language=n('span',p.language,'language'),links=n('div','','cardlinks');
  links.append(link(p.url,'⌘'));if(p.preview)links.append(link(p.preview,'↗'));
