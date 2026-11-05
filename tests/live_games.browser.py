@@ -190,6 +190,20 @@ def run_factory(driver,check):
   state=WebDriverWait(driver,34).until(detected)
   return state
  check("bootstrap","真实工厂 Canvas、资金与建造菜单启动",scene)
+ def first_time_tutorial():
+  # The original game (inside its iframe) can overlay the building buttons
+  # with a floating tutorial banner 1.2 s after initialization.
+  # Dismiss it through the actual visible Skip button, not via DOM mutation
+  # or an internal game API. Older saved sessions may not show the banner.
+  banner=driver.find_element(By.ID,'tutorial-banner')
+  try:
+   WebDriverWait(driver,4).until(lambda d:banner.is_displayed())
+  except TimeoutException:
+   return "no-first-run-banner"
+  driver.find_element(By.ID,'tutorial-skip').click()
+  WebDriverWait(driver,12).until(lambda d:not banner.is_displayed())
+  return "dismissed-by-user-action"
+ check("tutorial","通过真实 Skip 按钮完成首次内置提示条，不遮挡建造操作",first_time_tutorial)
  def mine():
   button=driver.find_element(By.CSS_SELECTOR,'#build-panel button[data-id="mine"]')
   button.click()
