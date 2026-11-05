@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": "2026-11-05T10:05:45Z",
-  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42007634783",
+  "generatedAt": "2026-11-05T10:21:47Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42009542622",
   "source": "real_chromium_public_games",
   "browser": "Chromium / Selenium / fresh profile per game",
   "results": [
@@ -10,7 +10,7 @@
       "id": "bistro",
       "repo": "cozy-bistro-sim",
       "status": "pass",
-      "elapsedMs": 4013,
+      "elapsedMs": 11859,
       "checks": [
         {
           "id": "interaction",
@@ -49,7 +49,7 @@
       "id": "paradise",
       "repo": "paradise-isle",
       "status": "pass",
-      "elapsedMs": 2817,
+      "elapsedMs": 3465,
       "checks": [
         {
           "id": "bootstrap",
@@ -88,7 +88,7 @@
       "id": "wildlands",
       "repo": "wildlands-anglerfishing-world-3d",
       "status": "pass",
-      "elapsedMs": 8037,
+      "elapsedMs": 8118,
       "checks": [
         {
           "id": "webgl",
@@ -121,7 +121,7 @@
       "id": "fishing",
       "repo": "fishing-world-3d",
       "status": "pass",
-      "elapsedMs": 11886,
+      "elapsedMs": 15590,
       "checks": [
         {
           "id": "webgl",
@@ -154,7 +154,7 @@
       "id": "factory",
       "repo": "Midnight-Factory",
       "status": "pass",
-      "elapsedMs": 1984,
+      "elapsedMs": 2453,
       "checks": [
         {
           "id": "interaction",
@@ -193,7 +193,7 @@
       "id": "citylife",
       "repo": "City-of-Small-Chances",
       "status": "pass",
-      "elapsedMs": 37086,
+      "elapsedMs": 47057,
       "checks": [
         {
           "id": "webgl",
@@ -226,7 +226,7 @@
       "id": "mori",
       "repo": "Tamagochi---Open-Source-Game",
       "status": "pass",
-      "elapsedMs": 2093,
+      "elapsedMs": 12822,
       "checks": [
         {
           "id": "bootstrap",
@@ -249,6 +249,99 @@
         {
           "id": "save",
           "label": "实际刷新后宠物照料历史持久保存",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
+        }
+      ],
+      "message": ""
+    },
+    {
+      "id": "qube",
+      "repo": "qubecraft",
+      "status": "timeout",
+      "elapsedMs": 52947,
+      "checks": [
+        {
+          "id": "bootstrap",
+          "label": "实际进入世界管理器并配置独立创造模式存档",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "真实点击创建世界并完成体素沙盒运行初始化",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "save",
+          "label": "使用真实游戏菜单保存并返回世界列表，存档可重新找到",
+          "status": "timeout",
+          "reason": "TimeoutException: Message: "
+        }
+      ],
+      "message": "TimeoutException: Message: "
+    },
+    {
+      "id": "cimulity",
+      "repo": "cimulity",
+      "status": "timeout",
+      "elapsedMs": 15603,
+      "checks": [
+        {
+          "id": "bootstrap",
+          "label": "真正的城市模拟 Canvas、资金和工具栏完成初始化",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "真实点击暂停与恢复城市时间模拟",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "save",
+          "label": "真实打开并关闭城市存档管理器",
+          "status": "timeout",
+          "reason": "TimeoutException: Message: "
+        }
+      ],
+      "message": "TimeoutException: Message: "
+    },
+    {
+      "id": "spacefortress",
+      "repo": "spacefortress",
+      "status": "pass",
+      "elapsedMs": 48563,
+      "checks": [
+        {
+          "id": "bootstrap",
+          "label": "实际启动等距殖民地 Canvas、资源状态及地点信息",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "真实打开殖民地面板与操作手册并正确关闭",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "save",
+          "label": "真实使用浏览器存储保存殖民地并收到成功确认",
           "status": "pass",
           "reason": ""
         },
