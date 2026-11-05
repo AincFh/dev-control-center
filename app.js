@@ -46,6 +46,12 @@ function fromRepo(repo,st){
  p.site=st?.site||{state:'unknown',url:null};p.preview=p.site.state==='published'?p.site.url:null;p.maturity=CATALOG[repo.name]?.maturity||null;
  p.branch=st?.defaultBranch||'main';p.upstream=CATALOG[repo.name]?.upstream||null;p.isFork=!!(repo.fork||st?.fork||p.upstream);return p;
 }
+function siteLabel(site){
+ if(site?.state==='published')return site.source==='github_deployment'?'GitHub Pages · SHA 部署已证实':'GitHub Pages · API 已证实';
+ if(site?.state==='building')return 'GitHub Pages · 构建中';
+ if(site?.state==='error')return 'GitHub Pages · 构建失败';
+ return 'GitHub Pages · 暂无可核验证据';
+}
 function statPill(p){
  const val=p.ci?.state||'unknown';return n('span',repoHealthLabel(val),'ci ci-'+val);
 }
@@ -55,7 +61,7 @@ function card(p){
  root.append(n('h3',p.label),n('p',p.description||'独立开发仓库。'));
  const sub=n('div','','projectmeta');
  sub.append(n('span','Issues '+(p.openIssues??'—')),n('span','PR '+(p.openPRs??'—')));if(p.maturity)sub.append(n('span',p.maturity,'prototype'));if(p.isFork)sub.append(n('span','上游署名保留','fork-label'));
- if(p.site.state==='published')sub.append(n('span','● 已发布','published'));
+ if(p.site.state==='published')sub.append(n('span',p.site.source==='github_deployment'?'● 部署证实':'● Pages 已发布','published'));
  root.append(sub);
  const bottom=n('div','','cardbottom'),language=n('span',p.language,'language'),links=n('div','','cardlinks');
  links.append(link(p.url,'⌘'));if(p.preview)links.append(link(p.preview,'↗'));
@@ -239,7 +245,7 @@ function detailPanel(name){
  const p=projects.find(x=>x.name===name);if(!p)return;
  const body=$('detailBody');body.replaceChildren(n('div','PROJECT HEALTH / GITHUB','eyebrow'),n('h2',p.label),n('p',p.description||'GitHub 项目'));
  const list=n('div','','detailsstats');
- list.append(dataLine('主分支',p.branch),dataLine('构建状态',repoHealthLabel(p.ci?.state)),dataLine('最近更新',isoAge(p.ci?.updatedAt)),dataLine('打开 Issues',p.openIssues??'未知'),dataLine('打开 PR',p.openPRs??'未知'),dataLine('Pages',p.site?.state==='published'?'已发布':p.site?.state==='not_published'?'未发布':'未确认'));
+ list.append(dataLine('主分支',p.branch),dataLine('构建状态',repoHealthLabel(p.ci?.state)),dataLine('最近更新',isoAge(p.ci?.updatedAt)),dataLine('打开 Issues',p.openIssues??'未知'),dataLine('打开 PR',p.openPRs??'未知'),dataLine('Pages',siteLabel(p.site)));
  if(p.maturity)list.append(dataLine('产品成熟度',p.maturity+'（仍需开发）'));if(p.isFork)list.append(dataLine('项目来源','Fork · '+(p.upstream||'GitHub 上游项目')));
  body.append(list);
  const links=n('div','','detailactions');links.append(link(p.url,'源代码 ↗'),link(p.ci?.url||ghUrl(p.name,'/actions'),'Actions ↗'),link(ghUrl(p.name,'/issues'),'Issues ↗'),link(ghUrl(p.name,'/pulls'),'PR ↗'));
@@ -261,7 +267,7 @@ function detailPanel(name){
    if(prs.status==='fulfilled'){p.openPRs=prs.value.length;changed=true;}
    if(!changed)throw Error('公共 API 请求失败或被限流');
    outcome.textContent='已核验 '+new Date().toLocaleTimeString('zh-CN')+'；构建 '+repoHealthLabel(p.ci?.state)+' · Issue '+(p.openIssues??'未知')+' · PR '+(p.openPRs??'未知');
-   render();list.replaceChildren(dataLine('主分支',p.branch),dataLine('构建状态',repoHealthLabel(p.ci?.state)),dataLine('最近更新',isoAge(p.ci?.updatedAt)),dataLine('打开 Issues',p.openIssues??'未知'),dataLine('打开 PR',p.openPRs??'未知'),dataLine('Pages',p.site?.state==='published'?'已发布':'未确认'));
+   render();list.replaceChildren(dataLine('主分支',p.branch),dataLine('构建状态',repoHealthLabel(p.ci?.state)),dataLine('最近更新',isoAge(p.ci?.updatedAt)),dataLine('打开 Issues',p.openIssues??'未知'),dataLine('打开 PR',p.openPRs??'未知'),dataLine('Pages',siteLabel(p.site)));
   }catch(e){outcome.textContent='无法核验：'+e.message+'。保留此前快照，不将未知结果视为成功。';}
   finally{fresh.disabled=false;fresh.textContent='再次核验实时状态';}
  });
