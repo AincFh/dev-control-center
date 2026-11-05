@@ -56,6 +56,13 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         assert len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))>=2
         driver.find_element(By.CSS_SELECTOR,"#arcadeGenres button[data-genre='all']").click()
         fav=driver.find_element(By.CSS_SELECTOR,"[data-game='paradise'] .arcade-favorite")
+        # The arcade lives below multiple sticky full-screen panels; Selenium
+        # auto-scroll sometimes leaves the favorite button under the fixed
+        # HUD, reporting click-intercepted even though the UI works.
+        # Explicitly center it and click as a real user would.
+        driver.execute_script("arguments[0].scrollIntoView({behavior:'instant',block:'center',inline:'center'})",fav)
+        time.sleep(.4)
+        fav=driver.find_element(By.CSS_SELECTOR,"[data-game='paradise'] .arcade-favorite")
         fav.click()
         # Favorites re-render the entire card grid; requery the new DOM node.
         fav=driver.find_element(By.CSS_SELECTOR,"[data-game='paradise'] .arcade-favorite")
