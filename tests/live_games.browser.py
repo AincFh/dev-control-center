@@ -27,7 +27,7 @@ SITES={
  "factory":("Midnight-Factory","https://aincfh.github.io/Midnight-Factory/"),
  "citylife":("City-of-Small-Chances","https://aincfh.github.io/City-of-Small-Chances/"),
  "mori":("Tamagochi---Open-Source-Game","https://aincfh.github.io/Tamagochi---Open-Source-Game/"),
- "qube":("qubecraft","https://aincfh.github.io/qubecraft/"),
+ "qube":("qubecraft","https://aincfh.github.io/qubecraft/?touch=1"),
  "cimulity":("cimulity","https://aincfh.github.io/cimulity/"),
  "spacefortress":("spacefortress","https://aincfh.github.io/spacefortress/"),
 }
@@ -298,16 +298,29 @@ def run_qube(driver,check):
   assert status["canvas"]>390,status
   return status
  check("interaction","真实点击创建世界并完成体素沙盒运行初始化",create_and_enter)
- def save_and_quit():
-  ActionChains(driver).send_keys(Keys.ESCAPE).perform()
-  WebDriverWait(driver,18).until(lambda d:'show' in d.find_element(By.ID,'pause').get_attribute('class'))
-  driver.find_element(By.XPATH,"//div[@id='pause']//button[contains(., 'Save and quit')]").click()
-  wait_for(driver,"return window.blockhaven?.mode==='title'",35)
-  driver.find_element(By.CSS_SELECTOR,'#title .title-menu button').click()
-  WebDriverWait(driver,20).until(lambda d:d.find_elements(By.CSS_SELECTOR,'#worlds .world-row'))
-  assert driver.find_elements(By.CSS_SELECTOR,'#worlds .world-row')
+ def open_pause():
+  # ?touch=1 is the public game's documented built-in touch mode.
+  # On CI Chromium without pointer lock, Esc does not open the pause menu.
+  # Use the game's actual visible "Pause" touch control instead of
+  # programmatically invoking its menu methods or synthesizing a success.
+  btn=WebDriverWait(driver,20).until(lambda d:
+   d.find_element(By.CSS_SELECTOR,'#touch [data-a="pause"]')
+   if d.find_element(By.CSS_SELECTOR,'#touch').get_attribute('class').find('show')>=0 else False)
+  assert btn.is_displayed(),"Actual pause button must be visible"
+  btn.click()
+  WebDriverWait(driver,20).until(lambda d:'show' in d.find_element(By.ID,'pause').get_attribute('class'))
   return True
- check("save","使用真实游戏菜单保存并返回世界列表，存档可重新找到",save_and_quit)
+ check("pause","真实点击游戏内置触控暂停按钮显示暂停菜单",open_pause)
+ def save_and_quit():
+  driver.find_element(By.XPATH,"//div[@id='pause']//button[contains(., 'Save and quit')]").click()
+  wait_for(driver,"return window.blockhaven?.mode==='title'",60)
+  WebDriverWait(driver,15).until(lambda d:'show' in d.find_element(By.ID,'title').get_attribute('class'))
+  driver.find_element(By.CSS_SELECTOR,'#title .title-menu button').click()
+  WebDriverWait(driver,30).until(lambda d:
+   any('ATLAS QA / Creative' in row.text for row in d.find_elements(By.CSS_SELECTOR,'#worlds .world-row')))
+  assert any('ATLAS QA / Creative' in row.text for row in driver.find_elements(By.CSS_SELECTOR,'#worlds .world-row'))
+  return True
+ check("save","实际保存退出并验证刚创建的独立世界仍在列表",save_and_quit)
  check("mobile",LABELS["mobile"],lambda:assert_mobile(driver))
 
 def run_cimulity(driver,check):
@@ -327,7 +340,9 @@ def run_cimulity(driver,check):
   driver.find_element(By.CSS_SELECTOR,'.city-desktop-vault').click()
   assert WebDriverWait(driver,12).until(lambda d:d.find_element(By.CSS_SELECTOR,'.city-vault-dialog').is_displayed())
   driver.find_element(By.CSS_SELECTOR,'.city-vault-close').click()
-  WebDriverWait(driver,10).until(lambda d:not d.find_element(By.CSS_SELECTOR,'.city-vault-dialog').is_displayed())
+  # React removes the modal subtree when onClose sets vaultOpen=false.
+  # Selenium find_element() would raise NoSuchElement forever here.
+  WebDriverWait(driver,12).until(lambda d:len(d.find_elements(By.CSS_SELECTOR,'.city-vault-dialog'))==0)
   return True
  check("save","真实打开并关闭城市存档管理器",vault)
  def mobile_tools():
