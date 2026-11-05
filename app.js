@@ -2,6 +2,7 @@ import {normalize,filtered,sorted,summary,ago} from './core.js';
 import {summarizeHealth,repoHealthLabel,isoAge,workflowState,latestWorkflow} from './status.js';
 import {trackedWorkstreams,readiness} from './roadmap.js';
 import {DISCOVERY,GENRES,searchDiscovery,discoverySummary} from './discovery.js';
+import {GAMES,GAME_GENRES,filterGames,sortGames,playableGame,arcadeStats,statusText} from './arcade.js';
 const OWNER='AincFh', API='https://api.github.com';
 const CATALOG={
  'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,description:'多项目状态、开发任务与交付管理'},
@@ -61,7 +62,7 @@ function render(){
  const h=summarizeHealth(projects),s=summary(projects);
  $('total').textContent=s.total;$('live').textContent=h.success;$('active').textContent=h.failure+h.running;
  $('syncCaption').textContent=(h.failure?'失败 '+h.failure+' · ':'')+'运行中 '+h.running+' · 未知 '+h.unknown;
- renderWorkstreams();renderDelivery(h);renderQueue();renderDiscovery();
+ renderWorkstreams();renderArcade();renderDelivery(h);renderQueue();renderDiscovery();
 }
 function renderWorkstreams(){
  const holder=$('workstreamGrid');if(!holder)return;holder.replaceChildren();
@@ -80,6 +81,78 @@ function renderWorkstreams(){
   if(!t.known)box.append(n('span','尚未在公开仓库索引中识别到此项目','workstream-unseen'));
   box.append(actions);holder.append(box);
  }
+}
+
+const arcadeChoice={genre:'all',query:'',mode:'all'};
+function favoriteGames(){
+ try{
+  const saved=JSON.parse(localStorage.getItem('atlas-game-favorites-v1')||'[]');
+  return Array.isArray(saved)?saved.filter(x=>typeof x==='string'&&GAMES.some(g=>g.id===x)).slice(0,20):[];
+ }catch{return []}
+}
+let arcadeFavorites=favoriteGames();
+function toggleGameFavorite(id){
+ if(arcadeFavorites.includes(id))arcadeFavorites=arcadeFavorites.filter(x=>x!==id);
+ else arcadeFavorites=[...arcadeFavorites,id];
+ try{localStorage.setItem('atlas-game-favorites-v1',JSON.stringify(arcadeFavorites))}catch{}
+ renderArcade();
+}
+function renderArcade(){
+ const grid=$('arcadeGrid');if(!grid)return;
+ const entries=sortGames(filterGames(GAMES,arcadeChoice.query,arcadeChoice.genre,arcadeChoice.mode),arcadeFavorites);
+ const stats=arcadeStats();
+ $('arcadeCount').textContent=entries.length+' 款展示 / '+stats.playable+' 款已确认有独立试玩入口 / '+stats.blocked+' 款暂未通过发布门槛';
+ grid.replaceChildren();
+ if(!entries.length){grid.append(n('div','没有匹配的游戏，试着清除筛选。','placeholder'));return}
+ for(const item of entries){
+  const root=n('article','','arcade-card');
+  root.dataset.game=item.id;
+  const stage=n('div','','arcade-art arcade-art-'+item.art);
+  stage.setAttribute('aria-label',item.title+'游戏封面');
+  if(item.cover){
+   const img=n('img','','arcade-cover');
+   img.src=item.cover;img.alt=item.title+'的仓库截图';img.loading='lazy';
+   img.onerror=()=>img.remove();
+   stage.append(img);
+  }
+  const vignette=n('div','','arcade-art-vignette');
+  vignette.append(n('span',item.english,'arcade-art-name'),n('span',item.tag,'arcade-art-sub'));
+  stage.append(vignette);
+  const fav=n('button',arcadeFavorites.includes(item.id)?'★':'☆','arcade-favorite');
+  fav.type='button';fav.title=arcadeFavorites.includes(item.id)?'取消收藏':'收藏游戏';fav.setAttribute('aria-label',fav.title);
+  fav.setAttribute('aria-pressed',String(arcadeFavorites.includes(item.id)));
+  fav.addEventListener('click',()=>toggleGameFavorite(item.id));
+  stage.append(fav);root.append(stage);
+  const info=n('div','','arcade-info');
+  const status=n('div','','arcade-status');
+  status.append(n('span',statusText(item.status),'arcade-state '+item.status));
+  status.append(n('span',item.source==='fork'?'独立 Fork · 保留原作者':'原创项目','arcade-origin'));
+  info.append(status,n('h3',item.title),n('p',item.summary,'arcade-summary'));
+  const foot=n('div','','arcade-actions');
+  const repoURL=ghUrl(item.repo);
+  if(playableGame(item))foot.append(link(item.play,'进入游戏 ↗','arcade-play'));
+  else foot.append(n('span',item.status==='blocked'?'发布检查未通过':'试玩部署尚未核验','arcade-disabled'));
+  foot.append(link(repoURL,'查看代码 ↗','arcade-source'));
+  info.append(foot);root.append(info);
+  grid.append(root);
+ }
+}
+function initArcade(){
+ const filters=$('arcadeGenres');if(!filters)return;
+ for(const genre of GAME_GENRES){
+  const button=n('button',genre.label,arcadeChoice.genre===genre.id?'selected':'');
+  button.type='button';button.dataset.genre=genre.id;
+  button.addEventListener('click',()=>{arcadeChoice.genre=genre.id;
+   filters.querySelectorAll('button').forEach(x=>x.classList.toggle('selected',x===button));renderArcade()});
+  filters.append(button);
+ }
+ const search=$('arcadeSearch');
+ const applySearch=e=>{arcadeChoice.query=e.target.value;renderArcade()};
+ search.addEventListener('input',applySearch);
+ search.addEventListener('search',applySearch);
+ search.addEventListener('change',applySearch);
+ $('arcadePlayable').addEventListener('change',e=>{arcadeChoice.mode=e.target.checked?'playable':'all';renderArcade()});
+ renderArcade();
 }
 
 const libraryChoice={genre:'all',query:''};
@@ -215,4 +288,4 @@ $('query').addEventListener('input',e=>{selection.query=e.target.value;render()}
 $('sort').addEventListener('change',e=>{selection.sort=e.target.value;render()});
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;selection.type=b.dataset.type;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x===b));render();});
 $('reset').onclick=()=>{selection.query='';selection.type='all';$('query').value='';document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.type==='all'));render();};
-$('refresh').onclick=load;initDiscovery();load();
+$('refresh').onclick=load;initDiscovery();initArcade();load();

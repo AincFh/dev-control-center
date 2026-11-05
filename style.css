@@ -71,3 +71,53 @@
 @media(max-width:1390px){.discovery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:1000px){.discovery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:630px){.discovery-grid{grid-template-columns:1fr}.discovery-section{margin:30px 0}.discovery-card{min-height:185px}.discovery-card h3{font-size:14px}}
+
+
+/* ATLAS / playable game arcade — separate from GitHub discovery */
+.arcade-section{margin:42px 0 60px;padding:25px 28px 30px;background:linear-gradient(155deg,rgba(32,48,65,.53),rgba(11,19,30,.87));border:1px solid rgba(162,196,216,.13);border-radius:25px;position:relative;overflow:hidden}
+.arcade-section:before{content:"";pointer-events:none;position:absolute;top:-160px;right:-120px;width:470px;height:470px;border-radius:50%;background:radial-gradient(circle,rgba(83,147,159,.12),transparent 67%)}
+.arcade-intro{font-size:13px;line-height:1.85;color:#9fb1bb;max-width:920px;margin:2px 0 20px}
+.arcade-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:16px 0}
+.arcade-search{display:flex;align-items:center;gap:11px;border:1px solid rgba(180,209,222,.18);background:rgba(7,16,25,.55);padding:11px 14px;border-radius:12px;min-width:225px;max-width:370px;flex:1}
+.arcade-search span{font-size:22px;color:#7f9ba8}.arcade-search input{color:#eef6ff;background:transparent;border:0;outline:0;width:100%;font-size:13px}.arcade-search input::placeholder{color:#6f8795}
+.arcade-only{font-size:12px;color:#b5c7ce;display:flex;align-items:center;gap:9px;cursor:pointer;white-space:nowrap}.arcade-only input{accent-color:#a7d8bf;cursor:pointer}
+.arcade-filters{display:flex;flex-wrap:wrap;gap:6px}.arcade-filters button{background:rgba(12,24,33,.65);color:#a9bec8;border:1px solid rgba(174,201,211,.12);padding:9px 12px;border-radius:10px;font-size:12px;transition:background .2s,color .2s}.arcade-filters button:hover{color:#fff;background:#253b46}.arcade-filters button.selected{background:rgba(144,199,167,.16);border-color:rgba(165,222,189,.42);color:#d0f1da}
+.arcade-count{font-size:11px;letter-spacing:.05em;color:#8ea1ad;margin:13px 0 14px}
+.arcade-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.arcade-card{min-width:0;overflow:hidden;position:relative;border-radius:18px;border:1px solid rgba(171,202,206,.17);background:#141f29;display:flex;flex-direction:column;transition:transform .28s cubic-bezier(.2,.85,.25,1),border-color .3s,box-shadow .3s;box-shadow:0 7px 24px rgba(2,10,18,.13)}
+.arcade-card:hover{transform:translateY(-4px);border-color:rgba(193,238,213,.35);box-shadow:0 18px 44px rgba(2,10,19,.38)}
+.arcade-art{height:165px;width:100%;position:relative;overflow:hidden;background:#213c48;isolation:isolate}
+.arcade-art:before{content:"";position:absolute;inset:-20%;background:linear-gradient(120deg,transparent 25%,rgba(255,255,255,.10) 48%,transparent 60%);transform:translateX(-90%);animation:arcadeSweep 14s linear infinite;z-index:1;pointer-events:none}
+@keyframes arcadeSweep{0%,65%{transform:translateX(-110%)}100%{transform:translateX(130%)}}
+.arcade-cover{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;filter:saturate(.90) contrast(1.03);transition:transform .8s cubic-bezier(.16,.75,.22,1)}
+.arcade-card:hover .arcade-cover{transform:scale(1.06)}
+.arcade-art-bistro{background:radial-gradient(circle at 23% 37%,#e3ad77 1%,transparent 28%),radial-gradient(circle at 83% 66%,#8e493c 0%,transparent 35%),linear-gradient(140deg,#513d43,#a07058 56%,#443f3c)}
+.arcade-art-bistro:after{content:"";position:absolute;width:78%;height:42%;bottom:-25%;left:11%;border:7px solid rgba(240,212,163,.14);border-radius:50%;box-shadow:0 0 55px rgba(245,172,102,.14)}
+.arcade-art-lake,.arcade-art-lake2{background:radial-gradient(ellipse at 70% -5%,#c3b88b 1%,transparent 32%),linear-gradient(178deg,#526b6f 0%,#394f52 43%,#18394e 44%,#0c232e 100%)}
+.arcade-art-lake:after,.arcade-art-lake2:after{content:"";position:absolute;bottom:16%;width:110%;height:12%;background:repeating-linear-gradient(0deg,rgba(196,224,224,.15),rgba(255,255,255,.03) 2px,transparent 3px,transparent 10px);transform:rotate(-3deg);animation:lakeRise 5s ease-in-out infinite alternate}
+@keyframes lakeRise{from{translate:-4px 0}to{translate:6px 6px}}
+.arcade-art-voxel{background:linear-gradient(145deg,#b3a2c1,#587c7d 42%,#23424a)}
+.arcade-art-city{background:linear-gradient(135deg,#384560,#686e7b 47%,#182a33)}
+.arcade-art-island{background:linear-gradient(130deg,#a6ae72,#466b61 52%,#1e3d50)}
+.arcade-art-pet{background:radial-gradient(circle at 52% 45%,#af90bb,transparent 44%),linear-gradient(150deg,#574965,#242f47)}
+.arcade-art-factory{background:linear-gradient(125deg,#373743,#754b3f 57%,#1f2532)}
+.arcade-art-citylife{background:linear-gradient(140deg,#686a67,#425968 56%,#1e303d)}
+.arcade-art-coast{background:linear-gradient(130deg,#96aca6,#38657c 50%,#213c5a)}
+.arcade-art-vignette{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:end;padding:23px 21px 15px;background:linear-gradient(transparent 19%,rgba(4,15,21,.73));z-index:2;pointer-events:none}
+.arcade-art-name{font-size:20px;letter-spacing:.08em;line-height:1.15;font-weight:800;color:#f5f7f5;text-shadow:0 3px 14px #0009}
+.arcade-art-sub{font-size:10px;letter-spacing:.12em;color:#d9ece7;margin-top:6px}
+.arcade-favorite{position:absolute;z-index:3;right:12px;top:12px;font-size:21px;line-height:1;border:1px solid rgba(245,250,247,.3);color:#f6eacc;background:rgba(4,13,19,.59);border-radius:10px;width:35px;height:35px;display:grid;place-items:center;backdrop-filter:blur(10px)}
+.arcade-favorite:hover{background:#2c4046}
+.arcade-info{display:flex;flex-direction:column;flex:1;padding:16px 17px 18px;gap:10px}
+.arcade-status{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;font-size:10px}
+.arcade-state{font-weight:750;letter-spacing:.02em;color:#c0e4c7}.arcade-state.prototype{color:#b7c8ed}.arcade-state.blocked{color:#ebae9e}.arcade-state.unverified{color:#a4b3c2}
+.arcade-origin{color:#8196a3}.arcade-info h3{margin:0;font-size:17px;font-weight:750;color:#eff8f3}.arcade-summary{font-size:12px;line-height:1.7;color:#a9bbc5;min-height:57px;margin:0}
+.arcade-actions{margin-top:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:4px}
+.arcade-play{padding:10px 12px;background:linear-gradient(145deg,#bbdbc3,#8cbaab);color:#14282a;border-radius:10px;font-size:11px;font-weight:800;transition:transform .15s,filter .15s}
+.arcade-play:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.arcade-source{font-size:11px;color:#bed1da;letter-spacing:.03em}.arcade-source:hover{color:#fff}
+.arcade-disabled{font-size:10px;color:#8499a4;background:rgba(255,255,255,.055);border:1px solid rgba(160,187,196,.12);padding:9px;border-radius:10px}
+.arcade-footnote{margin-top:16px;font-size:10px;line-height:1.8;color:#788c9a}
+@media(max-width:1260px){.arcade-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.arcade-search{min-width:210px}}
+@media(max-width:700px){.arcade-section{padding:19px 15px 22px;margin:26px 0 40px;border-radius:18px}.arcade-grid{grid-template-columns:1fr}.arcade-art{height:172px}.arcade-toolbar{gap:10px}.arcade-search{max-width:none;flex-basis:100%}.arcade-filters{gap:5px}.arcade-filters button{padding:8px 10px}.arcade-summary{min-height:0}}
+@media(prefers-reduced-motion:reduce){.arcade-art:before,.arcade-art-lake:after,.arcade-art-lake2:after{animation:none}.arcade-card,.arcade-cover{transition:none}}
