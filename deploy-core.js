@@ -50,3 +50,17 @@ export function applyDeploymentEvidence(trace,lookups=[]){
  const byNumber=new Map(lookups.filter(x=>x&&Number.isInteger(x.prNumber)).map(x=>[x.prNumber,x.evidence]));
  return{...trace,prs:trace.prs.map(p=>p.state==='merged'?{...p,deployment:byNumber.get(p.number)||null}:p)};
 }
+
+
+// Repo-level evidence is independent of whether a PR exists. Verify default
+// branch and most recent GitHub Pages deployment, never infer via URL alone.
+export function planBranchDeployment(records=[],owner='AincFh',repo='dev-control-center',branch='main'){
+ if(!NAME.test(owner)||!NAME.test(repo)||!NAME.test(branch)||!Array.isArray(records))return null;
+ const matching=records.filter(d=>Number.isSafeInteger(d?.id)&&d.id>0&&
+  d.environment==='github-pages'&&d.ref===branch&&SHA.test(d.sha||''));
+ matching.sort((a,b)=>(Date.parse(b.created_at||'')||0)-(Date.parse(a.created_at||'')||0));
+ const record=matching[0];if(!record)return null;
+ return{id:record.id,sha:record.sha,ref:branch,environment:'github-pages',
+  recordUrl:'https://github.com/'+owner+'/'+repo+'/deployments/'+record.id,
+  createdAt:record.created_at||null};
+}
