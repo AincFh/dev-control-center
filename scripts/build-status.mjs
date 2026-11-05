@@ -2,6 +2,7 @@ import {mkdir,copyFile,writeFile,readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {latestWorkflow,workflowState,safeRepositoryPath} from '../status.js';
+import {deploymentVersion,fingerprintDist} from './asset-version.mjs';
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const OWNER='AincFh', API='https://api.github.com', TOKEN=process.env.GITHUB_TOKEN||'';
 const exclude=process.env.GITHUB_RUN_ID, currentRepo=process.env.GITHUB_REPOSITORY||'';
@@ -92,6 +93,9 @@ async function main(){
  const copied=await copyFrontendModules(ROOT,path.join(ROOT,'dist'));
  if(!copied.includes('arcade.js'))throw Error('Game arcade module missing from generated Pages artifact');
  if(!copied.includes('atlas-v3.css'))throw Error('V3 workspace stylesheet missing from generated Pages artifact');
+ const buildTag=deploymentVersion({sha:process.env.GITHUB_SHA||'',runId:process.env.GITHUB_RUN_ID||''});
+ await fingerprintDist(path.join(ROOT,'dist'),copied,buildTag);
+ console.log('Static assets fingerprint:',buildTag);
  console.log('Bundled frontend files:',copied.join(', '));
  await writeFile(path.join(ROOT,'dist','data','status.json'),JSON.stringify(data,null,2));
  console.log('Public project snapshot:',projects.length,'repositories;',errors.length,'nonfatal API errors.');
