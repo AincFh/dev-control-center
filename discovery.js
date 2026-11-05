@@ -10,14 +10,14 @@ export const DISCOVERY=[
  {title:'IsoCity / IsoCoaster',genre:'builder',origin:'amilich/isometric-city',forkName:null,license:'MIT',play:'https://iso-city.com/',stack:'Next.js · Canvas',description:'等距城市模拟；同项目还提供游乐园设计、轨道与游客管理',priority:2},
  {title:'3d.city · 3D 城市建造',genre:'builder',origin:'lo-th/3d.city',forkName:null,license:'需单独核验',play:null,stack:'JavaScript · WebGL',description:'浏览器 3D 城市建设，使用 Micropolis 模拟与 Three.js 渲染',priority:2},
  {title:'Mynecraft · 3D 沙盒',genre:'survival',origin:'zimkk/mynecraft',forkName:null,license:'MIT',play:null,stack:'TypeScript · Three.js',description:'地形、洞穴、怪物、工具合成、地下世界与存档',priority:2},
- {title:'City of Small Chances',genre:'life',origin:'Mon-ius/City-of-Small-Chances',forkName:null,license:'MIT',play:'https://mon-ius.github.io/City-of-Small-Chances/',stack:'JavaScript · Three.js',description:'在城市生活、工作、培养关系、应对经济压力的 3D 人生模拟',priority:2},
+ {title:'City of Small Chances',genre:'life',origin:'Mon-ius/City-of-Small-Chances',forkName:'City-of-Small-Chances',license:'MIT',play:'https://mon-ius.github.io/City-of-Small-Chances/',stack:'JavaScript · Three.js',description:'在城市生活、工作、培养关系、应对经济压力的 3D 人生模拟',priority:2},
  {title:'Lifesim · 人生轨迹',genre:'life',origin:'thaihuynhatquang/life-sim',forkName:null,license:'需单独核验',play:'https://life-sim.quangthn.net/',stack:'TypeScript · Browser',description:'基于现实概率的人生抉择、教育、事业、家庭与代际经营',priority:2},
- {title:'Spacefortress · 太空基地',genre:'industry',origin:'Jaredcastorena/spacefortress',forkName:null,license:'MIT',play:null,stack:'JavaScript · Canvas',description:'空间基地、船员、氧气、能源、物流和轨道任务',priority:2},
+ {title:'Spacefortress · 太空基地',genre:'industry',origin:'Jaredcastorena/spacefortress',forkName:'spacefortress',license:'MIT',play:null,stack:'JavaScript · Canvas',description:'空间基地、船员、氧气、能源、物流和轨道任务',priority:2},
  {title:'Lunaris · 月球殖民',genre:'industry',origin:'jacko555/lunaris',forkName:null,license:'代码与素材分开核验',play:'https://jacko555.github.io/lunaris/',stack:'TypeScript · Simulation',description:'月球基地、资源补给、生命维持、生产链与任务决策',priority:2},
  {title:'Kingdom Architect',genre:'builder',origin:'trymnilsen/kingdomarchitect',forkName:null,license:'需单独核验',play:'https://kingdomarchitect.netlify.app/',stack:'TypeScript · Canvas',description:'中古小镇建造、资源采集、英雄与怪物防御',priority:3},
  {title:'Little Apartment, Big City',genre:'life',origin:'TechProGabe/little-apartment-big-city',forkName:null,license:'需单独核验',play:null,stack:'Tauri · React',description:'像素城市打工、交友、装饰公寓与日常生活的桌面游戏',priority:3},
  {title:'OpenRP · 城市生活 RP',genre:'survival',origin:'DevanMetz/openrp',forkName:null,license:'MIT',play:'https://openrp.dev/',stack:'Three.js · Node.js',description:'多人城市、职业、商店、物理物件与房产玩法，需后端服务器',priority:3},
- {title:'Squiffy · 互动故事',genre:'stories',origin:'textadventures/squiffy',forkName:null,license:'MIT',play:'https://app.squiffystory.com/',stack:'TypeScript · PWA',description:'可自行创作选项剧情、文字冒险与多结局故事',priority:3}
+ {title:'Squiffy · 互动故事',genre:'stories',origin:'textadventures/squiffy',forkName:'squiffy',license:'MIT',play:'https://app.squiffystory.com/',stack:'TypeScript · PWA',description:'可自行创作选项剧情、文字冒险与多结局故事',priority:3}
 ];
 export const GENRES=[
  {id:'all',label:'全部'},

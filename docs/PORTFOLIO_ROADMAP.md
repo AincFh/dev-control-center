@@ -24,6 +24,6 @@
 
 ## 2026-11-05 开源游戏引入计划
 
-已建立 5 个保留原始项目来源、MIT 许可的独立 Fork，分别是天堂小岛、Cimulity、QubeCraft、虚拟宠物和 Midnight Factory。除明确说明的修改外，所有已有玩法与美术来自上游作者，不能声称属于 ATLAS 原创。浏览器实验室另有 12 个参考项目，其中许可未核验者只供调研。
+现已建立 8 个保留原始项目来源、MIT 许可的独立 Fork：天堂小岛、Cimulity、QubeCraft、虚拟宠物、Midnight Factory、Spacefortress、City of Small Chances、Squiffy。除明确说明的修改外，所有已有玩法与美术来自上游作者，不能声称属于 ATLAS 原创。浏览器实验室另有 9 个参考项目，其中许可未核验者只供调研。
 
 优先顺序：先完成 Fork 的独立 CI / Pages 验证和版本变更日志，再补充原创功能。大型工程（城市/体素）必须保留许可证与资产来源记录，不直接并入已有游戏仓库。
