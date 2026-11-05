@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": "2026-11-05T11:04:23Z",
-  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42015510367",
+  "generatedAt": "2026-11-05T11:22:17Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42018072064",
   "source": "real_chromium_public_games",
   "browser": "Chromium / Selenium / fresh profile per game",
   "results": [
@@ -10,7 +10,7 @@
       "id": "bistro",
       "repo": "cozy-bistro-sim",
       "status": "pass",
-      "elapsedMs": 6087,
+      "elapsedMs": 13102,
       "checks": [
         {
           "id": "interaction",
@@ -43,13 +43,22 @@
           "reason": ""
         }
       ],
-      "message": ""
+      "message": "",
+      "screenshots": [
+        "bistro-game.png",
+        "bistro-mobile.png"
+      ],
+      "navigation": {
+        "domContentLoadedMs": 61,
+        "loadEventMs": 61,
+        "resourceCount": 6
+      }
     },
     {
       "id": "paradise",
       "repo": "paradise-isle",
       "status": "pass",
-      "elapsedMs": 3331,
+      "elapsedMs": 3491,
       "checks": [
         {
           "id": "bootstrap",
@@ -82,13 +91,22 @@
           "reason": ""
         }
       ],
-      "message": ""
+      "message": "",
+      "screenshots": [
+        "paradise-game.png",
+        "paradise-mobile.png"
+      ],
+      "navigation": {
+        "domContentLoadedMs": 58,
+        "loadEventMs": 59,
+        "resourceCount": 2
+      }
     },
     {
       "id": "wildlands",
       "repo": "wildlands-anglerfishing-world-3d",
       "status": "pass",
-      "elapsedMs": 7686,
+      "elapsedMs": 14845,
       "checks": [
         {
           "id": "webgl",
@@ -115,13 +133,22 @@
           "reason": ""
         }
       ],
-      "message": ""
+      "message": "",
+      "screenshots": [
+        "wildlands-game.png",
+        "wildlands-mobile.png"
+      ],
+      "navigation": {
+        "domContentLoadedMs": 1101,
+        "loadEventMs": 3085,
+        "resourceCount": 43
+      }
     },
     {
       "id": "fishing",
       "repo": "fishing-world-3d",
       "status": "pass",
-      "elapsedMs": 4982,
+      "elapsedMs": 14682,
       "checks": [
         {
           "id": "webgl",
@@ -148,13 +175,22 @@
           "reason": ""
         }
       ],
-      "message": ""
+      "message": "",
+      "screenshots": [
+        "fishing-game.png",
+        "fishing-mobile.png"
+      ],
+      "navigation": {
+        "domContentLoadedMs": 7540,
+        "loadEventMs": 7541,
+        "resourceCount": 8
+      }
     },
     {
       "id": "factory",
       "repo": "Midnight-Factory",
-      "status": "pass",
-      "elapsedMs": 2188,
+      "status": "fail",
+      "elapsedMs": 4076,
       "checks": [
         {
           "id": "interaction",
@@ -171,29 +207,22 @@
         {
           "id": "build",
           "label": "实际选择并取消矿机建造工具",
-          "status": "pass",
-          "reason": ""
-        },
-        {
-          "id": "mobile",
-          "label": "390px 手机视口没有水平溢出",
-          "status": "pass",
-          "reason": ""
-        },
-        {
-          "id": "console",
-          "label": "没有未捕获的第一方脚本错误",
-          "status": "pass",
-          "reason": ""
+          "status": "fail",
+          "reason": "ElementClickInterceptedException: Message: element click intercepted: Element <button class=\"build-btn\" data-id=\"mine\" data-req=\"\">...</button> is not clickable at point (540, 626). Other element would receive the click:"
         }
       ],
-      "message": ""
+      "message": "ElementClickInterceptedException: Message: element click intercepted: Element <button class=\"build-btn\" data-id=\"mine\" data-req=\"\">...</button> is not clickable at point (540, 626). Other element would receive the click: <div id=\"tutorial-banner\" style=\"display: block; position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%); z-index: ",
+      "screenshots": [
+        "factory-game.png",
+        "factory-failure.png"
+      ],
+      "navigation": null
     },
     {
       "id": "citylife",
       "repo": "City-of-Small-Chances",
       "status": "pass",
-      "elapsedMs": 46398,
+      "elapsedMs": 30515,
       "checks": [
         {
           "id": "webgl",
@@ -220,13 +249,22 @@
           "reason": ""
         }
       ],
-      "message": ""
+      "message": "",
+      "screenshots": [
+        "citylife-game.png",
+        "citylife-mobile.png"
+      ],
+      "navigation": {
+        "domContentLoadedMs": 1014,
+        "loadEventMs": 3912,
+        "resourceCount": 127
+      }
     },
     {
       "id": "mori",
       "repo": "Tamagochi---Open-Source-Game",
       "status": "pass",
-      "elapsedMs": 2684,
+      "elapsedMs": 7557,
       "checks": [
         {
           "id": "bootstrap",
@@ -265,13 +303,22 @@
           "reason": ""
         }
       ],
-      "message": ""
+      "message": "",
+      "screenshots": [
+        "mori-game.png",
+        "mori-mobile.png"
+      ],
+      "navigation": {
+        "domContentLoadedMs": 49,
+        "loadEventMs": 51,
+        "resourceCount": 9
+      }
     },
     {
       "id": "qube",
       "repo": "qubecraft",
       "status": "pass",
-      "elapsedMs": 34526,
+      "elapsedMs": 36015,
       "checks": [
         {
           "id": "bootstrap",
@@ -310,13 +357,22 @@
           "reason": ""
         }
       ],
-      "message": ""
+      "message": "",
+      "screenshots": [
+        "qube-game.png",
+        "qube-mobile.png"
+      ],
+      "navigation": {
+        "domContentLoadedMs": 624,
+        "loadEventMs": 904,
+        "resourceCount": 19
+      }
     },
     {
       "id": "cimulity",
       "repo": "cimulity",
       "status": "pass",
-      "elapsedMs": 3887,
+      "elapsedMs": 5639,
       "checks": [
         {
           "id": "bootstrap",
@@ -349,13 +405,22 @@
           "reason": ""
         }
       ],
-      "message": ""
+      "message": "",
+      "screenshots": [
+        "cimulity-game.png",
+        "cimulity-mobile.png"
+      ],
+      "navigation": {
+        "domContentLoadedMs": 367,
+        "loadEventMs": 577,
+        "resourceCount": 20
+      }
     },
     {
       "id": "spacefortress",
       "repo": "spacefortress",
       "status": "pass",
-      "elapsedMs": 53309,
+      "elapsedMs": 16471,
       "checks": [
         {
           "id": "bootstrap",
@@ -388,7 +453,16 @@
           "reason": ""
         }
       ],
-      "message": ""
+      "message": "",
+      "screenshots": [
+        "spacefortress-game.png",
+        "spacefortress-mobile.png"
+      ],
+      "navigation": {
+        "domContentLoadedMs": 1168,
+        "loadEventMs": 1168,
+        "resourceCount": 138
+      }
     }
   ],
   "note": "Real browser interactions on public Pages; not comprehensive gameplay, performance or full product certification."
