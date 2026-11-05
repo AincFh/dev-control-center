@@ -635,3 +635,35 @@ html.atlas-restricted-selection textarea{
 @media(max-width:1050px){.mission-hero{grid-template-columns:1fr 215px;padding:30px}.mission-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.mission-body{grid-template-columns:1fr}.mission-projects{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-side{display:grid;grid-template-columns:1fr 1fr;align-items:start}}
 @media(max-width:700px){.mission-hero{grid-template-columns:1fr;padding:26px 21px}.mission-pulse{display:none}.mission-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mission-kpi{padding:14px}.mission-kpi strong{font-size:34px}.mission-kpi:last-child{grid-column:1/-1}.mission-projects,.mission-side{grid-template-columns:1fr}.mission-section-head{align-items:flex-start;flex-direction:column}.mission-controls>*{flex:1 1 auto}.mission-search{flex:1 1 100%;max-width:none}.mission-side-panel{padding:16px}.mission-review-dialog{padding:20px}.mission-review-footer{flex-direction:column;align-items:stretch}.mission-review-footer button{width:100%}.mission-task-date{white-space:normal}}
 @media(prefers-reduced-motion:reduce){.mission-pulse-ring{animation:none!important}.mission-project,.mission-kpi,.mission-hero-actions>*{transition:none!important}}
+
+
+/* Edition 07 / Global command search — editorial keyboard-first cross-project interaction. */
+.command-dialog{border:1px solid #a5bfb35c;border-radius:19px;box-shadow:0 30px 100px #071a2266;background:var(--surface);color:var(--ink);padding:0;max-height:min(80dvh,720px);width:min(700px,94vw);max-width:94vw;overflow:hidden;position:fixed;top:11%;bottom:auto;margin:0 auto;left:0;right:0}
+.command-dialog::backdrop{background:#0a1c2391;backdrop-filter:blur(11px)}
+.command-shell{display:flex;flex-direction:column;min-width:0;max-height:min(80dvh,720px)}
+.command-searchbar{display:flex;align-items:center;gap:14px;padding:17px 20px;border-bottom:1px solid var(--line)}
+.command-searchbar>.i{width:21px;height:21px;color:var(--accent-dark)}
+.command-searchbar input{font-size:17px;font-weight:550;line-height:1.5;flex:1 1 auto;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);border-radius:0}
+.command-searchbar input::placeholder{color:var(--muted2)}
+.command-searchbar input::-webkit-search-cancel-button{display:none}
+#commandClose{font-size:11px;padding:6px 9px;border-radius:7px;background:var(--surface-soft);color:var(--muted);border:1px solid var(--line);font-weight:740}
+.command-results-heading{display:flex;justify-content:space-between;gap:18px;padding:16px 21px 10px;color:var(--muted);align-items:center}
+.command-results-heading span{font-size:10px;font-weight:760;letter-spacing:1.6px}
+.command-results-heading small{font-size:10px;text-align:right}
+.command-results{display:flex;flex-direction:column;overflow:auto;padding:6px 10px 15px;max-height:min(56dvh,485px);scrollbar-width:thin;scrollbar-color:var(--line-dark) transparent}
+.command-entry{display:flex;align-items:center;gap:13px;border:1px solid transparent;border-radius:11px;background:transparent;padding:13px 12px;color:var(--ink);text-align:left;width:100%;min-height:65px;cursor:pointer;transition:background .13s,border-color .13s}
+.command-entry:hover,.command-entry.is-selected{background:var(--accent-soft);border-color:#87bda148}
+.command-glyph{height:39px;width:39px;display:grid;place-items:center;flex:none;border-radius:11px;background:var(--surface-soft);border:1px solid var(--line);font-size:18px;font-weight:740;color:var(--accent-dark)}
+.command-glyph.game{background:#e5efe7;color:#327255}
+.command-glyph.repo{background:#e6edf6;color:#5b7591}
+.command-glyph.external{background:#f1eaf1;color:#8f7396}
+.command-copy{min-width:0;display:flex;flex-direction:column;gap:3px;flex:1 1 auto}
+.command-copy strong{font-size:13px;font-weight:760;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.command-copy small{font-size:11px;font-weight:450;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.command-group{font-size:9px;font-weight:710;color:var(--muted);border:1px solid var(--line-dark);border-radius:5px;padding:5px 8px;white-space:nowrap}
+.command-empty{font-size:11px;text-align:center;color:var(--muted);padding:34px 16px;line-height:1.7}
+.command-footer{display:flex;align-items:center;gap:15px;flex-wrap:wrap;padding:13px 20px;border-top:1px solid var(--line);background:var(--surface-soft);font-size:10px;color:var(--muted)}
+.command-footer kbd{padding:2px 5px;border:1px solid var(--line-dark);border-radius:5px;background:var(--surface);font-size:10px}
+.command-footer span:last-child{margin-left:auto}
+@media(max-width:660px){.command-dialog{top:5%;border-radius:15px;width:96vw;max-width:96vw}.command-searchbar{padding:13px 14px;gap:8px}.command-searchbar input{font-size:14px}.command-results-heading{padding:14px 13px 8px}.command-results-heading span{font-size:8px}.command-results-heading small{font-size:9px}.command-results{padding:5px}.command-entry{min-height:60px;padding:10px 9px;gap:9px}.command-glyph{height:34px;width:34px}.command-copy strong{font-size:12px}.command-copy small{font-size:10px}.command-group{display:none}.command-footer{padding:11px 12px;gap:11px}.command-footer span:last-child{margin-left:0}}
+@media(prefers-reduced-motion:reduce){.command-entry{transition:none!important}}
