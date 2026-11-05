@@ -41,6 +41,7 @@ test('blocked games cannot inherit success from unrelated CI',()=>{
  assert.equal(statusText(x.status),'发布受阻');
  const metrics=arcadeStats();
  assert.equal(metrics.total,GAMES.length);
- assert.ok(metrics.playable>=3);
+ assert.equal(metrics.playable,6);
  assert.ok(metrics.blocked>=1);
+ for(const repo of ['Midnight-Factory','Tamagochi---Open-Source-Game']) assert.ok(playableGame(GAMES.find(g=>g.repo===repo)));
 });
