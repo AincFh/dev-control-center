@@ -46,6 +46,7 @@ function fromRepo(repo,st){
  p.openPRs=Number.isInteger(st?.openPRs)?st.openPRs:null;p.countsTruncated=!!st?.countsTruncated;
  p.issuePreview=Array.isArray(st?.issuePreview)?st.issuePreview:null;p.prPreview=Array.isArray(st?.prPreview)?st.prPreview:null;
  p.trace=st?.trace&&st.trace.repo===repo.name?st.trace:null;
+ p.runtimeQa=gameEvidenceFor(repo.name,gameRunReport);
  p.site=st?.site||{state:'unknown',url:null};p.probe=st?.probe||null;p.preview=p.site.state==='published'?p.site.url:null;p.maturity=CATALOG[repo.name]?.maturity||null;
  p.branch=st?.defaultBranch||'main';p.upstream=CATALOG[repo.name]?.upstream||null;p.isFork=!!(repo.fork||st?.fork||p.upstream);return p;
 }
