@@ -27,3 +27,9 @@
 现已建立 8 个保留原始项目来源、MIT 许可的独立 Fork：天堂小岛、Cimulity、QubeCraft、虚拟宠物、Midnight Factory、Spacefortress、City of Small Chances、Squiffy。除明确说明的修改外，所有已有玩法与美术来自上游作者，不能声称属于 ATLAS 原创。浏览器实验室另有 9 个参考项目，其中许可未核验者只供调研。
 
 优先顺序：先完成 Fork 的独立 CI / Pages 验证和版本变更日志，再补充原创功能。大型工程（城市/体素）必须保留许可证与资产来源记录，不直接并入已有游戏仓库。
+
+## 第二批大型农场模拟引入（Issue #4）
+
+新增 Hollowmere（Godot 4 农场、伙伴战斗）与 Harness Hollow（Three.js 双人合作农场）两个完整源码 MIT Fork。与原作者项目保留 Fork 关联；**尚未完成本账号的独立运行或联网部署**。Hollowmere Web 游戏的账号、联机和云存档涉及后端，Harness Hollow 需要 Node 服务，不能把静态 Pages 当作完整部署。
+
+额外加入桃源乡（CC BY-NC 4.0，仅参考、非商用许可）与 SimLife（GitHub 未找到可核验的 LICENSE 文件，仅参考）。Fork 与引用的许可状态必须区别显示，不得自动标记成可重用代码。

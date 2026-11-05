@@ -16,7 +16,7 @@ https://aincfh.github.io/dev-control-center/
 ## 已实现
 
 - 公开仓库发现、搜索、分类筛选、排序、响应式项目详情；
-- 开源游戏发现实验室：17 个已核验来源、8 个真实 MIT Fork，按类型搜索筛选；清晰区分原创仓库、Fork 与仅参考；
+- 开源游戏发现实验室：21 个经筛选来源、10 个 MIT Fork，按类型搜索筛选；清晰区分原创仓库、Fork 与仅参考；
 - 多项目工作台与人工维护的项目成熟度路线图（WILDLANDS、COZY BISTRO、AZURE COAST 等），每个项目独立显示实际 CI、任务和下一目标；
 - GitHub Actions 最近一次主分支运行状态，区分通过/失败/运行中/未知；
 - 公开 Issues 和 PR 数量、各仓库任务入口与失败运行链接；
