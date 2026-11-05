@@ -10,6 +10,7 @@ on:
 permissions:
   contents: read
   actions: read
+  deployments: read
   pages: write
   id-token: write
 concurrency:
@@ -26,7 +27,7 @@ jobs:
       - name: Unit tests
         run: npm test
       - name: Module syntax
-        run: node --check app.js && node --check status.js && node --check scripts/build-status.mjs && node --check scripts/asset-version.mjs
+        run: node --check app.js && node --check status.js && node --check deploy-core.js && node --check scripts/build-status.mjs && node --check scripts/asset-version.mjs
       - name: Build public status snapshot
         run: npm run build
         env:
