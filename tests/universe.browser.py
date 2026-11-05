@@ -4,6 +4,7 @@ from http.server import SimpleHTTPRequestHandler
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
 
 ROOT=pathlib.Path(__file__).resolve().parents[1];OUT=ROOT/"test-artifacts"/"universe";OUT.mkdir(parents=True,exist_ok=True)
 class Server(SimpleHTTPRequestHandler):
@@ -79,7 +80,44 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   severe=[x['message'] for x in driver.get_log("browser") if x["level"]=="SEVERE"]
   critical=[s for s in severe if "Uncaught" in s or ("/universe" in s and "404" in s)]
   assert not critical,critical
-  report={"realExternalRepositories":count,"desktopCards":len(cards),"canvas":canvas,"blockedEvents":blocked,"mobile":mobile,"criticalErrors":critical}
+  # Connect the real GitHub source directory to the local research Kanban.
+  driver.set_window_size(1440,900)
+  driver.execute_script("location.hash='#universe'")
+  until(lambda:driver.execute_script("return document.querySelector('#universe')?.classList.contains('is-active')"))
+  source=driver.find_element(By.CSS_SELECTOR,"#universeGrid .universe-project .universe-incubate")
+  source.click()
+  until(lambda:driver.execute_script("return document.querySelector('#candidateCount')?.textContent==='1'"))
+  driver.execute_script("location.hash='#incubator'")
+  until(lambda:driver.execute_script("return document.querySelector('#incubator')?.classList.contains('is-active')"))
+  assert len(driver.find_elements(By.CSS_SELECTOR,"#candidateBoard .candidate-card"))==1
+  driver.find_element(By.CSS_SELECTOR,"#candidateBoard .candidate-card .candidate-button.primary").click()
+  assert driver.execute_script("return document.querySelector('#candidateEditor').open")
+  assert driver.find_element(By.ID,"candidateIssue").get_attribute("href").startswith("https://github.com/AincFh/dev-control-center/issues/new?")
+  driver.find_element(By.ID,"candidateEditNote").send_keys("ATLAS browser verified research note")
+  assert "ATLAS%20browser" in driver.find_element(By.ID,"candidateIssue").get_attribute("href")
+  Select(driver.find_element(By.ID,'candidateEditStage')).select_by_value('review')
+  driver.find_element(By.CSS_SELECTOR,"#candidateForm button[type='submit']").click()
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#candidateBoard .candidate-card"))==1)
+  assert driver.execute_script("return document.querySelector('#candidateEditor').open") is False
+  driver.refresh()
+  until(lambda:driver.execute_script("return document.querySelector('#candidateTotal')?.textContent==='1'"))
+  assert len(driver.find_elements(By.CSS_SELECTOR,"#candidateBoard .candidate-card"))==1
+  assert driver.find_element(By.CSS_SELECTOR,"#candidateBoard .candidate-card .candidate-snippet").text=="ATLAS browser verified research note"
+  driver.set_window_size(390,844)
+  time.sleep(.3)
+  incubator_mobile=driver.execute_script("""return{
+   width:innerWidth,documentWidth:document.documentElement.scrollWidth,
+   boardWidth:document.getElementById('candidateBoard').clientWidth,
+   boardContentWidth:document.getElementById('candidateBoard').scrollWidth,
+   route:document.querySelector('.view.is-active')?.id
+  }""")
+  assert incubator_mobile['documentWidth']<=incubator_mobile['width']+4,incubator_mobile
+  assert incubator_mobile['route']=='incubator',incubator_mobile
+  assert incubator_mobile['boardContentWidth']>incubator_mobile['boardWidth'],incubator_mobile
+  driver.save_screenshot(str(OUT/"03-incubator-mobile.png"))
+  severe_after=[x['message'] for x in driver.get_log("browser") if x["level"]=="SEVERE"]
+  assert not [s for s in severe_after if "Uncaught" in s],severe_after
+  report={"realExternalRepositories":count,"desktopCards":len(cards),"canvas":canvas,"blockedEvents":blocked,"mobile":mobile,"incubatorMobile":incubator_mobile,"criticalErrors":critical}
   (OUT/"report.json").write_text(json.dumps(report,indent=2,ensure_ascii=False))
   print(json.dumps(report,ensure_ascii=False))
  finally:

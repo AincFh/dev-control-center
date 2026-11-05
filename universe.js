@@ -49,7 +49,10 @@ function render(){
   const actions=node('div',null,'universe-card-actions'),more=node('button','查看资料 ↗','universe-details-button');
   more.type='button';more.onclick=()=>showDetail(p.name);
   const link=node('a','打开 GitHub ↗','universe-external');link.href='https://github.com/'+p.name;link.target='_blank';link.rel='noopener noreferrer';
-  actions.append(more,link);card.append(top,ident,description,actions);grid.append(card);
+  const incubate=node('button','加入候选池','universe-incubate');
+  incubate.type='button';incubate.title='加入本地研发候选，不代表已经创建 GitHub Issue';
+  incubate.onclick=()=>window.dispatchEvent(new CustomEvent('atlas:add-candidate',{detail:{name:p.name,genre:p.genreName}}));
+  actions.append(more,incubate,link);card.append(top,ident,description,actions);grid.append(card);
  }
  refreshMeta();
 }
@@ -84,7 +87,9 @@ async function showDetail(name){
   const warning=node('p','以上元信息来自 GitHub；即使仓库标示许可证，也需要在复用代码或素材之前逐项审核。','universe-detail-note');
   const buttons=node('div',null,'universe-detail-actions'),git=node('a','前往 GitHub →');git.href=d.html_url||'https://github.com/'+name;git.target='_blank';git.rel='noopener noreferrer';
   const follow=node('button',scene.following.has(name.toLowerCase())?'取消关注':'加入关注');follow.onclick=()=>{toggleSave(name);follow.textContent=scene.following.has(name.toLowerCase())?'取消关注':'加入关注'};
-  buttons.append(git,follow);content.append(list,warning,buttons);
+  const incubate=node('button','加入研发候选池');
+  incubate.type='button';incubate.onclick=()=>window.dispatchEvent(new CustomEvent('atlas:add-candidate',{detail:{name:d.full_name,genre:scene.items.find(x=>x.name.toLowerCase()===name.toLowerCase())?.genreName||'未分类'}}));
+  buttons.append(git,follow,incubate);content.append(list,warning,buttons);
  }catch(e){content.replaceChildren(node('h2',name),node('p','GitHub 元信息获取失败（可能达到公共接口限额）：'+e.message+'。此项目仍可直接打开源码页面查看。'));const a=node('a','打开 GitHub 仓库 →');a.href='https://github.com/'+name;a.target='_blank';a.rel='noopener noreferrer';content.append(a);}
 }
 function drawMap(){
