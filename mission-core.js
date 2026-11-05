@@ -8,7 +8,8 @@ export const MISSION_FILTERS=[
  {id:'review',label:'待审 PR'},
  {id:'unverified',label:'待核验'},
  {id:'game',label:'游戏项目'},
- {id:'site_error',label:'线上资源异常'}
+ {id:'site_error',label:'线上资源异常'},
+ {id:'game_qa_failed',label:'浏览器玩法验收失败'}
 ];
 export const RELEASE_CHECKS=[
  {id:'playtest',label:'核心流程完成连续实际试玩'},
@@ -72,6 +73,9 @@ export function assessProject(p,now=Date.now()){
  if(prs>0)add('review','action',prs+(p.countsTruncated?'+':'')+' 个开放 PR','需要开发者审核、测试和处理',70);
  if(issues>0)add('issue','action',issues+(p.countsTruncated?'+':'')+' 个开放 Issue','待排期、分类或验证的公开问题',42);
  if(p.countsTruncated)add('truncated','verify','任务计数达到 API 截断阈值','数值是下限，不等于全部任务',52);
+ if(p?.runtimeQa?.isCurrent&&['fail','timeout'].includes(p.runtimeQa.status)){
+  add('game_browser','critical','游戏真实浏览器验收失败','独立 Chromium 实际游戏流程失败或超时；请核对 QA 原始运行和具体检查项',96);
+ }
  if(['http_error','resource_error','network_error','content_error'].includes(p?.probe?.state)){
   add('site_probe','critical','线上静态资源探针异常','最近快照的 HTML/JS/CSS 网络检测未通过，需要打开站点进一步诊断',93);
  }
@@ -112,6 +116,11 @@ export function missionSnapshot(projects=[],snapshot={},now=Date.now()){
   taskPreview:tasks,taskPreviewIsPartial:true,
   snapshotState:freshness,snapshotAgeMinutes:Number.isFinite(age)?Math.max(0,Math.floor((now-age)/60000)):null,
   errors:Array.isArray(snapshot?.errors)?snapshot.errors.length:0,
+  gameQA:{
+   passed:assessments.filter(a=>a.project.runtimeQa?.isCurrent&&a.project.runtimeQa.status==='pass').length,
+   failed:assessments.filter(a=>a.project.runtimeQa?.isCurrent&&['fail','timeout'].includes(a.project.runtimeQa.status)).length,
+   stale:assessments.filter(a=>a.project.runtimeQa?.case&&!a.project.runtimeQa.isCurrent).length
+  },
   probes:probeOverview(projects),
   generatedAt:validDate(snapshot?.generatedAt)?snapshot.generatedAt:null
  };
@@ -126,6 +135,7 @@ export function filterMission(items,{query='',filter='all',sort='urgency',pinned
   if(filter==='unverified'&&!['unknown','neutral'].includes(a.state))return false;
   if(filter==='game'&&a.project.category!=='game')return false;
   if(filter==='site_error'&&!['http_error','resource_error','network_error','content_error'].includes(a.project.probe?.state))return false;
+  if(filter==='game_qa_failed'&&!(a.project.runtimeQa?.isCurrent&&['fail','timeout'].includes(a.project.runtimeQa.status)))return false;
   return terms.every(t=>[a.name,a.project.label,a.project.description,a.project.language].some(x=>String(x||'').toLocaleLowerCase().includes(t)));
  };
  return items.filter(predicate).sort((a,b)=>{
@@ -149,8 +159,9 @@ export function reportMarkdown(result,{generatedAt=new Date().toISOString(),evid
   '- 开放任务：Issue '+result.openIssues+(result.countsTruncated?'+':'')+' / PR '+result.openPRs+(result.countsTruncated?'+':''),
   '- 采集异常：'+result.errors+' 项',
   '- 在线静态资源探针：正常 '+(result.probes?.reachable??0)+' / 异常 '+(result.probes?.broken??0)+' / 未检测 '+(result.probes?.missing??0),
+  '- 独立 Chromium 游戏验收（仅当前抽样）：通过 '+(result.gameQA?.passed??0)+' / 失败 '+(result.gameQA?.failed??0)+' / 过期 '+(result.gameQA?.stale??0),
   '',
-  '> CI 成功不代表已发布或满足产品完整度；HTTP 探针只检查网站 HTML 与最多 6 个同源 JS/CSS 引用，不执行游戏逻辑。公开 Issues/PR 可能不完整，人工清单不是正式验收。',
+  '> CI 成功不代表已发布或满足产品完整度；HTTP 探针只检查首页与少量静态资源，真实 Chromium 游戏场景与人工作品验收分别保留独立结果。公开 Issues/PR 可能不完整。',
   '',
   '## 项目关注队列','',
   '| 仓库 | 主分支 CI | 公开 Issue | 公开 PR | 关注提示 | 本地人工核验 |',
