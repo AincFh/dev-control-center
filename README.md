@@ -91,3 +91,18 @@ ATLAS 不再只有 GitHub 搜索星图。#incubator 是独立的、无需服务�
 - 对应 incubator-core.js 域测试与 tests/universe.browser.py 实际浏览器流程检查。
 
 **事实边界**：外部 GitHub 索引 ≠ 自己的游戏 ≠ Fork 许可通过 ≠ 可以玩 ≠ 通过上线验收。候选池也不是公开 GitHub Issues 数据库；正式立项仍须走 Issue → PR → CI → 浏览器验收 → 发布。
+
+
+## Edition 06 · 研发总控（Mission Control）
+
+[#mission](https://aincfh.github.io/dev-control-center/#mission) 将公开 GitHub 多仓库**状态快照**转换成可操作的研发决策界面：
+
+- 展示完整公开仓库数、失败 CI、开放 PR、开放 Issue、待核验 CI；区分失败、运行中、成功、跳过与未知，不把 CI 成功当成游戏完成；
+- 依照公开证据标记构建失败、PR 审查、Issue 排期、API 截断、缺乏 CI 以及长期无推送，但仅将其标为观察信号，不作无依据的故障判断；
+- 追加可审查的 GitHub Issue/PR 标题样本（每仓库最多各 5 条）、最近更新时间和真正的 GitHub 打开链接，汇总为跨项目待办；新增任务数据在 Actions 定时构建的公开 JSON 中，网站不接触任何 GitHub Token；
+- 关键词搜索、关注、CI 失败/PR/待核验/游戏筛选、风险优先排序；本地关注用 localStorage 保存；
+- 各项目提供六项手动 QA 证据清单、笔记、保存恢复。**不是系统自动通过的发布门禁**，也不会自动修改 GitHub；
+- 下载包含 CI、风险、任务样本、快照时效和人工记录的 Markdown 交接报告。公开快照超过两小时会标注“可能过期”；
+- 支持桌面、触屏、深色主题及 reduced-motion，自动化门禁包含 Node 测试、Pages 发布 ES 模块指纹检查以及真实 Chromium 桌面/移动端 QA。
+
+公开状态快照每小时尝试更新。连接失败或数据缺失会显示“未知”，而不是假装 CI 通过。GitHub API 的 Issue / PR 每页最多取 100 条，达到阈值时数量仅为**下限**。有权修改 GitHub 的 Agent 仍通过授权 GitHub 连接工作，Pages 本身只提供公开只读入口。
