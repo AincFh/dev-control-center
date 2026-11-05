@@ -154,3 +154,16 @@ ATLAS 依然是公开只读观测层。真正的 GitHub 修改、游戏 Playtest
 修复策略：若 Pages API 明确为 built/active/published 且 URL 为 HTTPS，则标记 published；否则允许 30 日内 **同仓库、同合并提交 SHA、github-pages 环境且最新状态为 success** 的 Deployment 作为 Pages 发布证据，并保留来源、部署 SHA、验证时间。两种证据都缺失时显示 unknown，不编造“未发布”。
 
 前台项目详情现在区分“Pages API 已证实”和“GitHub Deployment 提交级已证实”。源证据不能替代浏览器打开后的真实游戏 Playtest。
+
+
+## Edition 11 · 已部署站点在线 HTTP / 静态资源巡检
+
+此前 ATLAS 只区分 GitHub 构建和部署状态，无法发现网站发布之后返回 HTTP 404 或 JS/CSS 静态资源丢失。本次新增第三层独立证据：
+
+1. 只有已有公开 Pages 发布证据的仓库才会检测；仅允许访问 aincfh.github.io 下该仓库的首页路径，拒绝跨域跳转与任意外部 URL。
+2. 记录首页 HTTP 响应码、HTML 类型和基本结构；从页面最多抽取 6 个同源 JS/CSS 引用并分别检查状态。
+3. 单独标记 reachable、resource_error、http_error、content_error、network_error 和无数据；返回 200 不意味着游戏已经正常运行。
+4. 研发总控增加线上资源可达/异常计数、站点逐条列表及问题过滤；状态报告也有独立的 HTTP 探针结论。
+5. 定时构建时重新检查，代表一次带时间戳的公开网络观测，非持续 Uptime 服务或 SLA。
+
+**边界**：探针不执行浏览器 JavaScript、WebGL、音频、键盘/触控、存档、性能测试，也不自动修复目标游戏。它只填补发布成功与完整游戏验收之间的一个质量层。
