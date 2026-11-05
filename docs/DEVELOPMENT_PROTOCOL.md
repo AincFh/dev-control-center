@@ -71,3 +71,10 @@ ATLAS 开发链路工作区（#trace）只从公开 GitHub REST API 获取 Issue
 环境 URL 需严格校验与 Pages API 返回 URL 的 origin 与路径，拒绝非 HTTPS 和不同来源，避免公开数据中的恶意跳转。已启用 Pages 或主分支 CI 通过不足以作为特定提交的发布证明。若仅查询到 in_progress / failure / 无状态，必须保留原始结论。
 
 此检查只读取 GitHub 公共 REST；GitHub Actions 给部署读取权限，但公开网页没有 GitHub Token。合并后的状态可以被后续部署覆盖，应结合 GitHub 最新状态及实际浏览器功能继续验收。
+
+
+### Phase 3 补充：线上 HTTP / 静态资源核验
+
+GitHub Pages 成功部署后，ATLAS 需要实际访问公开页面并检查 HTML 及最多 6 个同仓库的 JS/CSS 资源。新探针只能进行 HTTPS 静态资源请求，不能运行未知第三方脚本，不收集用户数据、不持有令牌。公开状态快照的每个项目附带独立 probe 字段。
+
+CI success ≠ GitHub Pages Deployment success ≠ HTTP/静态资源可达 ≠ 游戏完整 Playtest 通过。这四个独立证据必须在产品验收时分别核查。出现资源异常需要人工查看目标站点、相对路径和模块导入图，不得靠自动置绿掩盖失败。

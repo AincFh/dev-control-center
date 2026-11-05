@@ -148,13 +148,15 @@
   <div class="mission-kpi"><span>待审 PR</span><strong id="missionReview">—</strong><small>开放的 Pull Requests</small></div>
   <div class="mission-kpi"><span>公开 Issue</span><strong id="missionIssues">—</strong><small>开放任务</small></div>
   <div class="mission-kpi"><span>待核验</span><strong id="missionUnknown">—</strong><small>未知与中立工作流</small></div>
+  <div class="mission-kpi"><span>HTTP 可达</span><strong id="missionProbeGood">—</strong><small>HTML 与首批静态资源</small></div>
+  <div class="mission-kpi" data-state="failure"><span>线上资源异常</span><strong id="missionProbeBad">—</strong><small>需要进一步打开诊断</small></div>
  </section>
  <p id="missionFreshness" class="mission-freshness" data-state="missing" role="status" aria-live="polite">正在读取状态快照…</p>
  <div class="mission-body">
   <section class="mission-main" aria-label="跨项目操作清单">
    <div class="mission-section-head"><div><span class="eyebrow">ACTIONABLE REPOSITORIES</span><h2>跨项目行动队列</h2></div><span id="missionMatches">载入中…</span></div>
    <div class="mission-controls"><label class="mission-search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input type="search" id="missionSearch" autocomplete="off" placeholder="搜索项目名称、类型、说明…" aria-label="搜索总控项目"></label>
-    <select id="missionFilter" aria-label="筛选项目关注类型"><option value="all">全部项目</option><option value="action">需要处理</option><option value="failure">构建失败</option><option value="review">待审 PR</option><option value="unverified">待核验</option><option value="game">游戏项目</option></select>
+    <select id="missionFilter" aria-label="筛选项目关注类型"><option value="all">全部项目</option><option value="action">需要处理</option><option value="failure">构建失败</option><option value="review">待审 PR</option><option value="unverified">待核验</option><option value="game">游戏项目</option><option value="site_error">线上资源异常</option></select>
     <select id="missionSort" aria-label="排序"><option value="urgency">风险优先</option><option value="updated">最新推送</option><option value="name">项目名称</option></select>
     <button type="button" id="missionOnlyPinned" aria-pressed="false">☆ 我的关注</button>
    </div>
@@ -163,6 +165,7 @@
   </section>
   <aside class="mission-side" aria-label="跨项目的状态分布与任务">
    <article class="mission-side-panel"><div class="mission-side-top"><span class="eyebrow">LATEST DEFAULT-BRANCH CI</span><h3>构建状态分布</h3></div><div id="missionStateBreakdown" class="mission-bars"></div><p id="missionDataNote">状态来源于公开 GitHub 快照。</p></article>
+   <article class="mission-side-panel mission-probes"><div class="mission-side-top"><span class="eyebrow">PUBLISHED SITE / HTTP PROBE</span><h3>线上静态资源巡检</h3><small>独立于 CI · 最近快照</small></div><div id="missionSiteChecks" class="mission-probe-list" aria-live="polite"></div><p class="mission-partial">仅检查公开 Pages HTML 及最多六个同源 JS/CSS 引用；不执行应用脚本，不代表游戏试玩或性能验收。</p></article>
    <article class="mission-side-panel mission-tasks-panel"><div class="mission-side-top"><span class="eyebrow">ISSUE / PULL REQUEST FEED</span><h3>最新开放事项</h3><small id="missionTaskCount">载入中…</small></div><div id="missionTaskFeed" class="mission-task-feed"></div><p class="mission-partial">仅显示当前公开快照中每个仓库最多 5 条 Issue 和 5 条 PR。不是全部任务，更不是实时权限写入。</p></article>
   </aside>
  </div>

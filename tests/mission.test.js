@@ -55,3 +55,15 @@ test('handoff report explicitly labels uncertainty and partial evidence',()=>{
  assert.match(report,/没有可用任务样本/);assert.match(report,/公开数据快照：未获取/);
  assert.match(report,/CI 成功不代表已发布/);assert.match(report,/broken/);assert.match(report,/1\/6/);
 });
+
+test('HTTP site faults are independent of CI and filterable by source evidence',()=>{
+ const good={...p('good','success'),probe:{state:'reachable',httpStatus:200}};
+ const broken={...p('broken','success'),probe:{state:'resource_error',httpStatus:200}};
+ const offline={...p('no-ci','unknown'),probe:null};
+ const snapshot=missionSnapshot([good,broken,offline],{},NOW);
+ assert.equal(snapshot.probes.reachable,1);assert.equal(snapshot.probes.broken,1);
+ assert.equal(snapshot.probes.missing,1);
+ assert.equal(snapshot.states.failure,0);
+ assert.equal(snapshot.assessments.find(x=>x.name==='broken').signals.some(x=>x.type==='site_probe'),true);
+ assert.deepEqual(filterMission(snapshot.assessments,{filter:'site_error'}).map(x=>x.name),['broken']);
+});

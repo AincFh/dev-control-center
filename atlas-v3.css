@@ -743,3 +743,22 @@ html.atlas-restricted-selection textarea{
 .trace-stats>div:last-child strong{color:#368568}
 @media(max-width:1150px){.trace-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:670px){.trace-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Edition 11: independent public site HTML/static-resource probe */
+.mission-kpis{grid-template-columns:repeat(7,minmax(0,1fr))}
+.mission-kpis .mission-kpi{padding:16px 14px}
+.mission-kpi strong{overflow-wrap:anywhere}
+.mission-probe-list{display:flex;flex-direction:column;gap:3px;max-height:450px;overflow-y:auto;scrollbar-width:thin}
+.mission-probe-line{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:12px 0;min-width:0}
+.mission-probe-state{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:36px;padding:6px 7px;border-radius:6px;font-size:9px;font-weight:780}
+.mission-probe-state.good{background:#e3f3e6;color:#286c48}.mission-probe-state.bad{background:#f8e7de;color:#a14b38}
+.mission-probe-copy{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.mission-probe-copy strong{font-size:10px;font-weight:710;color:var(--ink);overflow-wrap:anywhere}
+.mission-probe-copy small{font-size:9px;line-height:1.55;color:var(--muted)}
+.mission-probe-link{font-size:10px;font-weight:740;color:var(--accent-dark);white-space:nowrap}
+.mission-card-indicators .mission-probe-ok{background:#e5f2e7;color:#2b7149;border-color:#b8dbbc}
+.mission-card-indicators .mission-probe-error{background:#f8e9e1;color:#a2553f;border-color:#ebc5b4}
+.projectmeta .probe-good{color:#30744b}.projectmeta .probe-bad{color:#b55b43}
+@media(max-width:1500px){.mission-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1050px){.mission-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.mission-kpi:last-child{grid-column:auto}}
+@media(max-width:700px){.mission-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-kpi:last-child{grid-column:auto}.mission-probe-line{gap:7px}}

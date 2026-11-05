@@ -16,6 +16,9 @@ projects=[
  {"name":"healthy-game","description":"Working world","language":"TypeScript","updatedAt":STAMP,"defaultBranch":"main","repositoryUrl":"https://github.com/AincFh/healthy-game","ci":{"state":"success","sha":"c1234","updatedAt":STAMP},"openIssues":0,"openPRs":0,"site":{"state":"published","url":"https://aincfh.github.io/healthy-game/"},"issuePreview":[],"prPreview":[]},
  {"name":"unverified","description":"Pending metadata","language":"JavaScript","updatedAt":STAMP,"defaultBranch":"main","repositoryUrl":"https://github.com/AincFh/unverified","ci":{"state":"unknown"},"openIssues":None,"openPRs":None,"site":{"state":"unknown"},"issuePreview":None,"prPreview":None}
 ]
+# Independent live HTTP checks: 200 HTML alone does not mean scripts loaded.
+projects[0]["probe"]={"state":"resource_error","checkedAt":STAMP,"httpStatus":200,"assetCount":4,"assetFailures":2,"contentType":"text/html","durationMs":310,"reason":"static_asset_failed"}
+projects[1]["probe"]={"state":"reachable","checkedAt":STAMP,"httpStatus":200,"assetCount":2,"assetFailures":0,"contentType":"text/html","durationMs":100,"reason":"html_and_assets_ok"}
 # Real data shape returned by the trace collector, isolated from private tokens.
 HEAD="a"*40
 MERGE="b"*40
@@ -85,6 +88,14 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   assert driver.find_element(By.ID,'missionReview').text=='1'
   assert driver.find_element(By.ID,'missionIssues').text=='2'
   assert len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==3
+  assert driver.find_element(By.ID,'missionProbeGood').text=='1'
+  assert driver.find_element(By.ID,'missionProbeBad').text=='1'
+  assert len(driver.find_elements(By.CSS_SELECTOR,'#missionSiteChecks .mission-probe-line'))==2
+  Select(driver.find_element(By.ID,'missionFilter')).select_by_value('site_error')
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==1)
+  assert driver.find_element(By.CSS_SELECTOR,'#missionProjects .mission-project').get_attribute('data-repo')=='broken-game'
+  Select(driver.find_element(By.ID,'missionFilter')).select_by_value('all')
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==3)
   assert len(driver.find_elements(By.CSS_SELECTOR,'#missionTaskFeed .mission-task'))==2
   assert "任务" not in driver.find_element(By.ID,'missionFreshness').text or True
   driver.save_screenshot(str(OUT/'01-mission-desktop.png'))

@@ -32,6 +32,8 @@ function snapshotNotice(){
  $('missionReview').textContent=String(model.openPRs)+(model.countsTruncated?'+':'');
  $('missionIssues').textContent=String(model.openIssues)+(model.countsTruncated?'+':'');
  $('missionUnknown').textContent=String(model.states.unknown+model.states.neutral);
+ $('missionProbeGood').textContent=String(model.probes?.reachable??0);
+ $('missionProbeBad').textContent=String(model.probes?.broken??0);
  const nav=$('missionNavCount');if(nav){const c=model.states.failure;nav.textContent=String(c);nav.hidden=!c}
  const health=$('missionStateBreakdown');health.replaceChildren();
  const kinds=[
@@ -64,6 +66,9 @@ function card(a){
  const indicators=n('div',null,'mission-card-indicators');
  indicators.append(n('span','Issue '+size(a.issues)+(p.countsTruncated?'+':'')),n('span','PR '+size(a.prs)+(p.countsTruncated?'+':'')));
  if(p.isFork)indicators.append(n('span','Fork · 上游项目','mission-fork'));
+ if(p.probe?.state==='reachable')indicators.append(n('span','HTTP 可达 · 资源检查通过','mission-probe-ok'));
+ else if(p.probe&&['http_error','resource_error','network_error','content_error'].includes(p.probe.state))
+  indicators.append(n('span','在线资源异常 · '+p.probe.state,'mission-probe-error'));
  const summary=n('p',p.description||'暂无仓库说明。','mission-card-description');
  const signals=n('div',null,'mission-card-signals');
  if(a.signals.length)for(const signal of a.signals.slice(0,2)){
@@ -105,7 +110,23 @@ function renderTasks(){
   item.append(badge,info,date);holder.append(item);
  }
 }
-function render(){snapshotNotice();renderProjects();renderTasks()}
+function renderProbes(){
+ const holder=$('missionSiteChecks');holder.replaceChildren();
+ const checks=model.assessments.filter(a=>a.project.probe).sort((a,b)=>{
+  const broken=x=>['http_error','resource_error','network_error','content_error'].includes(x.project.probe.state)?1:0;
+  return broken(b)-broken(a)||a.name.localeCompare(b.name,'en');
+ });
+ if(!checks.length){holder.append(n('p','尚无可访问性检测数据。只有确认 Pages 部署的仓库才会进行公开 HTTP 检查。','mission-no-tasks'));return}
+ for(const a of checks.slice(0,16)){
+  const p=a.project,r=p.probe,line=n('article',null,'mission-probe-line');
+  const icon=n('span',r.state==='reachable'?'正常':'异常','mission-probe-state '+(r.state==='reachable'?'good':'bad'));
+  const info=n('div',null,'mission-probe-copy');
+  info.append(n('strong',p.label||p.name),n('small',(r.httpStatus?'HTTP '+r.httpStatus+' · ':'')+r.assetCount+' 个静态引用，'+r.assetFailures+' 个失败'));
+  const target=p.site?.url?external(p.site.url,'打开 ↗','mission-probe-link'):external(gh(a.name),'仓库 ↗','mission-probe-link');
+  line.append(icon,info,target);holder.append(line);
+ }
+}
+function render(){snapshotNotice();renderProjects();renderTasks();renderProbes()}
 function openReview(name){
  const a=model.assessments.find(x=>x.name===name);if(!a)return;
  editing=name;const r=releaseChecklist(evidence[name]);
