@@ -1,8 +1,155 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": null,
-  "runUrl": null,
-  "results": [],
-  "note": "尚未完成独立 Chromium 实际运行测试；不可把无数据当作通过。"
+  "generatedAt": "2026-11-05T09:26:56Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42002402154",
+  "source": "real_chromium_public_games",
+  "browser": "Chromium / Selenium / fresh profile per game",
+  "results": [
+    {
+      "id": "bistro",
+      "repo": "cozy-bistro-sim",
+      "status": "pass",
+      "elapsedMs": 3290,
+      "checks": [
+        {
+          "id": "interaction",
+          "label": "真实点击开店并进入营业状态",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "bootstrap",
+          "label": "实机浏览器内订单引擎推进并生成订单",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "save",
+          "label": "浏览器刷新后餐馆营业状态恢复",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
+        }
+      ],
+      "message": ""
+    },
+    {
+      "id": "paradise",
+      "repo": "paradise-isle",
+      "status": "pass",
+      "elapsedMs": 2430,
+      "checks": [
+        {
+          "id": "bootstrap",
+          "label": "真实创建独立岛屿存档并进入世界",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "实际打开背包并读取玩家状态",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "save",
+          "label": "实际保存、刷新并恢复已创建岛屿",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
+        }
+      ],
+      "message": ""
+    },
+    {
+      "id": "wildlands",
+      "repo": "wildlands-anglerfishing-world-3d",
+      "status": "pass",
+      "elapsedMs": 6714,
+      "checks": [
+        {
+          "id": "webgl",
+          "label": "真实 Three.js WebGL 湖泊与鱼群启动",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "真实按住并松开钓竿按钮完成抛投",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
+        }
+      ],
+      "message": ""
+    },
+    {
+      "id": "fishing",
+      "repo": "fishing-world-3d",
+      "status": "pass",
+      "elapsedMs": 4107,
+      "checks": [
+        {
+          "id": "webgl",
+          "label": "实机 WebGL 世界启动及真实开始按钮",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "真实点击抛竿令钓鱼阶段变化",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
+        }
+      ],
+      "message": ""
+    }
+  ],
+  "note": "Real browser interactions on public Pages; not comprehensive gameplay, performance or full product certification."
 }
