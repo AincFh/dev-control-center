@@ -133,3 +133,15 @@ ATLAS 不再只有 GitHub 搜索星图。#incubator 是独立的、无需服务�
 - Node 领域测试验证引用关系、URL 安全和 SHA 关联；Chromium 验证桌面/手机与交互。
 
 ATLAS 依然是公开只读观测层。真正的 GitHub 修改、游戏 Playtest 和发布验收必须在独立仓库中完成。
+
+
+## Edition 09 · 精确合并提交的 GitHub Pages 部署证明
+
+新增对 GitHub Deployments API 的只读采样，并严格对齐 PR 的 **merge commit SHA + base branch + github-pages 环境**。匹配成功后读取该 Deployment 的最新 Status：
+
+- Latest status = success：标记“同提交 GitHub Pages 部署确认”，显示对应 SHA 和 GitHub Deployment 原始证据。
+- Latest status = failure/error：标记部署失败；queued / pending / waiting / in_progress 标记处理中。
+- PR 尚未合并、SHA 对不上、部署记录未进入采样窗口、API 出错、权限不足：一律保留“无法核验”，不把仓库已有 Pages 页面冒充该 PR 已上线。
+- 匹配 Deployment 成功后，发布 URL 仍需与仓库 Pages URL 同源且路径匹配才予显示。这样不会把不受信任的跳转注入公开页面。
+
+只采样最近 50 个 Pages Deployment，每仓库最多核实 4 个合并 PR 的部署状态，按公开信息分批获取。**部署成功只证明 GitHub 环境记录，不代表完整 Playtest、性能验收和用户端质量全部通过。**
