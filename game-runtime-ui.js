@@ -24,6 +24,19 @@ export function initGameRuntime(){
    const header=n('div',null,'game-qa-header');
    header.append(n('strong',target.label),n('span',STATE[state]||'待核验','game-qa-state '+state));
    tile.append(header,n('p',target.title,'game-qa-explainer'));
+   if(result){
+    const pieces=[];
+    if(result.elapsedMs!=null)pieces.push('本次运行 '+(result.elapsedMs/1000).toFixed(1)+' 秒');
+    if(result.navigation?.domContentLoadedMs!=null)
+     pieces.push('最近导航 DOM 就绪 '+result.navigation.domContentLoadedMs+' ms');
+    if(result.screenshots?.length)pieces.push('实机截图 '+result.screenshots.length+' 张');
+    if(pieces.length)tile.append(n('p',pieces.join(' · '),'game-qa-telemetry'));
+    if(result.screenshots?.length&&report.runUrl){
+     const evidence=link(report.runUrl,'打开 Actions Artifacts 查看浏览器截图 ↗');
+     evidence.className='game-qa-evidence-link';
+     tile.append(evidence);
+    }
+   }
    if(result?.checks?.length){
     const details=n('details',null,'game-qa-details');
     const sum=n('summary',result.checks.filter(c=>c.status==='pass').length+' / '+result.checks.length+' 个检查项 · 展开证据');
