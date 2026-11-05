@@ -47,8 +47,10 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         assert len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))==1
         assert driver.find_element(By.CSS_SELECTOR,"#arcadeGrid .arcade-card").get_attribute("data-game")=="bistro"
         search.clear()
+        driver.execute_script("arguments[0].dispatchEvent(new Event('input',{bubbles:true}))",search)
         driver.find_element(By.ID,"arcadePlayable").click()
-        assert len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))==4
+        count=len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))
+        assert count==4, f"Playable filter expected 4, got {count}; search={search.get_attribute('value')!r}"
         driver.find_element(By.ID,"arcadePlayable").click()
         driver.find_element(By.CSS_SELECTOR,"#arcadeGenres button[data-genre='life']").click()
         assert len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))>=2
