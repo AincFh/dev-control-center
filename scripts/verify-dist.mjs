@@ -3,7 +3,7 @@ import {existsSync,readFileSync} from 'node:fs';
 import path from 'node:path';
 
 const root=path.resolve('dist');
-const entrypoints=['index.html','atlas-v3.css','style.css','app.js','favicon.svg','arcade.js','data/status.json','data/build.json','data/github-universe.json','universe.js','universe-core.js','studio-motion.js'];
+const entrypoints=['index.html','atlas-v3.css','style.css','app.js','favicon.svg','arcade.js','data/status.json','data/build.json','data/github-universe.json','universe.js','universe-core.js','studio-motion.js','mission.js','mission-core.js'];
 for(const file of entrypoints)assert(existsSync(path.join(root,file)),'Published site is missing: '+file);
 
 const meta=JSON.parse(readFileSync(path.join(root,'data/build.json'),'utf8'));
@@ -32,6 +32,7 @@ while(pending.length){
 }
 assert(seen.has('arcade.js'),'The game hall must be included in Pages artifact');
 assert(seen.has('universe.js')&&seen.has('universe-core.js'),'The external universe must be bundled with the application');
+assert(seen.has('mission.js')&&seen.has('mission-core.js'),'Mission Control and its domain module must be bundled');
 const universe=JSON.parse(readFileSync(path.join(root,'data/github-universe.json'),'utf8'));
 assert.equal(universe.kind,'external-discovery');assert(universe.rows.length>=1000,'External reference catalog must contain at least 1000 real repo names');
 console.log('Validated published ES graph with fingerprint '+version+':',[...seen].join(', '));
