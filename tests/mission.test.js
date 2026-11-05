@@ -67,3 +67,22 @@ test('HTTP site faults are independent of CI and filterable by source evidence',
  assert.equal(snapshot.assessments.find(x=>x.name==='broken').signals.some(x=>x.type==='site_probe'),true);
  assert.deepEqual(filterMission(snapshot.assessments,{filter:'site_error'}).map(x=>x.name),['broken']);
 });
+
+test('current real browser gameplay failure blocks release regardless of green CI or Pages',()=>{
+ const failed={...p('cozy-bistro-sim','success'),site:{state:'published'},
+  probe:{state:'reachable'},runtimeQa:{status:'fail',isCurrent:true,case:{checks:[{id:'interaction',status:'fail'}]}}};
+ const passed={...p('fishing-world-3d','success'),
+  runtimeQa:{status:'pass',isCurrent:true,case:{checks:[{id:'webgl',status:'pass'}]}}};
+ const stale={...p('old-game','success'),
+  runtimeQa:{status:'fail',isCurrent:false,case:{checks:[{id:'interaction',status:'fail'}]}}};
+ const aggregate=missionSnapshot([failed,passed,stale],{},NOW);
+ assert.deepEqual(aggregate.gameQA,{passed:1,failed:1,stale:1});
+ assert.equal(aggregate.states.failure,0,'CI remains a separate signal');
+ const blocked=aggregate.assessments.find(a=>a.name==='cozy-bistro-sim');
+ assert.equal(blocked.needsAttention,true);
+ assert.equal(blocked.signals[0].type,'game_browser');
+ assert.equal(blocked.signals[0].level,'critical');
+ assert.deepEqual(filterMission(aggregate.assessments,{filter:'game_qa_failed'}).map(a=>a.name),['cozy-bistro-sim']);
+ assert.match(reportMarkdown(aggregate),/独立 Chromium 游戏验收.*通过 1 \/ 失败 1 \/ 过期 1/);
+ assert.ok(!aggregate.assessments.find(a=>a.name==='old-game').signals.some(x=>x.type==='game_browser'));
+});
