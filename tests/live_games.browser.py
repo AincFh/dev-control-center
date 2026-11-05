@@ -387,7 +387,8 @@ def run_spacefortress(driver,check):
 RUNNERS={"bistro":run_bistro,"paradise":run_paradise,"wildlands":run_wildlands,"fishing":run_fishing,"factory":run_factory,"citylife":run_citylife,"mori":run_mori,"qube":run_qube,"cimulity":run_cimulity,"spacefortress":run_spacefortress}
 def run_game(id,artifact):
  repo,url=SITES[id]
- record={"id":id,"repo":repo,"status":"unknown","elapsedMs":0,"checks":[],"message":""}
+ record={"id":id,"repo":repo,"status":"unknown","elapsedMs":0,"checks":[],"message":"",
+         "screenshots":[],"navigation":None}
  start=time.monotonic()
  opts=Options()
  for arg in ("--headless=new","--no-sandbox","--disable-dev-shm-usage","--enable-webgl","--use-gl=angle","--use-angle=swiftshader","--enable-unsafe-swiftshader","--window-size=1280,840"):
@@ -400,15 +401,41 @@ def run_game(id,artifact):
   driver.set_page_load_timeout(70)
   driver.get(url)
   def check(name,label,fn):
-   return mark(record,name,label,fn)
+   detail=mark(record,name,label,fn)
+   # Screenshots come from the same actual game session, after real input.
+   # Failure to capture a screenshot never changes a game PASS into a FAIL;
+   # the QA run artifact still contains summary.json and failure evidence.
+   if name in ("interaction","mobile"):
+    filename=id+("-game.png" if name=="interaction" else "-mobile.png")
+    try:
+     if driver.save_screenshot(str(artifact/filename)):
+      record["screenshots"].append(filename)
+    except Exception:pass
+   return detail
   RUNNERS[id](driver,check)
   check("console",LABELS["console"],lambda:assert_console(driver))
+  record["navigation"]=driver.execute_script("""return (() => {
+   const n=performance.getEntriesByType('navigation')[0];
+   return {domContentLoadedMs:n?Math.round(n.domContentLoadedEventEnd):null,
+    loadEventMs:n?Math.round(n.loadEventEnd):null,
+    resourceCount:performance.getEntriesByType('resource').length}
+  })()""")
   record["status"]="pass"
  except Exception as error:
   record["status"]="timeout" if isinstance(error,TimeoutException) else "fail"
   record["message"]=(type(error).__name__+": "+str(error)).split("\n")[0][:350]
   if driver is not None:
-   try:driver.save_screenshot(str(artifact/(id+"-failure.png")))
+   try:
+    context=driver.execute_script("""return {
+     title:document.title,screen:document.querySelector('.screen.show')?.id||null,
+     mode:window.blockhaven?.mode||null,route:location.pathname,
+     viewport:[innerWidth,innerHeight]}""")
+    record["message"]=(record["message"]+" | "+json.dumps(context,ensure_ascii=False))[:350]
+   except Exception:pass
+   try:
+    filename=id+"-failure.png"
+    if driver.save_screenshot(str(artifact/filename)):
+     record["screenshots"].append(filename)
    except Exception:pass
  finally:
   if driver is not None:
