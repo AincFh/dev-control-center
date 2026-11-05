@@ -4,7 +4,7 @@ import path from 'node:path';
 import {latestWorkflow,workflowState,safeRepositoryPath} from '../status.js';
 import {normalizePreview} from '../mission-core.js';
 import {traceForRepo,normalizeTraceRun} from '../trace-core.js';
-import {planDeploymentChecks,normalizeDeploymentEvidence,applyDeploymentEvidence} from '../deploy-core.js';
+import {planDeploymentChecks,planBranchDeployment,normalizeDeploymentEvidence,applyDeploymentEvidence} from '../deploy-core.js';
 import {siteEvidence} from '../site-core.js';
 import {deploymentVersion,fingerprintDist} from './asset-version.mjs';
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -56,15 +56,27 @@ async function describe(r){
   prRuns:(prRuns?.workflow_runs||[]).map(x=>normalizeTraceRun(x,OWNER,r.name)).filter(Boolean)});
  // Deployment evidence is optional and strictly tied to exact merge SHA.
  // Pages existence or successful main CI never counts as this PR's deployment.
- const hasMerged=rawTrace?.prs.some(p=>p.state==='merged');
- const deployments=hasMerged?await optional(
-  ()=>get(root+'/deployments?environment=github-pages&per_page=50'),r.name,'deployments',null):null;
+ // Check both PR-level and repository-level deployments. A standalone Pages
+ // site may have a successful main deployment without any PR history.
+ const deployments=await optional(
+  ()=>get(root+'/deployments?environment=github-pages&per_page=50'),r.name,'deployments',null);
+ const cachedStatuses=new Map();
+ const statusesFor=async candidate=>{
+  if(!cachedStatuses.has(candidate.id))cachedStatuses.set(candidate.id,
+   optional(()=>get(root+'/deployments/'+candidate.id+'/statuses?per_page=10'),r.name,'deployment_status',null));
+  return cachedStatuses.get(candidate.id);
+ };
+ const expectedPageUrl=pages?.html_url||
+  ('https://'+OWNER.toLowerCase()+'.github.io/'+(r.name===OWNER?'':encodeURIComponent(r.name)+'/'));
  const candidates=planDeploymentChecks(rawTrace?.prs||[],deployments||[],OWNER,r.name,4);
- const proven=await Promise.all(candidates.map(async candidate=>{
-  const statuses=await optional(()=>get(root+'/deployments/'+candidate.id+'/statuses?per_page=10'),r.name,'deployment_status',null);
-  return{prNumber:candidate.prNumber,evidence:normalizeDeploymentEvidence(candidate,statuses||[],pages?.html_url||null)};
- }));
+ const proven=await Promise.all(candidates.map(async candidate=>({
+  prNumber:candidate.prNumber,
+  evidence:normalizeDeploymentEvidence(candidate,(await statusesFor(candidate))||[],expectedPageUrl)
+ })));
  const trace=applyDeploymentEvidence(rawTrace,proven);
+ const branchCandidate=planBranchDeployment(deployments||[],OWNER,r.name,branch);
+ const latestDeployment=branchCandidate?normalizeDeploymentEvidence(
+  branchCandidate,(await statusesFor(branchCandidate))||[],expectedPageUrl):null;
 
  return {
   name:r.name,repositoryUrl:r.html_url,description:r.description||'',language:r.language||null,
@@ -77,7 +89,7 @@ async function describe(r){
   fork:!!r.fork,archived:!!r.archived,
   trace,
   countsTruncated:!!(issues?.length>=100||prs?.length>=100),
-  site:siteEvidence({pages,trace})
+  site:siteEvidence({pages,trace,latestDeployment})
  };
 }
 // Copy the actual relative module dependency graph, not a manually curated
