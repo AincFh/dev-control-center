@@ -327,7 +327,7 @@ def run_cimulity(driver,check):
   driver.find_element(By.CSS_SELECTOR,'.city-desktop-vault').click()
   assert WebDriverWait(driver,12).until(lambda d:d.find_element(By.CSS_SELECTOR,'.city-vault-dialog').is_displayed())
   driver.find_element(By.CSS_SELECTOR,'.city-vault-close').click()
-  WebDriverWait(driver,10).until(lambda d:not d.find_elements(By.CSS_SELECTOR,'.city-vault-dialog[open]'))
+  WebDriverWait(driver,10).until(lambda d:not d.find_element(By.CSS_SELECTOR,'.city-vault-dialog').is_displayed())
   return True
  check("save","真实打开并关闭城市存档管理器",vault)
  def mobile_tools():
