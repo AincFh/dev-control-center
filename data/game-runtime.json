@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": "2026-11-05T11:22:17Z",
-  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42018072064",
+  "generatedAt": "2026-11-05T11:29:48Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42018982353",
   "source": "real_chromium_public_games",
   "browser": "Chromium / Selenium / fresh profile per game",
   "results": [
@@ -10,7 +10,7 @@
       "id": "bistro",
       "repo": "cozy-bistro-sim",
       "status": "pass",
-      "elapsedMs": 13102,
+      "elapsedMs": 7082,
       "checks": [
         {
           "id": "interaction",
@@ -49,8 +49,8 @@
         "bistro-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 61,
-        "loadEventMs": 61,
+        "domContentLoadedMs": 44,
+        "loadEventMs": 45,
         "resourceCount": 6
       }
     },
@@ -58,7 +58,7 @@
       "id": "paradise",
       "repo": "paradise-isle",
       "status": "pass",
-      "elapsedMs": 3491,
+      "elapsedMs": 3558,
       "checks": [
         {
           "id": "bootstrap",
@@ -97,8 +97,8 @@
         "paradise-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 58,
-        "loadEventMs": 59,
+        "domContentLoadedMs": 46,
+        "loadEventMs": 47,
         "resourceCount": 2
       }
     },
@@ -106,7 +106,7 @@
       "id": "wildlands",
       "repo": "wildlands-anglerfishing-world-3d",
       "status": "pass",
-      "elapsedMs": 14845,
+      "elapsedMs": 15703,
       "checks": [
         {
           "id": "webgl",
@@ -139,8 +139,8 @@
         "wildlands-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 1101,
-        "loadEventMs": 3085,
+        "domContentLoadedMs": 1033,
+        "loadEventMs": 4586,
         "resourceCount": 43
       }
     },
@@ -148,7 +148,7 @@
       "id": "fishing",
       "repo": "fishing-world-3d",
       "status": "pass",
-      "elapsedMs": 14682,
+      "elapsedMs": 16943,
       "checks": [
         {
           "id": "webgl",
@@ -181,16 +181,16 @@
         "fishing-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 7540,
-        "loadEventMs": 7541,
+        "domContentLoadedMs": 9249,
+        "loadEventMs": 9250,
         "resourceCount": 8
       }
     },
     {
       "id": "factory",
       "repo": "Midnight-Factory",
-      "status": "fail",
-      "elapsedMs": 4076,
+      "status": "pass",
+      "elapsedMs": 4207,
       "checks": [
         {
           "id": "interaction",
@@ -205,24 +205,46 @@
           "reason": ""
         },
         {
+          "id": "tutorial",
+          "label": "通过真实 Skip 按钮完成首次内置提示条，不遮挡建造操作",
+          "status": "pass",
+          "reason": ""
+        },
+        {
           "id": "build",
           "label": "实际选择并取消矿机建造工具",
-          "status": "fail",
-          "reason": "ElementClickInterceptedException: Message: element click intercepted: Element <button class=\"build-btn\" data-id=\"mine\" data-req=\"\">...</button> is not clickable at point (540, 626). Other element would receive the click:"
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
         }
       ],
-      "message": "ElementClickInterceptedException: Message: element click intercepted: Element <button class=\"build-btn\" data-id=\"mine\" data-req=\"\">...</button> is not clickable at point (540, 626). Other element would receive the click: <div id=\"tutorial-banner\" style=\"display: block; position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%); z-index: ",
+      "message": "",
       "screenshots": [
         "factory-game.png",
-        "factory-failure.png"
+        "factory-mobile.png"
       ],
-      "navigation": null
+      "navigation": {
+        "domContentLoadedMs": 502,
+        "loadEventMs": 683,
+        "resourceCount": 6
+      }
     },
     {
       "id": "citylife",
       "repo": "City-of-Small-Chances",
       "status": "pass",
-      "elapsedMs": 30515,
+      "elapsedMs": 51946,
       "checks": [
         {
           "id": "webgl",
@@ -255,8 +277,8 @@
         "citylife-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 1014,
-        "loadEventMs": 3912,
+        "domContentLoadedMs": 1061,
+        "loadEventMs": 4074,
         "resourceCount": 127
       }
     },
@@ -264,7 +286,7 @@
       "id": "mori",
       "repo": "Tamagochi---Open-Source-Game",
       "status": "pass",
-      "elapsedMs": 7557,
+      "elapsedMs": 7767,
       "checks": [
         {
           "id": "bootstrap",
@@ -309,8 +331,8 @@
         "mori-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 49,
-        "loadEventMs": 51,
+        "domContentLoadedMs": 90,
+        "loadEventMs": 90,
         "resourceCount": 9
       }
     },
@@ -318,7 +340,7 @@
       "id": "qube",
       "repo": "qubecraft",
       "status": "pass",
-      "elapsedMs": 36015,
+      "elapsedMs": 36034,
       "checks": [
         {
           "id": "bootstrap",
@@ -363,8 +385,8 @@
         "qube-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 624,
-        "loadEventMs": 904,
+        "domContentLoadedMs": 703,
+        "loadEventMs": 985,
         "resourceCount": 19
       }
     },
@@ -372,7 +394,7 @@
       "id": "cimulity",
       "repo": "cimulity",
       "status": "pass",
-      "elapsedMs": 5639,
+      "elapsedMs": 5096,
       "checks": [
         {
           "id": "bootstrap",
@@ -411,8 +433,8 @@
         "cimulity-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 367,
-        "loadEventMs": 577,
+        "domContentLoadedMs": 352,
+        "loadEventMs": 647,
         "resourceCount": 20
       }
     },
@@ -420,7 +442,7 @@
       "id": "spacefortress",
       "repo": "spacefortress",
       "status": "pass",
-      "elapsedMs": 16471,
+      "elapsedMs": 39363,
       "checks": [
         {
           "id": "bootstrap",
@@ -459,8 +481,8 @@
         "spacefortress-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 1168,
-        "loadEventMs": 1168,
+        "domContentLoadedMs": 1195,
+        "loadEventMs": 1195,
         "resourceCount": 138
       }
     }
