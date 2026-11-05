@@ -1,0 +1,80 @@
+name: ATLAS · Real Game Browser QA
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '27 3 * * *'
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: atlas-live-games-nightly
+  cancel-in-progress: false
+jobs:
+  playtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Selenium for actual Chromium playtests
+        run: python -m pip install selenium==4.37.0
+      - name: Compile actual public-game smoke suite
+        run: python -m py_compile tests/live_games.browser.py
+      - name: Play four real public games with isolated browser profiles
+        run: python tests/live_games.browser.py --output data/game-runtime.json
+        env:
+          GITHUB_RUN_ID: ${{ github.run_id }}
+      - name: Validate public evidence and never invent pass outcomes
+        run: |
+          python - <<'PY'
+          import json
+          with open('data/game-runtime.json', encoding='utf8') as f: data=json.load(f)
+          assert data['schemaVersion']==1 and data['owner']=='AincFh'
+          assert len(data['results'])==4
+          assert {x['id'] for x in data['results']}=={'bistro','paradise','wildlands','fishing'}
+          assert all(x['status'] in ('pass','fail','timeout','unknown') for x in data['results'])
+          print('Public Chromium game sessions:', [(x['id'],x['status']) for x in data['results']])
+          PY
+      - name: Preserve actual browser acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-live-game-playtests-${{ github.run_id }}
+          path: test-artifacts/live-games/
+          retention-days: 10
+          if-no-files-found: ignore
+      - name: Publish public game QA results to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/game-runtime.json
+          if git diff --cached --quiet; then
+            echo "Browser QA evidence unchanged"
+          else
+            git commit -m "ci(game-qa): publish actual Chromium game evidence [skip ci]"
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push origin HEAD:main; then
+                echo "Published latest game QA evidence"
+                break
+              fi
+              if [ "$attempt" -eq 3 ]; then exit 1; fi
+              sleep 3
+            done
+          fi
+      - name: Refresh published ATLAS site after evidence update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
+      - name: Surface failed real game sessions in workflow conclusion
+        run: |
+          python - <<'PY'
+          import json
+          with open('data/game-runtime.json', encoding='utf8') as f: data=json.load(f)
+          failures=[x for x in data['results'] if x['status']!='pass']
+          print('Real game QA failures:', [(x['id'],x['status'],x['message'][:200]) for x in failures])
+          if failures: raise SystemExit(1)
+          PY
