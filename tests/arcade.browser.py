@@ -9,6 +9,7 @@ from http.server import SimpleHTTPRequestHandler
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementClickInterceptedException, StaleElementReferenceException
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]
@@ -113,6 +114,11 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         time.sleep(.6)
         assert driver.execute_script("return document.documentElement.dataset.theme")==before_theme
         driver.find_element(By.ID,"quickFind").click()
+        time.sleep(.3)
+        assert driver.execute_script("return document.getElementById('commandDialog').open")
+        command=driver.find_element(By.ID,'commandInput')
+        command.send_keys('全部仓库')
+        command.send_keys(Keys.ENTER)
         time.sleep(.3)
         assert driver.execute_script("return location.hash")=="#projects"
         assert driver.execute_script("return document.getElementById('projects').classList.contains('is-active')")

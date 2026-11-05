@@ -53,7 +53,7 @@
 <div class="app-column">
 <header class="toolbar">
  <div class="toolbar-left"><span class="toolbar-studio">ATLAS</span><svg class="i" aria-hidden="true"><use href="#i-chevron"></use></svg><strong id="pageTitle">总览</strong><span class="toolbar-subtitle" id="pageSubtitle">你的创造者工作空间</span></div>
- <div class="right"><span class="toolbar-clock" id="clock"></span><button class="toolbar-button" id="quickFind" aria-label="搜索全部仓库" title="搜索仓库"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg></button><button class="toolbar-button" id="themeBtn" aria-label="切换浅色或深色主题" title="切换主题"><svg class="i" aria-hidden="true"><use href="#i-sun"></use></svg></button><button id="refresh" class="toolbar-button" aria-label="刷新公开 GitHub 状态" title="刷新项目状态"><svg class="i" aria-hidden="true"><use href="#i-refresh"></use></svg></button><a href="https://github.com/AincFh" target="_blank" rel="noopener" class="avatar" title="打开 GitHub 主页">AF</a></div>
+ <div class="right"><span class="toolbar-clock" id="clock"></span><button class="toolbar-button" id="quickFind" aria-label="全局搜索页面、游戏和仓库" title="全局搜索 · Ctrl / ⌘ + K"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg></button><button class="toolbar-button" id="themeBtn" aria-label="切换浅色或深色主题" title="切换主题"><svg class="i" aria-hidden="true"><use href="#i-sun"></use></svg></button><button id="refresh" class="toolbar-button" aria-label="刷新公开 GitHub 状态" title="刷新项目状态"><svg class="i" aria-hidden="true"><use href="#i-refresh"></use></svg></button><a href="https://github.com/AincFh" target="_blank" rel="noopener" class="avatar" title="打开 GitHub 主页">AF</a></div>
 </header>
 <main class="content" id="content">
 <section class="view view-home is-active" id="home" aria-label="工作台总览">
@@ -221,6 +221,14 @@
  </form>
 </dialog>
 <dialog id="universeDetail" aria-label="GitHub 外部项目资料"><button id="universeDetailClose" aria-label="关闭项目资料">×</button><div id="universeDetailBody"></div></dialog>
+<dialog id="commandDialog" class="command-dialog" aria-label="ATLAS 全局命令搜索">
+ <section class="command-shell">
+  <div class="command-searchbar"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input type="search" id="commandInput" role="combobox" aria-controls="commandResults" aria-expanded="true" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="搜索页面、游戏、仓库和开源项目…" aria-label="输入名称或关键词搜索全局命令"><button id="commandClose" type="button" aria-label="关闭命令搜索">Esc</button></div>
+  <div class="command-results-heading"><span>ATLAS / SEARCH EVERYWHERE</span><small id="commandResultCount" aria-live="polite">正在建立搜索索引…</small></div>
+  <div id="commandResults" class="command-results" role="listbox" aria-label="全局命令搜索结果"></div>
+  <footer class="command-footer"><span><kbd>↑</kbd> <kbd>↓</kbd> 选择</span><span><kbd>Enter</kbd> 执行</span><span><kbd>Esc</kbd> 关闭</span><span>只读 GitHub · 无账户令牌</span></footer>
+ </section>
+</dialog>
 <dialog id="details" aria-label="项目详情"><button id="close" aria-label="关闭详情">×</button><div id="detailBody"></div></dialog>
 <script type="module" src="./app.js"></script>
 </body></html>
