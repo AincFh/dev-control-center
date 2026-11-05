@@ -90,6 +90,7 @@ export function traceOverview(projects=[]){
   (Date.parse(b.updatedAt||b.mergedAt||'')||0)-(Date.parse(a.updatedAt||a.mergedAt||'')||0));
  return{cards,issues,open:cards.filter(x=>x.state==='open').length,merged:cards.filter(x=>x.state==='merged').length,
   failed:cards.filter(x=>x.checks.state==='failure').length,unknown:cards.filter(x=>x.checks.state==='unknown').length,
+  deployed:cards.filter(x=>x.state==='merged'&&x.deployment?.verified&&x.deployment?.sha===x.mergeSha).length,
   explicitLinks:cards.reduce((sum,x)=>sum+x.links.length,0),partial:true};
 }
 export function filterTrace(cards,{query='',phase='all',repo='all'}={}){
@@ -105,11 +106,12 @@ export function traceReport(overview,{generatedAt=new Date().toISOString()}={}){
  const lines=['# ATLAS · 研发链路追踪报告','',
  '- 导出时间：'+generatedAt,'- PR 样本：'+overview.cards.length+'（开放 '+overview.open+'，最近已合并 '+overview.merged+'）',
  '- 检查失败：'+overview.failed+' / 检查无证据：'+overview.unknown,
+ '- 已验证同合并提交 Pages 部署：'+(overview.deployed||0),
  '- 发现明确关闭引用：'+overview.explicitLinks,'',
  '> 仅采集公开 Issue/PR 样本，非完整历史。PR 检查、合并后的主分支检查、GitHub Pages 部署相互独立，不能互相充当完成证据。','',
- '| 仓库 | PR | 阶段 | 关联检查 | 明确关闭引用 |',
- '| --- | --- | --- | --- | --- |'];
- for(const c of overview.cards)lines.push('| '+clean(c.repo)+' | [#'+c.number+']('+c.url+') '+clean(c.title)+' | '+c.phase+' | '+c.checks.state+' ('+c.checks.checked+') | '+(c.links.length?c.links.map(l=>'[#'+l.issueNumber+']('+l.url+')').join('、'):'无')+' |');
+ '| 仓库 | PR | 阶段 | 关联检查 | 同提交部署 | 明确关闭引用 |',
+ '| --- | --- | --- | --- | --- | --- |'];
+ for(const c of overview.cards)lines.push('| '+clean(c.repo)+' | [#'+c.number+']('+c.url+') '+clean(c.title)+' | '+c.phase+' | '+c.checks.state+' ('+c.checks.checked+') | '+(c.deployment?.verified&&c.deployment.sha===c.mergeSha?'[Pages 部署成功]('+c.deployment.evidenceUrl+')':'未验证')+' | '+(c.links.length?c.links.map(l=>'[#'+l.issueNumber+']('+l.url+')').join('、'):'无')+' |');
  lines.push('','## 使用约束','',
  '- 关闭关键字仅代表 PR 正文中声明的关联，并不证明 GitHub 已正式建立跨事项自动关闭关系。',
  '- PR 检查成功不等于已合并；合并也不自动意味着目标页面已部署。',

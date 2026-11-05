@@ -4,6 +4,7 @@ import path from 'node:path';
 import {latestWorkflow,workflowState,safeRepositoryPath} from '../status.js';
 import {normalizePreview} from '../mission-core.js';
 import {traceForRepo,normalizeTraceRun} from '../trace-core.js';
+import {planDeploymentChecks,normalizeDeploymentEvidence,applyDeploymentEvidence} from '../deploy-core.js';
 import {deploymentVersion,fingerprintDist} from './asset-version.mjs';
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const OWNER='AincFh', API='https://api.github.com', TOKEN=process.env.GITHUB_TOKEN||'';
@@ -49,9 +50,20 @@ async function describe(r){
   Array.isArray(prs)&&prs.length>0?optional(()=>get(root+'/actions/runs?event=pull_request&per_page=80'),r.name,'pr_checks',null):Promise.resolve(null)
  ]);
  const w=latestWorkflow(runs?.workflow_runs,branch,skip);
- const trace=traceForRepo({owner:OWNER,repo:r.name,issues:issues||[],openPRs:prs||[],closedPRs:closedPRs||[],
+ const rawTrace=traceForRepo({owner:OWNER,repo:r.name,issues:issues||[],openPRs:prs||[],closedPRs:closedPRs||[],
   branchRuns:(runs?.workflow_runs||[]).map(x=>normalizeTraceRun(x,OWNER,r.name)).filter(Boolean),
   prRuns:(prRuns?.workflow_runs||[]).map(x=>normalizeTraceRun(x,OWNER,r.name)).filter(Boolean)});
+ // Deployment evidence is optional and strictly tied to exact merge SHA.
+ // Pages existence or successful main CI never counts as this PR's deployment.
+ const hasMerged=rawTrace?.prs.some(p=>p.state==='merged');
+ const deployments=hasMerged?await optional(
+  ()=>get(root+'/deployments?environment=github-pages&per_page=50'),r.name,'deployments',null):null;
+ const candidates=planDeploymentChecks(rawTrace?.prs||[],deployments||[],OWNER,r.name,4);
+ const proven=await Promise.all(candidates.map(async candidate=>{
+  const statuses=await optional(()=>get(root+'/deployments/'+candidate.id+'/statuses?per_page=10'),r.name,'deployment_status',null);
+  return{prNumber:candidate.prNumber,evidence:normalizeDeploymentEvidence(candidate,statuses||[],pages?.html_url||null)};
+ }));
+ const trace=applyDeploymentEvidence(rawTrace,proven);
 
  return {
   name:r.name,repositoryUrl:r.html_url,description:r.description||'',language:r.language||null,

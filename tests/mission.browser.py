@@ -42,6 +42,12 @@ projects[1]["trace"]={
     "state":"success","url":"https://github.com/AincFh/healthy-game/actions/runs/42",
     "sha":MERGE,"event":"push","scope":"merged_branch_commit"}]}}]
 }
+projects[1]["trace"]["prs"][0]["deployment"]={
+ "state":"success","sha":MERGE,"id":447,"environment":"github-pages",
+ "url":"https://aincfh.github.io/healthy-game/",
+ "evidenceUrl":"https://github.com/AincFh/healthy-game/deployments/447",
+ "updatedAt":STAMP,"scope":"exact_merge_commit_sha","verified":True
+}
 repos=[{"name":p["name"],"description":p["description"],"html_url":p["repositoryUrl"],"language":p["language"],"pushed_at":STAMP,"stargazers_count":0,"private":False} for p in projects]
 snapshot={"schemaVersion":2,"publicOnly":True,"owner":"AincFh","generatedAt":STAMP,"errors":[],"projects":projects}
 script="""(() => {
@@ -125,13 +131,17 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   until(lambda:driver.find_element(By.ID,'traceTotal').text=='2')
   assert driver.find_element(By.ID,'traceBlocked').text=='1'
   assert driver.find_element(By.ID,'traceLinked').text=='1'
+  assert driver.find_element(By.ID,'traceDeployed').text=='1'
   assert len(driver.find_elements(By.CSS_SELECTOR,'#traceGrid .trace-card'))==2
   assert "PR 检查失败" in driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card').text
   driver.save_screenshot(str(OUT/'03-trace-desktop.png'))
   Select(driver.find_element(By.ID,'tracePhase')).select_by_value('merged')
   until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#traceGrid .trace-card'))==1)
   assert "已合并" in driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card').text
-  assert "无法归因到该 PR" in driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card').text
+  assert "GitHub Pages 同提交部署确认" in driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card').text
+  driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card summary').click()
+  assert "GitHub Deployment #447" in driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-detail-body').text
+  assert driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-detail-body a[href*="/deployments/447"]')
   Select(driver.find_element(By.ID,'tracePhase')).select_by_value('open')
   until(lambda:driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card').get_attribute('data-repo')=='broken-game')
   driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card summary').click()

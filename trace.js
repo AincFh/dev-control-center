@@ -34,9 +34,13 @@ function drawCard(p){
  progress.append(refStage('代码审查',p.state==='merged'?'GitHub 已确认合并于 '+(p.mergedAt?new Date(p.mergedAt).toLocaleDateString('zh-CN'):'未知时间'):p.draft?'PR 草稿阶段':'PR 开放，尚未合并',p.state==='merged'?'ok':p.draft?'warn':'active',p.url));
  const ciText=p.state==='open'?'PR 源提交检查：':'合并提交主分支检查：';
  progress.append(refStage('自动检查',ciText+(STATE[p.checks.state]||'未知')+' · '+p.checks.checked+' 项工作流',p.checks.state==='success'?'ok':p.checks.state==='failure'?'error':p.checks.state==='running'?'active':'warn',p.checks.checks[0]?.url||null));
- const deployment=p.state==='open'?'未合并；没有本次 PR 的部署证据':
-  p.site.state==='published'?'仓库当前 Pages 已启用；无法归因到该 PR':'未获取本次 PR 的发布证明';
- progress.append(refStage('线上发布',deployment,'neutral'));
+ const proof=p.state==='merged'&&p.deployment?.sha===p.mergeSha?p.deployment:null;
+ const deployment=p.state==='open'?'PR 未合并，尚无本次部署证据':
+  proof?.verified?'GitHub Pages 同提交部署确认 · '+proof.sha.slice(0,12):
+  proof?.state==='failure'?'GitHub Pages 同提交部署失败':
+  proof?.state==='running'?'GitHub Pages 同提交部署进行中':
+  p.site.state==='published'?'仓库 Pages 当前存在，但没有此 PR 的部署证明':'没有与此 PR 合并 SHA 匹配的成功部署证据';
+ progress.append(refStage('线上发布',deployment,proof?.verified?'ok':proof?.state==='failure'?'error':proof?.state==='running'?'active':'neutral',proof?.evidenceUrl||null));
  card.append(progress);
  const expand=make('details',null,'trace-details'),summary=make('summary','检查来源与关联证据','trace-more');
  expand.append(summary);
@@ -47,6 +51,11 @@ function drawCard(p){
  }else inner.append(make('p','没有可解析的 Fixes/Closes/Resolves 关闭引用；不能断言该 PR 没有对应需求。'));
  const sha=make('div','源提交 '+(p.headSha?p.headSha.slice(0,12):'未知')+(p.mergeSha?' · 合并提交 '+p.mergeSha.slice(0,12):''),'trace-sha');
  inner.append(sha);
+ if(proof){
+  inner.append(make('small','部署环境：'+proof.environment+' · GitHub Deployment #'+proof.id+' · '+(STATE[proof.state]||'无证据')));
+  if(proof.evidenceUrl)inner.append(link(proof.evidenceUrl,'同提交 GitHub Deployment 原始记录 ↗','trace-detail-link'));
+  if(proof.verified&&proof.url)inner.append(link(proof.url,'打开该部署环境 ↗','trace-detail-link'));
+ }
  if(p.checks.checks.length){
   for(const w of p.checks.checks){
    const line=make('div',null,'trace-check-line');
@@ -63,6 +72,7 @@ function render(){
  $('traceMerged').textContent=String(model.merged);
  $('traceBlocked').textContent=String(model.failed);
  $('traceLinked').textContent=String(model.explicitLinks);
+ $('traceDeployed').textContent=String(model.deployed||0);
  const filtered=filterTrace(model.cards,{query,phase,repo});
  const list=$('traceGrid');list.replaceChildren();
  $('traceMatches').textContent=filtered.length+' 条匹配的公开 PR 链路（样本）';

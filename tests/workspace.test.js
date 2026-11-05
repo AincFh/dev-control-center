@@ -7,7 +7,7 @@ test('information architecture has twelve separate navigable views',()=>{
  assert.match(app,/window\.addEventListener\('hashchange',route\)/);
 });
 test('important functional widgets are preserved',()=>{
- for(const id of ['arcadeGrid','arcadePlayable','arcadeSearch','arcadeGenres','discoveryGrid','discoverySearch','grid','query','sort','tabs','deliveryList','queueList','events','workstreamGrid','universeGrid','universeSearch','universeCanvas','universePrev','universeNext','missionCount','missionProjects','missionTaskFeed','missionReviewDialog','missionReport','traceGrid','traceTotal','traceQuery','traceIssues','traceExport','commandDialog','commandInput','commandResults','details','close','refresh','total','live','active','synced','connection'])assert.ok(html.includes('id="'+id+'"'),id);
+ for(const id of ['arcadeGrid','arcadePlayable','arcadeSearch','arcadeGenres','discoveryGrid','discoverySearch','grid','query','sort','tabs','deliveryList','queueList','events','workstreamGrid','universeGrid','universeSearch','universeCanvas','universePrev','universeNext','missionCount','missionProjects','missionTaskFeed','missionReviewDialog','missionReport','traceGrid','traceTotal','traceDeployed','traceQuery','traceIssues','traceExport','commandDialog','commandInput','commandResults','details','close','refresh','total','live','active','synced','connection'])assert.ok(html.includes('id="'+id+'"'),id);
 });
 test('real website uses original bundled CSS without remote fonts',()=>{
  assert.match(html,/href="\.\/atlas-v3\.css"/);assert.doesNotMatch(css,/@import\s+url\(https?:/);
