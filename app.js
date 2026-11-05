@@ -7,6 +7,7 @@ import {initUniverse} from './universe.js';
 import {initStudioExperience} from './studio-motion.js';
 import {initIncubator} from './incubator.js';
 import {initMission} from './mission.js';
+import {initCommandPalette} from './command.js';
 const OWNER='AincFh', API='https://api.github.com';
 const CATALOG={
  'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,description:'多项目状态、开发任务与交付管理'},
@@ -310,11 +311,11 @@ function setTheme(mode){
 let initialTheme='light';try{initialTheme=localStorage.getItem('atlas-v3-theme')||'light'}catch{}
 setTheme(initialTheme);
 $('themeBtn').onclick=()=>setTheme(document.documentElement.dataset.theme==='light'?'dark':'light');
-function jumpToProjects(){location.hash='#projects';requestAnimationFrame(()=>$('query').focus({preventScroll:true}));}
-$('quickFind').onclick=jumpToProjects;
+const openCommandPalette=initCommandPalette(()=>projects);
+$('quickFind').onclick=openCommandPalette;
 document.addEventListener('keydown',e=>{
  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){
-  e.preventDefault();jumpToProjects();
+  e.preventDefault();openCommandPalette();
  }
 });
 
