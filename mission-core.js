@@ -1,4 +1,5 @@
 // ATLAS Mission Control. Strictly observational public-data signals, not a release certification.
+import {probeOverview} from './site-probe-core.js';
 export const MAX_PREVIEW=5;
 export const MISSION_FILTERS=[
  {id:'all',label:'全部项目'},
@@ -6,7 +7,8 @@ export const MISSION_FILTERS=[
  {id:'failure',label:'构建失败'},
  {id:'review',label:'待审 PR'},
  {id:'unverified',label:'待核验'},
- {id:'game',label:'游戏项目'}
+ {id:'game',label:'游戏项目'},
+ {id:'site_error',label:'线上资源异常'}
 ];
 export const RELEASE_CHECKS=[
  {id:'playtest',label:'核心流程完成连续实际试玩'},
@@ -70,6 +72,9 @@ export function assessProject(p,now=Date.now()){
  if(prs>0)add('review','action',prs+(p.countsTruncated?'+':'')+' 个开放 PR','需要开发者审核、测试和处理',70);
  if(issues>0)add('issue','action',issues+(p.countsTruncated?'+':'')+' 个开放 Issue','待排期、分类或验证的公开问题',42);
  if(p.countsTruncated)add('truncated','verify','任务计数达到 API 截断阈值','数值是下限，不等于全部任务',52);
+ if(['http_error','resource_error','network_error','content_error'].includes(p?.probe?.state)){
+  add('site_probe','critical','线上静态资源探针异常','最近快照的 HTML/JS/CSS 网络检测未通过，需要打开站点进一步诊断',93);
+ }
  const last=Date.parse(p?.updated||'');
  if(Number.isFinite(last)&&now-last>45*86400000)add('stale','note','近期缺少代码推送','超过 45 天无公开推送记录；不代表项目故障',14);
  signals.sort((a,b)=>b.weight-a.weight);
@@ -107,6 +112,7 @@ export function missionSnapshot(projects=[],snapshot={},now=Date.now()){
   taskPreview:tasks,taskPreviewIsPartial:true,
   snapshotState:freshness,snapshotAgeMinutes:Number.isFinite(age)?Math.max(0,Math.floor((now-age)/60000)):null,
   errors:Array.isArray(snapshot?.errors)?snapshot.errors.length:0,
+  probes:probeOverview(projects),
   generatedAt:validDate(snapshot?.generatedAt)?snapshot.generatedAt:null
  };
 }
@@ -119,6 +125,7 @@ export function filterMission(items,{query='',filter='all',sort='urgency',pinned
   if(filter==='review'&&!(a.prs>0))return false;
   if(filter==='unverified'&&!['unknown','neutral'].includes(a.state))return false;
   if(filter==='game'&&a.project.category!=='game')return false;
+  if(filter==='site_error'&&!['http_error','resource_error','network_error','content_error'].includes(a.project.probe?.state))return false;
   return terms.every(t=>[a.name,a.project.label,a.project.description,a.project.language].some(x=>String(x||'').toLocaleLowerCase().includes(t)));
  };
  return items.filter(predicate).sort((a,b)=>{
@@ -141,8 +148,9 @@ export function reportMarkdown(result,{generatedAt=new Date().toISOString(),evid
   '- CI：成功 '+result.states.success+' / 失败 '+result.states.failure+' / 运行中 '+result.states.running+' / 中立 '+result.states.neutral+' / 未知 '+result.states.unknown,
   '- 开放任务：Issue '+result.openIssues+(result.countsTruncated?'+':'')+' / PR '+result.openPRs+(result.countsTruncated?'+':''),
   '- 采集异常：'+result.errors+' 项',
+  '- 在线静态资源探针：正常 '+(result.probes?.reachable??0)+' / 异常 '+(result.probes?.broken??0)+' / 未检测 '+(result.probes?.missing??0),
   '',
-  '> CI 成功不代表已发布或满足产品完整度；公开 Issues/PR 数量可能因接口上限不完整。人工核验清单只代表此浏览器的记录，不等于正式验收。',
+  '> CI 成功不代表已发布或满足产品完整度；HTTP 探针只检查网站 HTML 与最多 6 个同源 JS/CSS 引用，不执行游戏逻辑。公开 Issues/PR 可能不完整，人工清单不是正式验收。',
   '',
   '## 项目关注队列','',
   '| 仓库 | 主分支 CI | 公开 Issue | 公开 PR | 关注提示 | 本地人工核验 |',
