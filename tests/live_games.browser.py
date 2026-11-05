@@ -23,6 +23,9 @@ SITES={
  "paradise":("paradise-isle","https://aincfh.github.io/paradise-isle/"),
  "wildlands":("wildlands-anglerfishing-world-3d","https://aincfh.github.io/wildlands-anglerfishing-world-3d/next/"),
  "fishing":("fishing-world-3d","https://aincfh.github.io/fishing-world-3d/"),
+ "factory":("Midnight-Factory","https://aincfh.github.io/Midnight-Factory/"),
+ "citylife":("City-of-Small-Chances","https://aincfh.github.io/City-of-Small-Chances/"),
+ "mori":("Tamagochi---Open-Source-Game","https://aincfh.github.io/Tamagochi---Open-Source-Game/"),
 }
 LABELS={
  "bootstrap":"真实页面启动",
@@ -154,7 +157,97 @@ def run_fishing(driver,check):
   return phase
  check("interaction","真实点击抛竿令钓鱼阶段变化",cast)
  check("mobile",LABELS["mobile"],lambda:assert_mobile(driver))
-RUNNERS={"bistro":run_bistro,"paradise":run_paradise,"wildlands":run_wildlands,"fishing":run_fishing}
+def run_factory(driver,check):
+ def guide():
+  WebDriverWait(driver,24).until(lambda d:d.find_elements(By.ID,"factory"))
+  driver.find_element(By.ID,"guide-toggle").click()
+  title=WebDriverWait(driver,12).until(lambda d:d.find_element(By.ID,"step-title").text)
+  driver.find_element(By.ID,"locale").click()
+  translated=driver.find_element(By.ID,"step-title").text
+  assert title and translated and title!=translated,(title,translated)
+  driver.find_element(By.ID,"guide-close").click()
+  return True
+ check("interaction","实际打开新手引导并切换中英文",guide)
+ def scene():
+  driver.switch_to.frame(driver.find_element(By.ID,"factory"))
+  def ready(d):
+   return d.execute_script("""return (() => ({
+    money:document.querySelector('#money-val')?.textContent||'',
+    buttons:document.querySelectorAll('#build-panel button.build-btn').length,
+    canvas:document.querySelector('#game-canvas')?.width||0
+   }))()""")
+  def detected(d):
+   x=ready(d)
+   return x if x["buttons"]>=15 and x["canvas"]>500 and x["money"] not in ("","0") else False
+  state=WebDriverWait(driver,34).until(detected)
+  return state
+ check("bootstrap","真实工厂 Canvas、资金与建造菜单启动",scene)
+ def mine():
+  button=driver.find_element(By.CSS_SELECTOR,'#build-panel button[data-id="mine"]')
+  button.click()
+  assert "active" in driver.find_element(By.CSS_SELECTOR,'#build-panel button[data-id="mine"]').get_attribute("class")
+  driver.find_element(By.CSS_SELECTOR,'#build-panel button[data-id="mine"]').click()
+  assert "active" not in driver.find_element(By.CSS_SELECTOR,'#build-panel button[data-id="mine"]').get_attribute("class")
+  return True
+ check("build","实际选择并取消矿机建造工具",mine)
+ def mobile():
+  driver.switch_to.default_content()
+  return assert_mobile(driver)
+ check("mobile",LABELS["mobile"],mobile)
+def run_citylife(driver,check):
+ def world():
+  state=wait_for(driver,"return window.__game && document.querySelector('#game')?.getBoundingClientRect().width>400 && !!document.querySelector('#clock')?.textContent",45)
+  assert state,"World is not ready"
+  return True
+ check("webgl","真实 3D 城市、HUD 与时间系统启动",world)
+ def walk():
+  before=driver.execute_script("return [window.__game.player.root.position.x,window.__game.player.root.position.z]")
+  ActionChains(driver).key_down("w").pause(1.0).key_up("w").perform()
+  time.sleep(.25)
+  after=driver.execute_script("return [window.__game.player.root.position.x,window.__game.player.root.position.z]")
+  movement=sum(abs(a-b) for a,b in zip(after,before))
+  assert movement>.025,{"before":before,"after":after,"distance":movement}
+  return movement
+ check("interaction","键盘真实行走导致玩家世界坐标改变",walk)
+ def mobile_walk():
+  width=assert_mobile(driver)
+  before=driver.execute_script("return [window.__game.player.root.position.x,window.__game.player.root.position.z]")
+  forward=driver.find_element(By.CSS_SELECTOR,"[data-touch-dir='up']")
+  ActionChains(driver).move_to_element(forward).click_and_hold().pause(.95).release().perform()
+  time.sleep(.3)
+  after=driver.execute_script("return [window.__game.player.root.position.x,window.__game.player.root.position.z]")
+  movement=sum(abs(a-b) for a,b in zip(after,before))
+  assert movement>.025,{"before":before,"after":after,"movement":movement}
+  assert not driver.execute_script("return window.__game.input.touchKeys.has('up')")
+  return width
+ check("mobile","390px 触屏按键确实使角色移动并松开",mobile_walk)
+def run_mori(driver,check):
+ def boot():
+  WebDriverWait(driver,35).until(lambda d:d.find_elements(By.CSS_SELECTOR,'button[aria-label="Feed"]'))
+  tour=driver.find_elements(By.CSS_SELECTOR,'.tutorial-skip')
+  if tour:tour[0].click()
+  WebDriverWait(driver,15).until(lambda d:not d.find_elements(By.CSS_SELECTOR,'.tutorial-overlay'))
+  assert driver.find_elements(By.CSS_SELECTOR,'button[aria-label="Feed"]')
+  return True
+ check("bootstrap","真实 React 宠物界面启动并完成首次引导",boot)
+ def care():
+  before=driver.execute_script("""return JSON.parse(localStorage.getItem('pocket-worlds-save-v1')||'{}').state?.actionNonce??0""")
+  driver.find_elements(By.CSS_SELECTOR,'button[aria-label="Feed"]')[0].click()
+  WebDriverWait(driver,12).until(lambda d:d.execute_script("""return (JSON.parse(localStorage.getItem('pocket-worlds-save-v1')||'{}').state?.actionNonce??0)>arguments[0]""",before))
+  after=driver.execute_script("""return JSON.parse(localStorage.getItem('pocket-worlds-save-v1')).state.actionNonce""")
+  assert after>before
+  return after
+ check("interaction","实际投喂导致宠物存档行为次数增加",care)
+ def persist():
+  saved=driver.execute_script("""return JSON.parse(localStorage.getItem('pocket-worlds-save-v1')).state.actionNonce""")
+  driver.refresh()
+  WebDriverWait(driver,35).until(lambda d:d.find_elements(By.CSS_SELECTOR,'button[aria-label="Feed"]'))
+  restored=driver.execute_script("""return JSON.parse(localStorage.getItem('pocket-worlds-save-v1')).state.actionNonce""")
+  assert restored>=saved,(saved,restored)
+  return restored
+ check("save","实际刷新后宠物照料历史持久保存",persist)
+ check("mobile",LABELS["mobile"],lambda:assert_mobile(driver))
+RUNNERS={"bistro":run_bistro,"paradise":run_paradise,"wildlands":run_wildlands,"fishing":run_fishing,"factory":run_factory,"citylife":run_citylife,"mori":run_mori}
 def run_game(id,artifact):
  repo,url=SITES[id]
  record={"id":id,"repo":repo,"status":"unknown","elapsedMs":0,"checks":[],"message":""}

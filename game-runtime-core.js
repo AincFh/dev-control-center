@@ -4,7 +4,10 @@ export const GAME_QA_CASES=Object.freeze([
  {id:'bistro',repo:'cozy-bistro-sim',label:'日落餐馆',title:'经营开店与订单刷新'},
  {id:'paradise',repo:'paradise-isle',label:'天堂小岛',title:'创建存档、进入岛屿与恢复'},
  {id:'wildlands',repo:'wildlands-anglerfishing-world-3d',label:'山野钓行 NEXT',title:'WebGL 场景与真实抛竿操作'},
- {id:'fishing',repo:'fishing-world-3d',label:'湖光物语',title:'WebGL 启动与钓鱼状态变化'}
+ {id:'fishing',repo:'fishing-world-3d',label:'湖光物语',title:'WebGL 启动与钓鱼状态变化'},
+ {id:'factory',repo:'Midnight-Factory',label:'午夜工厂',title:'工厂引导、矿机交互与 Canvas 启动'},
+ {id:'citylife',repo:'City-of-Small-Chances',label:'小城人生',title:'WebGL 城市启动、行走与触控移动'},
+ {id:'mori',repo:'Tamagochi---Open-Source-Game',label:'MORI 宠物日记',title:'照料行为、自动存档与恢复'}
 ]);
 const ISO=x=>typeof x==='string'&&Number.isFinite(Date.parse(x))?x:null;
 const ID=/^[a-z][a-z0-9-]{0,39}$/;

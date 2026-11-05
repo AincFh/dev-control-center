@@ -24,7 +24,7 @@ jobs:
         run: python -m pip install selenium==4.37.0
       - name: Compile actual public-game smoke suite
         run: python -m py_compile tests/live_games.browser.py
-      - name: Play four real public games with isolated browser profiles
+      - name: Play seven real public games with isolated browser profiles
         run: python tests/live_games.browser.py --output data/game-runtime.json
         env:
           GITHUB_RUN_ID: ${{ github.run_id }}
@@ -34,8 +34,8 @@ jobs:
           import json
           with open('data/game-runtime.json', encoding='utf8') as f: data=json.load(f)
           assert data['schemaVersion']==1 and data['owner']=='AincFh'
-          assert len(data['results'])==4
-          assert {x['id'] for x in data['results']}=={'bistro','paradise','wildlands','fishing'}
+          assert len(data['results'])==7
+          assert {x['id'] for x in data['results']}=={'bistro','paradise','wildlands','fishing','factory','citylife','mori'}
           assert all(x['status'] in ('pass','fail','timeout','unknown') for x in data['results'])
           print('Public Chromium game sessions:', [(x['id'],x['status']) for x in data['results']])
           PY
