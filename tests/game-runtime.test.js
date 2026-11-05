@@ -25,3 +25,18 @@ test('untrusted URLs never appear in QA report links',()=>{
  assert.equal(x.results[0].status,'timeout');
  assert.equal(normalizeGameReport(null).valid,false);
 });
+
+test('real game visual evidence names and measured timings are strictly sanitized',()=>{
+ const x=report([{id:'qube',repo:'qubecraft',status:'pass',elapsedMs:14012.3,
+  screenshots:['qube-game.png','qube-mobile.png','../../secrets.txt','https://evil.example/x.png','qube-game.png'],
+  navigation:{domContentLoadedMs:481.6,loadEventMs:1205,resourceCount:82}}]);
+ const row=x.results[0];
+ assert.deepEqual(row.screenshots,['qube-game.png','qube-mobile.png']);
+ assert.deepEqual(row.navigation,{domContentLoadedMs:482,loadEventMs:1205,resourceCount:82});
+ assert.equal(row.elapsedMs,14012);
+ const invalid=report([{id:'mori',repo:'Tamagochi---Open-Source-Game',status:'fail',
+  screenshots:['qube-mobile.png','mori-failure.png'],
+  navigation:{domContentLoadedMs:-100,loadEventMs:Infinity,resourceCount:10000000}}]).results[0];
+ assert.deepEqual(invalid.screenshots,['mori-failure.png']);
+ assert.deepEqual(invalid.navigation,{domContentLoadedMs:null,loadEventMs:null,resourceCount:10000});
+});
