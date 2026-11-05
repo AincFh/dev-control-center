@@ -131,6 +131,7 @@ function initMap(){
  can.addEventListener('pointermove',e=>{if(!scene.ready)return;const rect=can.getBoundingClientRect(),p=scene.points.find(x=>Math.hypot((e.clientX-rect.left)-x.x,(e.clientY-rect.top)-x.y)<x.r);can.style.cursor=p?'pointer':'default';});
  can.addEventListener('click',e=>{const rect=can.getBoundingClientRect(),p=scene.points.find(x=>Math.hypot(e.clientX-rect.left-x.x,e.clientY-rect.top-x.y)<x.r);if(p){scene.genre=p.id;scene.page=1;categoryMenu();render();drawMap();$('universeGrid').scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});}});
  window.addEventListener('resize',drawMap,{passive:true});
+ window.addEventListener('hashchange',()=>{if(location.hash==='#universe')requestAnimationFrame(drawMap)});
  if(reduced.addEventListener)reduced.addEventListener('change',()=>{scene.motion=!reduced.matches;drawMap()});
  animationId=requestAnimationFrame(animate);
 }

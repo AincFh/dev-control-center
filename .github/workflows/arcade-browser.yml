@@ -21,10 +21,14 @@ jobs:
           sudo apt-get install -y fonts-wqy-microhei
       - name: Test real arcade filtering and mobile experience
         run: python tests/arcade.browser.py
+      - name: Test real 1,000+ GitHub project galaxy and selection restrictions
+        run: python tests/universe.browser.py
       - name: Preserve arcade screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: atlas-game-arcade-qa
-          path: test-artifacts/arcade/
+          path: |
+            test-artifacts/arcade/
+            test-artifacts/universe/
           if-no-files-found: ignore
