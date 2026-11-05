@@ -126,6 +126,7 @@ async function main(){
  if(!copied.includes('atlas-v3.css'))throw Error('V3 workspace stylesheet missing from generated Pages artifact');
  if(!copied.includes('universe.js')||!copied.includes('universe-core.js')||!copied.includes('studio-motion.js'))throw Error('Galaxy discovery or motion module missing');
  await copyFile(path.join(ROOT,'data','github-universe.json'),path.join(ROOT,'dist','data','github-universe.json'));
+ await copyFile(path.join(ROOT,'data','game-runtime.json'),path.join(ROOT,'dist','data','game-runtime.json'));
  const buildTag=deploymentVersion({sha:process.env.GITHUB_SHA||'',runId:process.env.GITHUB_RUN_ID||''});
  await fingerprintDist(path.join(ROOT,'dist'),copied,buildTag);
  console.log('Static assets fingerprint:',buildTag);

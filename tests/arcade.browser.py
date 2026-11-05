@@ -67,6 +67,12 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         assert len(driver.find_elements(By.CSS_SELECTOR,"[data-game='qube'] a.arcade-play"))==1
         assert len(driver.find_elements(By.CSS_SELECTOR,"[data-game='spacefortress'] a.arcade-play"))==1
         assert len(driver.find_elements(By.CSS_SELECTOR,"[data-game='citylife'] a.arcade-play"))==1
+        # Browser QA is independent of CI and Pages readiness; missing real
+        # nightly evidence never gets painted green in the arcade.
+        assert len(driver.find_elements(By.CSS_SELECTOR,"#gameQACards .game-qa-tile"))==4
+        assert driver.find_element(By.ID,"gameQAPassed").text=="0"
+        assert driver.find_element(By.ID,"gameQAUnknown").text=="4"
+        assert not driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-qa-pass")
         driver.save_screenshot(str(OUT/"01-arcade-desktop.png"))
         search=driver.find_element(By.ID,"arcadeSearch")
         search.send_keys("餐馆")

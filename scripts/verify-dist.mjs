@@ -3,7 +3,7 @@ import {existsSync,readFileSync} from 'node:fs';
 import path from 'node:path';
 
 const root=path.resolve('dist');
-const entrypoints=['index.html','atlas-v3.css','style.css','app.js','favicon.svg','arcade.js','data/status.json','data/build.json','data/github-universe.json','universe.js','universe-core.js','studio-motion.js','mission.js','mission-core.js','command.js','command-core.js','trace.js','trace-core.js','site-probe-core.js'];
+const entrypoints=['index.html','atlas-v3.css','style.css','app.js','favicon.svg','arcade.js','data/status.json','data/build.json','data/github-universe.json','data/game-runtime.json','universe.js','universe-core.js','studio-motion.js','mission.js','mission-core.js','command.js','command-core.js','trace.js','trace-core.js','site-probe-core.js'];
 for(const file of entrypoints)assert(existsSync(path.join(root,file)),'Published site is missing: '+file);
 
 const meta=JSON.parse(readFileSync(path.join(root,'data/build.json'),'utf8'));
@@ -36,6 +36,10 @@ assert(seen.has('mission.js')&&seen.has('mission-core.js'),'Mission Control and 
 assert(seen.has('command.js')&&seen.has('command-core.js'),'Global command-search modules must be bundled');
 assert(seen.has('trace.js')&&seen.has('trace-core.js'),'Delivery trace modules must be bundled');
 assert(seen.has('site-probe-core.js'),'Public static asset probe module must be bundled');
+assert(seen.has('game-runtime-core.js')&&seen.has('game-runtime-ui.js'),'Real Chromium gameplay evidence modules must be bundled');
 const universe=JSON.parse(readFileSync(path.join(root,'data/github-universe.json'),'utf8'));
 assert.equal(universe.kind,'external-discovery');assert(universe.rows.length>=1000,'External reference catalog must contain at least 1000 real repo names');
+const qa=JSON.parse(readFileSync(path.join(root,'data/game-runtime.json'),'utf8'));
+assert.equal(qa.schemaVersion,1,'Invalid real-game QA report schema');
+assert.equal(qa.owner,'AincFh','Invalid real-game QA repository attribution');
 console.log('Validated published ES graph with fingerprint '+version+':',[...seen].join(', '));

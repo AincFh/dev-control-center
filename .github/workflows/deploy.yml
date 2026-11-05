@@ -26,6 +26,8 @@ jobs:
           node-version: '22'
       - name: Unit tests
         run: npm test
+      - name: Real game QA evidence module syntax
+        run: node --check game-runtime-core.js && node --check game-runtime-ui.js
       - name: Module syntax
         run: node --check app.js && node --check status.js && node --check deploy-core.js && node --check site-probe-core.js && node --check scripts/build-status.mjs && node --check scripts/asset-version.mjs
       - name: Build public status snapshot

@@ -762,3 +762,45 @@ html.atlas-restricted-selection textarea{
 @media(max-width:1500px){.mission-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:1050px){.mission-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.mission-kpi:last-child{grid-column:auto}}
 @media(max-width:700px){.mission-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-kpi:last-child{grid-column:auto}.mission-probe-line{gap:7px}}
+
+
+/* Edition 12 — Real, independently sampled browser gameplay evidence. */
+.game-qa{margin-top:30px;padding:26px 27px 20px;border:1px solid var(--line);border-radius:15px;background:var(--surface)}
+.game-qa-intro{display:flex;justify-content:space-between;align-items:center;gap:20px}
+.game-qa-intro h2{font-size:27px;letter-spacing:-.045em;font-weight:780;margin:8px 0 6px}
+.game-qa-intro h2 span{color:var(--accent-dark)}
+.game-qa-intro p{font-size:11px;line-height:1.9;color:var(--muted);max-width:640px}
+.game-qa-link a{display:inline-flex;padding:11px 14px;background:var(--accent-soft);border-radius:9px;color:var(--accent-dark);font-size:11px;font-weight:760;text-decoration:none;white-space:nowrap}
+.game-qa-link a:hover{text-decoration:underline}
+.game-qa-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0 12px}
+.game-qa-metrics>div{display:flex;gap:6px;align-items:center;padding:13px 16px;border-radius:9px;background:var(--surface-soft);border:1px solid var(--line)}
+.game-qa-metrics strong{font-size:26px;font-variant-numeric:tabular-nums;font-weight:790;line-height:1;color:var(--ink)}
+.game-qa-metrics span{font-size:10px;font-weight:700;color:var(--muted)}
+.game-qa-metrics>div:nth-child(2) strong{color:#b46551}
+.game-qa-stamp{font-size:10px;color:var(--muted);line-height:1.6;margin:0 0 15px}
+.game-qa-stamp[data-freshness="stale"],.game-qa-stamp[data-freshness="invalid_clock"]{color:#af744c}
+.game-qa-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.game-qa-tile{padding:18px;background:var(--surface-soft);border:1px solid var(--line);border-radius:12px;min-width:0}
+.game-qa-tile[data-qa="fail"],.game-qa-tile[data-qa="timeout"]{border-left:3px solid #cb8067}
+.game-qa-tile[data-qa="pass"]{border-left:3px solid #6bab87}
+.game-qa-kicker{font-size:9px;letter-spacing:1.2px;font-weight:740;color:var(--muted)}
+.game-qa-header{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:10px 0 7px}
+.game-qa-header strong{font-size:14px;font-weight:770;letter-spacing:-.02em}
+.game-qa-state{font-size:9px;white-space:nowrap;font-weight:760;padding:6px 9px;border:1px solid var(--line-dark);border-radius:6px;color:var(--muted)}
+.game-qa-state.pass{background:#e2f0e6;color:#2f734a;border-color:#c0dbc8}
+.game-qa-state.fail,.game-qa-state.timeout{background:#f9e5dd;color:#a94f39;border-color:#efc7b7}
+.game-qa-explainer{font-size:10px;color:var(--muted);line-height:1.65;margin:0 0 10px}
+.game-qa-details{border-top:1px solid var(--line);padding-top:11px}
+.game-qa-details summary{cursor:pointer;color:var(--accent-dark);font-size:10px;font-weight:740}
+.game-qa-check{display:flex;align-items:start;gap:8px;font-size:10px;padding:10px 0;border-bottom:1px solid var(--line);line-height:1.5}
+.game-qa-check-status{font-size:12px;font-weight:800;color:#328253}
+.game-qa-check-status.fail,.game-qa-check-status.timeout{color:#be694a}
+.game-qa-check>span:nth-child(2){flex:1}
+.game-qa-check small{color:var(--muted);font-size:9px;max-width:130px;overflow-wrap:anywhere}
+.game-qa-no-data,.game-qa-old{display:block;font-size:10px;line-height:1.7;color:var(--muted)}
+.game-qa-old{color:#af744c;margin-top:8px}
+.game-qa-failure{color:#a75141;font-size:10px;line-height:1.7;margin:10px 0 0;overflow-wrap:anywhere}
+.arcade-status .arcade-qa-pass{background:#e6f3e7;color:#2d744d;font-size:10px;border-radius:5px;padding:5px 7px;font-weight:740}
+.arcade-status .arcade-qa-fail{background:#f9e6dd;color:#9f513f;font-size:10px;border-radius:5px;padding:5px 7px;font-weight:740}
+@media(max-width:900px){.game-qa-intro{align-items:flex-start;flex-direction:column}.game-qa-cards{grid-template-columns:1fr}}
+@media(max-width:610px){.game-qa{padding:19px 14px}.game-qa-metrics{grid-template-columns:1fr;gap:7px}.game-qa-metrics>div{padding:10px 13px}.game-qa-header{align-items:flex-start;flex-wrap:wrap}.game-qa-state{white-space:normal}}
