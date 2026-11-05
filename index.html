@@ -38,6 +38,7 @@
 <a class="nav" href="#projects" data-view-link="projects" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-folder"></use></svg><span>全部仓库</span></a>
 <a class="nav" href="#discovery" data-view-link="discovery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>发现实验室</span></a>
 <a class="nav" href="#universe" data-view-link="universe"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>GitHub 星图</span><small class="nav-counter">1K+</small></a>
+<a class="nav" href="#incubator" data-view-link="incubator"><svg class="i" aria-hidden="true"><use href="#i-layers"></use></svg><span>项目孵化</span><small class="nav-counter" id="candidateCount" hidden>0</small></a>
 <a class="nav" href="#delivery" data-view-link="delivery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>交付健康</span></a>
 <a class="nav" href="#pipeline" data-view-link="pipeline" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>构建流程</span></a>
 <a class="nav" href="#activity" data-view-link="activity" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-activity"></use></svg><span>开发动态</span></a>
@@ -121,6 +122,20 @@
  <nav class="universe-pagination" aria-label="项目结果翻页"><button id="universePrev" type="button" disabled>← 上一页</button><span id="universePage">—</span><button id="universeNext" type="button" disabled>下一页 →</button></nav>
  <p class="universe-disclaimer">索引采集于 GitHub 公开仓库搜索结果；可能包含未完成、已停更、非游戏或存在使用限制的项目。页面默认不推断 Star 数、许可证、可运行性或商业使用权；点击“查看资料”才读取 GitHub 当前公开元数据。收藏仅保存在此浏览器。</p>
 </section>
+<section class="view" id="incubator" aria-label="研发候选孵化工作台">
+ <header class="view-header"><span class="eyebrow">ATLAS / PRODUCT INCUBATOR</span><div class="view-heading-row"><div><h1>从灵感到立项<span>.</span></h1><p>把 GitHub 的研究线索推进为可审查、可交接的研发计划。这里的阶段仅代表本地研究流程，不代表仓库已经开发或发布。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-layers"></use></svg></div></div></header>
+ <section class="candidate-intro">
+  <div><span class="eyebrow">LOCAL PROJECT INTELLIGENCE</span><h2>发现只是起点。<em>做出选择，才有产品。</em></h2><p>在 1,580 条 GitHub 参考项目中挑选真正值得投入的方向，留存研究笔记、审查复用权利并生成 GitHub Issue 草稿。</p><a class="candidate-discover" href="#universe">探索 GitHub 星图 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div>
+  <div class="candidate-figures"><div><strong id="candidateTotal">0</strong><span>已加入候选</span></div><div><strong id="candidateChecked">0</strong><span>四项人工检查完成</span></div></div>
+ </section>
+ <div class="candidate-toolbar"><label class="candidate-search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input id="candidateSearch" type="search" autocomplete="off" placeholder="搜索来源、方向、研究备注…" aria-label="搜索候选项目"></label>
+ <select id="candidateStage" aria-label="筛选研究阶段"><option value="all">全部阶段</option><option value="inbox">待研究</option><option value="review">技术评估</option><option value="design">方案设计</option><option value="ready">待立项</option><option value="hold">暂缓</option></select>
+ <button id="candidateExport" type="button" class="candidate-tool-button">导出备份</button>
+ <label class="candidate-tool-button candidate-import-button" for="candidateImport">导入备份<input id="candidateImport" type="file" accept="application/json,.json" hidden></label></div>
+ <div class="candidate-result"><strong id="candidateMatched">0 个候选项目</strong><span>仅保存在当前浏览器。请定期导出备份；正式任务应进入 GitHub Issues。</span></div>
+ <div id="candidateBoard" class="candidate-board" aria-label="候选项目五阶段看板"></div>
+ <p class="candidate-disclaimer">所有候选均保留第三方来源属性；勾选核验表示使用者自行核查，不能替代法律授权、安全审查或实际运行测试。项目从候选进入开发，需要独立立项、代码评审和发布门禁。</p>
+</section>
 <section class="view" id="delivery" aria-label="交付状态">
  <header class="view-header"><span class="eyebrow">OPERATIONS 01 / DELIVERY</span><div class="view-heading-row"><div><h1>交付健康<span>.</span></h1><p>以 GitHub Actions 为依据，区分构建成功、部署完成与产品真正可用。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg></div></div></header>
  <div class="deliverygrid"><article class="deliverypane"><div class="deliverytop"><div><span class="eyebrow">BUILD & RELEASE STATUS</span><strong id="healthSummary">加载中</strong></div><span class="mini-status">LIVE DATA</span></div><div id="deliveryList" aria-live="polite"></div><p class="healthnote" id="healthNote">等待状态快照</p></article>
@@ -143,6 +158,21 @@
 <footer class="global-footer"><span>ATLAS © 2026 · CRAFTED TO BUILD</span><span>PUBLIC REPOSITORIES ONLY · UPSTREAM AUTHORS CREDITED</span></footer>
 </main></div></div>
 <div id="universeNotice" class="universe-notice" role="status" aria-live="polite"></div>
+<div id="candidateFeedback" class="candidate-feedback" role="status" aria-live="polite"></div>
+<dialog id="candidateEditor" class="candidate-editor" aria-label="研发候选项目评估">
+ <div class="candidate-editor-heading"><div><span class="eyebrow">SOURCE REVIEW / LOCAL RECORD</span><h2 id="candidateEditorTitle">研发候选</h2><span id="candidateEditorGenre" class="candidate-editor-genre"></span></div><button type="button" id="candidateEditorClose" aria-label="关闭评估弹窗">×</button></div>
+ <form id="candidateForm">
+  <label class="candidate-field">研究阶段<select id="candidateEditStage"><option value="inbox">待研究</option><option value="review">技术评估</option><option value="design">方案设计</option><option value="ready">待立项</option><option value="hold">暂缓</option></select></label>
+  <label class="candidate-field">研究说明与差异化方向<textarea id="candidateEditNote" rows="5" maxlength="2000" placeholder="玩法亮点、关键缺陷、改造方向、实际测试结果及风险…" ></textarea></label>
+  <fieldset class="candidate-checks"><legend>人工核查清单（仅为自述标记）</legend>
+   <label><input type="checkbox" id="candidateCheck_license">代码许可证已人工核查</label>
+   <label><input type="checkbox" id="candidateCheck_assets">第三方素材权利已人工核查</label>
+   <label><input type="checkbox" id="candidateCheck_runtime">实际运行环境已人工测试</label>
+   <label><input type="checkbox" id="candidateCheck_scope">差异化方案及范围已明确</label>
+  </fieldset>
+  <div class="candidate-editor-actions"><button type="button" id="candidateDelete" class="candidate-remove">移出候选池</button><a id="candidateIssue" href="#" target="_blank" rel="noopener noreferrer" class="candidate-issue">生成 Issue 草稿 ↗</a><button type="submit" class="candidate-save">保存记录</button></div>
+ </form>
+</dialog>
 <dialog id="universeDetail" aria-label="GitHub 外部项目资料"><button id="universeDetailClose" aria-label="关闭项目资料">×</button><div id="universeDetailBody"></div></dialog>
 <dialog id="details" aria-label="项目详情"><button id="close" aria-label="关闭详情">×</button><div id="detailBody"></div></dialog>
 <script type="module" src="./app.js"></script>
