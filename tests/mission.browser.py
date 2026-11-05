@@ -1,7 +1,7 @@
 """Real Chromium QA for ATLAS Mission Control, with deterministic public GitHub fixture.
 Mocks only public JSON transport; real DOM controls, browser storage and CSS are exercised.
 """
-import json,pathlib,socketserver,threading,time
+import json,pathlib,socketserver,threading,time,datetime
 from http.server import SimpleHTTPRequestHandler
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -16,6 +16,18 @@ projects=[
  {"name":"healthy-game","description":"Working world","language":"TypeScript","updatedAt":STAMP,"defaultBranch":"main","repositoryUrl":"https://github.com/AincFh/healthy-game","ci":{"state":"success","sha":"c1234","updatedAt":STAMP},"openIssues":0,"openPRs":0,"site":{"state":"published","url":"https://aincfh.github.io/healthy-game/"},"issuePreview":[],"prPreview":[]},
  {"name":"unverified","description":"Pending metadata","language":"JavaScript","updatedAt":STAMP,"defaultBranch":"main","repositoryUrl":"https://github.com/AincFh/unverified","ci":{"state":"unknown"},"openIssues":None,"openPRs":None,"site":{"state":"unknown"},"issuePreview":None,"prPreview":None}
 ]
+# CI green does not imply the real game browser passed.
+projects.append({"name":"cozy-bistro-sim","description":"Real game QA failed despite successful CI",
+ "language":"JavaScript","updatedAt":STAMP,"defaultBranch":"main",
+ "repositoryUrl":"https://github.com/AincFh/cozy-bistro-sim",
+ "ci":{"state":"success","updatedAt":STAMP},"openIssues":0,"openPRs":0,
+ "site":{"state":"published","url":"https://aincfh.github.io/cozy-bistro-sim/"},
+ "issuePreview":[],"prPreview":[]})
+QA={"schemaVersion":1,"owner":"AincFh",
+ "generatedAt":datetime.datetime.now(datetime.timezone.utc).isoformat(),
+ "runUrl":"https://github.com/AincFh/dev-control-center/actions/runs/42003758031",
+ "results":[{"id":"bistro","repo":"cozy-bistro-sim","status":"fail",
+  "checks":[{"id":"interaction","label":"真实游戏流程","status":"fail","reason":"runtime invariant failed"}]}]}
 # Independent live HTTP checks: 200 HTML alone does not mean scripts loaded.
 projects[0]["probe"]={"state":"resource_error","checkedAt":STAMP,"httpStatus":200,"assetCount":4,"assetFailures":2,"contentType":"text/html","durationMs":310,"reason":"static_asset_failed"}
 projects[1]["probe"]={"state":"reachable","checkedAt":STAMP,"httpStatus":200,"assetCount":2,"assetFailures":0,"contentType":"text/html","durationMs":100,"reason":"html_and_assets_ok"}
@@ -54,15 +66,16 @@ projects[1]["trace"]["prs"][0]["deployment"]={
 repos=[{"name":p["name"],"description":p["description"],"html_url":p["repositoryUrl"],"language":p["language"],"pushed_at":STAMP,"stargazers_count":0,"private":False} for p in projects]
 snapshot={"schemaVersion":2,"publicOnly":True,"owner":"AincFh","generatedAt":STAMP,"errors":[],"projects":projects}
 script="""(() => {
- const snapshot=__SNAPSHOT__, repos=__REPOS__, realFetch=window.fetch.bind(window);
+ const snapshot=__SNAPSHOT__, repos=__REPOS__, qa=__QA__, realFetch=window.fetch.bind(window);
  window.fetch=(input,opts)=>{
   const u=String(typeof input==='string'?input:input.url);
+  if(u.includes('/data/game-runtime.json'))return Promise.resolve(new Response(JSON.stringify(qa),{status:200,headers:{'Content-Type':'application/json'}}));
   if(u.includes('/data/status.json'))return Promise.resolve(new Response(JSON.stringify(snapshot),{status:200,headers:{'Content-Type':'application/json'}}));
   if(u.includes('api.github.com/users/AincFh/repos?'))return Promise.resolve(new Response(JSON.stringify(repos),{status:200,headers:{'Content-Type':'application/json'}}));
   if(u.includes('api.github.com/users/AincFh/events/public?'))return Promise.resolve(new Response('[]',{status:200,headers:{'Content-Type':'application/json'}}));
   return realFetch(input,opts);
  };
-})()""".replace("__SNAPSHOT__",json.dumps(snapshot,ensure_ascii=False)).replace("__REPOS__",json.dumps(repos,ensure_ascii=False))
+})()""".replace("__SNAPSHOT__",json.dumps(snapshot,ensure_ascii=False)).replace("__REPOS__",json.dumps(repos,ensure_ascii=False)).replace("__QA__",json.dumps(QA,ensure_ascii=False))
 class Handler(SimpleHTTPRequestHandler):
  def __init__(self,*a,**kw):super().__init__(*a,directory=str(ROOT),**kw)
  def log_message(self,*a):pass
@@ -83,14 +96,20 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   raise AssertionError("Mission UI did not reach expected state")
  try:
   driver.get(f"http://127.0.0.1:{server.server_address[1]}/#mission")
-  until(lambda:driver.find_element(By.ID,'missionCount').text=='3')
+  until(lambda:driver.find_element(By.ID,'missionCount').text=='4')
   assert driver.find_element(By.ID,'missionFail').text=='1'
   assert driver.find_element(By.ID,'missionReview').text=='1'
   assert driver.find_element(By.ID,'missionIssues').text=='2'
-  assert len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==3
+  assert len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==4
   assert driver.find_element(By.ID,'missionProbeGood').text=='1'
+  assert driver.find_element(By.ID,'missionGameQAFail').text=='1'
+  assert driver.find_element(By.ID,'missionGameQAPass').text=='0'
   assert driver.find_element(By.ID,'missionProbeBad').text=='1'
   assert len(driver.find_elements(By.CSS_SELECTOR,'#missionSiteChecks .mission-probe-line'))==2
+  Select(driver.find_element(By.ID,'missionFilter')).select_by_value('game_qa_failed')
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==1)
+  assert driver.find_element(By.CSS_SELECTOR,'#missionProjects .mission-project').get_attribute('data-repo')=='cozy-bistro-sim'
+  assert '浏览器玩法验收失败' in driver.find_element(By.CSS_SELECTOR,'#missionProjects .mission-project').text
   Select(driver.find_element(By.ID,'missionFilter')).select_by_value('site_error')
   until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==1)
   assert driver.find_element(By.CSS_SELECTOR,'#missionProjects .mission-project').get_attribute('data-repo')=='broken-game'
@@ -134,7 +153,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   }""")
   assert mobile['docWidth']<=mobile['width']+4,mobile
   assert mobile['mainWidth']<=4,mobile
-  assert mobile['cards']==3 and mobile['route']=='mission',mobile
+  assert mobile['cards']==4 and mobile['route']=='mission',mobile
   driver.save_screenshot(str(OUT/'02-mission-mobile.png'))
   # Traceability: open PR failure, recent merged SHA check and explicit Issue edge.
   driver.set_window_size(1440,900)
