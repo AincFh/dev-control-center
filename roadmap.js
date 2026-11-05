@@ -8,6 +8,7 @@ export const TRACKS=[
  {repo:'cimulity',short:'CIMULITY',category:'game',title:'城市建设与交通仿真',stage:'Fork · 可游玩',maturity:'fork-playable',priority:2,goal:'等距城市、道路、分区、水电、财政、人口及公共服务模拟',next:'复杂城市长期模拟压力测试和触屏建造交互',symbol:'▦'},
  {repo:'Midnight-Factory',short:'MIDNIGHT FACTORY',category:'game',title:'生产线与工业经营',stage:'Fork · 可游玩',maturity:'fork-playable',priority:2,goal:'采矿、输送、熔炼、装配、研究与升级的完整生产链',next:'长时连续经营与触屏交互体验优化',symbol:'⚙'},
  {repo:'Tamagochi---Open-Source-Game',short:'MORI',category:'game',title:'虚拟宠物与陪伴模拟',stage:'Fork · 可游玩',maturity:'fork-playable',priority:3,goal:'照料、成长、故事、小游戏和 PWA 离线养宠',next:'独立 GPU 3D 验收与移动端性能/电量基线',symbol:'♡'},
+ {repo:'spacefortress',short:'SPACEFORTRESS',category:'game',title:'太空殖民地与船员生存',stage:'Fork · 可游玩',maturity:'fork-playable',priority:2,goal:'七名船员、生命支持、能源水气管网、建筑物流与远征',next:'长时压力测试、触屏交互与轨道任务平衡',symbol:'⬡'},
  {repo:'azure-coast',short:'AZURE COAST',category:'game',title:'现代海滨都市探索',stage:'开发中 · 未发布',maturity:'blocked',priority:2,goal:'城市驾驶、探索、目标与生态',next:'遵守 release gate，补齐资产授权与端到端验收',symbol:'⌘'},
  {repo:'fishing-world-3d',short:'FISHING WORLD',category:'game',title:'轻量湖畔钓鱼',stage:'可玩原型',maturity:'prototype',priority:3,goal:'独立的轻休闲钓鱼路线',next:'优化交互与移动体验，不强行合并',symbol:'◌'}
 ];
