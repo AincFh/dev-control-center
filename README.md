@@ -52,3 +52,8 @@ Node.js 20+：
 - 快照一般每小时更新，不等同于实时推送；部分 API 数据可能不可用或被限流。
 - 这个网站不执行后台 Agent、远程命令或授权写操作。
 - 游戏项目互为独立仓库，未经比较不要合并/删除。
+
+### 新增城市生活与太空经营
+
+- City of Small Chances：作者 Mon-ius 的 MIT 3D 城市生活游戏 Fork，独立 Actions + Pages、真实浏览器人物移动和移动端验收完成，已开放试玩；该玩法不是 ATLAS 原创。
+- Spacefortress：作者 Jaredcastorena 的 MIT 太空殖民地模拟 Fork 已配置 Actions/Pages；在完整单测和线上浏览器测试完成以前，ATLAS 仅开放源码入口，不显示未经验证的试玩地址。
