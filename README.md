@@ -218,3 +218,13 @@ ATLAS 的研发总控现在读取每日公开 Chromium 游戏验收记录，按�
 - **SPACEFORTRESS 星际前哨**：等距殖民地 Canvas、资源与区域加载，真实打开和关闭殖民地面板、指南；点击保存并等待浏览器存储成功确认；移动端基本宽度验证。
 
 3 款新增对象被加入 GitHub Actions 每日公开 Chromium 独立会话流程与可信 ID 校验；仅在真正执行后才展示结果。十款的这些小范围关键操作通过，也仍不足以宣布任一游戏达到完整产品级验收。
+
+
+### Edition 15 首轮真实游戏失败复核
+
+十款 Chromium 首次实测 run #42009542622：8 款通过，QubeCraft 的暂停/保存路径与 CIMULITY 的 City Vault 关闭检查超时。经核查原游戏源码：
+
+- QubeCraft 的桌面 Esc 暂停依赖 pointer lock；无 GPU/自动化浏览器可能不进入 pointer lock。改为在已发布游戏中显式开启触控控制选项，真实点击游戏自带 Pause 触控按钮，分别验证暂停菜单、存档退出与回到真实存档列表。**不直接调用游戏调试/菜单 API 代替用户输入。**
+- CIMULITY 的 City Vault 在 React state 关闭后会从 DOM 卸载；原 Selenium 代码使用 find_element().is_displayed() 等待已卸载节点，必然因 NoSuchElement 超时。改用真实关闭按钮并等到节点从 DOM 消失。
+
+修复是否通过仍以合并后重新执行的十款真实 Chromium 运行报告为准；不得因这份说明宣称自动验收成功。
