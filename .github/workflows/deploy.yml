@@ -1,36 +1,63 @@
-name: Test and deploy ATLAS
+name: ATLAS · Validate and Publish
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '13 * * * *'
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
+concurrency:
+  group: atlas-pages-\${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  test:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm test
-      - run: test -s index.html && test -s app.js && test -s style.css
+      - name: Unit tests
+        run: npm test
+      - name: Module syntax
+        run: node --check app.js && node --check status.js && node --check scripts/build-status.mjs
+      - name: Build public status snapshot
+        run: npm run build
+        env:
+          GITHUB_TOKEN: \${{ github.token }}
+          GITHUB_RUN_ID: \${{ github.run_id }}
+          GITHUB_REPOSITORY: \${{ github.repository }}
+      - name: Verify deployment artifacts
+        run: |
+          test -s dist/index.html
+          test -s dist/data/status.json
+          node --input-type=module -e "import fs from 'node:fs'; const d=JSON.parse(fs.readFileSync('dist/data/status.json','utf8')); if(!d.publicOnly || !Array.isArray(d.projects))process.exit(1);"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: atlas-site-\${{ github.run_id }}
+          path: dist
+          retention-days: 3
   deploy:
     if: github.event_name != 'pull_request'
-    needs: test
+    needs: verify
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: \${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: atlas-site-\${{ github.run_id }}
+          path: dist
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
