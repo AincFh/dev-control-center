@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": "2026-11-05T09:26:56Z",
-  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42002402154",
+  "generatedAt": "2026-11-05T09:38:01Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42003758031",
   "source": "real_chromium_public_games",
   "browser": "Chromium / Selenium / fresh profile per game",
   "results": [
@@ -10,7 +10,7 @@
       "id": "bistro",
       "repo": "cozy-bistro-sim",
       "status": "pass",
-      "elapsedMs": 3290,
+      "elapsedMs": 11668,
       "checks": [
         {
           "id": "interaction",
@@ -49,7 +49,7 @@
       "id": "paradise",
       "repo": "paradise-isle",
       "status": "pass",
-      "elapsedMs": 2430,
+      "elapsedMs": 2792,
       "checks": [
         {
           "id": "bootstrap",
@@ -88,7 +88,7 @@
       "id": "wildlands",
       "repo": "wildlands-anglerfishing-world-3d",
       "status": "pass",
-      "elapsedMs": 6714,
+      "elapsedMs": 7509,
       "checks": [
         {
           "id": "webgl",
@@ -121,7 +121,7 @@
       "id": "fishing",
       "repo": "fishing-world-3d",
       "status": "pass",
-      "elapsedMs": 4107,
+      "elapsedMs": 9809,
       "checks": [
         {
           "id": "webgl",
@@ -149,6 +149,75 @@
         }
       ],
       "message": ""
+    },
+    {
+      "id": "factory",
+      "repo": "Midnight-Factory",
+      "status": "timeout",
+      "elapsedMs": 14181,
+      "checks": [
+        {
+          "id": "interaction",
+          "label": "实际打开新手引导并切换中英文",
+          "status": "timeout",
+          "reason": "TimeoutException: Message: "
+        }
+      ],
+      "message": "TimeoutException: Message: "
+    },
+    {
+      "id": "citylife",
+      "repo": "City-of-Small-Chances",
+      "status": "pass",
+      "elapsedMs": 35538,
+      "checks": [
+        {
+          "id": "webgl",
+          "label": "真实 3D 城市、HUD 与时间系统启动",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "键盘真实行走导致玩家世界坐标改变",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 触屏按键确实使角色移动并松开",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
+        }
+      ],
+      "message": ""
+    },
+    {
+      "id": "mori",
+      "repo": "Tamagochi---Open-Source-Game",
+      "status": "fail",
+      "elapsedMs": 5492,
+      "checks": [
+        {
+          "id": "bootstrap",
+          "label": "真实 React 宠物界面启动并完成首次引导",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "实际投喂导致宠物存档行为次数增加",
+          "status": "fail",
+          "reason": "ElementClickInterceptedException: Message: element click intercepted: Element <button aria-label=\"Feed\">...</button> is not clickable at point (508, 689). Other element would receive the click: <div class=\"story-overlay\""
+        }
+      ],
+      "message": "ElementClickInterceptedException: Message: element click intercepted: Element <button aria-label=\"Feed\">...</button> is not clickable at point (508, 689). Other element would receive the click: <div class=\"story-overlay\" role=\"presentation\">...</div>"
     }
   ],
   "note": "Real browser interactions on public Pages; not comprehensive gameplay, performance or full product certification."
