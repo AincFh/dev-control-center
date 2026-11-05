@@ -55,7 +55,7 @@ async function describe(r){
 // Copy the actual relative module dependency graph, not a manually curated
 // list. A stale list once excluded arcade.js: CI was green, Pages deployed,
 // but app.js failed at runtime because the ES module returned 404.
-export async function copyFrontendModules(root,dest,entrypoints=['index.html','style.css','app.js','favicon.svg']){
+export async function copyFrontendModules(root,dest,entrypoints=['index.html','atlas-v3.css','style.css','app.js','favicon.svg']){
  const pending=[...entrypoints],copied=new Set();
  while(pending.length){
   const filename=pending.shift();
@@ -91,6 +91,7 @@ async function main(){
  await mkdir(path.join(ROOT,'dist','data'),{recursive:true});
  const copied=await copyFrontendModules(ROOT,path.join(ROOT,'dist'));
  if(!copied.includes('arcade.js'))throw Error('Game arcade module missing from generated Pages artifact');
+ if(!copied.includes('atlas-v3.css'))throw Error('V3 workspace stylesheet missing from generated Pages artifact');
  console.log('Bundled frontend files:',copied.join(', '));
  await writeFile(path.join(ROOT,'dist','data','status.json'),JSON.stringify(data,null,2));
  console.log('Public project snapshot:',projects.length,'repositories;',errors.length,'nonfatal API errors.');

@@ -50,8 +50,12 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
                 last_error=error
         raise last_error
     try:
-        driver.get(f"http://127.0.0.1:{server.server_address[1]}/")
-        driver.execute_script("document.querySelector('#arcade').scrollIntoView()")
+        driver.get(f"http://127.0.0.1:{server.server_address[1]}/#arcade")
+        for _ in range(30):
+            if driver.execute_script("return document.getElementById('arcade').classList.contains('is-active')"):break
+            time.sleep(.1)
+        assert driver.execute_script("return document.getElementById('arcade').classList.contains('is-active')")
+        assert driver.execute_script("return getComputedStyle(document.getElementById('home')).display")=="none"
         for _ in range(35):
             if len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))>=11:break
             time.sleep(.35)
@@ -97,6 +101,25 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         assert mobile["cards"]==11,mobile
         assert mobile["scrollWidth"]<=mobile["width"]+4,mobile
         driver.save_screenshot(str(OUT/"02-arcade-mobile.png"))
+        # Focused route switching, persisted light/dark theme, and command search.
+        driver.execute_script("location.hash='#home'")
+        time.sleep(.4)
+        assert driver.execute_script("return document.getElementById('home').classList.contains('is-active')")
+        assert driver.execute_script("return getComputedStyle(document.getElementById('arcade')).display")=="none"
+        driver.find_element(By.ID,"themeBtn").click()
+        before_theme=driver.execute_script("return document.documentElement.dataset.theme")
+        assert before_theme in ("dark","light")
+        driver.refresh()
+        time.sleep(.6)
+        assert driver.execute_script("return document.documentElement.dataset.theme")==before_theme
+        driver.find_element(By.ID,"quickFind").click()
+        time.sleep(.3)
+        assert driver.execute_script("return location.hash")=="#projects"
+        assert driver.execute_script("return document.getElementById('projects').classList.contains('is-active')")
+        driver.execute_script("location.hash='#arcade'")
+        time.sleep(.35)
+        assert driver.execute_script("return document.getElementById('arcade').classList.contains('is-active')")
+        assert driver.execute_script("return document.documentElement.scrollWidth<=innerWidth+4")
         severe=[x["message"] for x in driver.get_log("browser") if x["level"]=="SEVERE" and "favicon" not in x["message"]]
         # External image/CDN/API access is best-effort; app code must still load locally.
         # Local development intentionally lacks the generated GitHub status
