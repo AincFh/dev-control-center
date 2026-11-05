@@ -11,6 +11,8 @@ const CATALOG={
  'spacefortress':{label:'SPACEFORTRESS · 太空基地',symbol:'✧',category:'game',maturity:'Fork · 上游作品',upstream:'Jaredcastorena/spacefortress',description:'MIT Fork · 宇宙殖民地、氧气、能源与船员物流'},
  'City-of-Small-Chances':{label:'CITY OF SMALL CHANCES · 城市人生',symbol:'◇',category:'game',maturity:'Fork · 上游作品',upstream:'Mon-ius/City-of-Small-Chances',description:'MIT Fork · 3D 城市生活、打工、社交与经济抉择'},
  'squiffy':{label:'SQUIFFY · 剧情创作引擎',symbol:'✎',category:'tool',maturity:'Fork · 上游工具',upstream:'textadventures/squiffy',description:'MIT Fork · 多结局互动小说与文本剧情编辑器'},
+ 'hollowmere.tretu.de':{label:'HOLLOWMERE · 精灵农庄',symbol:'❀',category:'game',maturity:'Fork · 尚未独立部署',upstream:'robintrepte/hollowmere.tretu.de',description:'MIT Fork · Godot 4 农场、精灵伙伴、采集、战斗与联机；需单独验证 Web 导出和服务端'},
+ 'harvest-hollow':{label:'HARNESS HOLLOW · 双人农场',symbol:'✿',category:'game',maturity:'Fork · 需要后端',upstream:'KrasimirKralev/harvest-hollow',description:'MIT Fork · 3D 双人合作农场、建造、动物、制作链；在线联机依赖 Node 服务'},
  'paradise-isle':{label:'PARADISE ISLE · 天堂小岛',symbol:'❀',category:'game',maturity:'Fork · 上游作品',upstream:'appleweiping/paradise-isle',description:'MIT Fork · 岛屿种田、养殖、钓鱼、宠物和小镇生活'},
  'cimulity':{label:'CIMULITY · 城市模拟',symbol:'▦',category:'game',maturity:'Fork · 上游作品',upstream:'zeikar/cimulity',description:'MIT Fork · 等距城市规划、分区、交通和人口经济'},
  'qubecraft':{label:'QUBECRAFT · 方块生存',symbol:'◫',category:'game',maturity:'Fork · 上游作品',upstream:'krabduke/qubecraft',description:'MIT Fork · 3D 体素冒险、建造、合成与生存'},
