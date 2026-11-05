@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": "2026-11-05T09:45:00Z",
-  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42004719519",
+  "generatedAt": "2026-11-05T10:05:45Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42007634783",
   "source": "real_chromium_public_games",
   "browser": "Chromium / Selenium / fresh profile per game",
   "results": [
@@ -10,7 +10,7 @@
       "id": "bistro",
       "repo": "cozy-bistro-sim",
       "status": "pass",
-      "elapsedMs": 10903,
+      "elapsedMs": 4013,
       "checks": [
         {
           "id": "interaction",
@@ -49,7 +49,7 @@
       "id": "paradise",
       "repo": "paradise-isle",
       "status": "pass",
-      "elapsedMs": 3360,
+      "elapsedMs": 2817,
       "checks": [
         {
           "id": "bootstrap",
@@ -88,7 +88,7 @@
       "id": "wildlands",
       "repo": "wildlands-anglerfishing-world-3d",
       "status": "pass",
-      "elapsedMs": 8415,
+      "elapsedMs": 8037,
       "checks": [
         {
           "id": "webgl",
@@ -121,7 +121,7 @@
       "id": "fishing",
       "repo": "fishing-world-3d",
       "status": "pass",
-      "elapsedMs": 4413,
+      "elapsedMs": 11886,
       "checks": [
         {
           "id": "webgl",
@@ -154,7 +154,7 @@
       "id": "factory",
       "repo": "Midnight-Factory",
       "status": "pass",
-      "elapsedMs": 2185,
+      "elapsedMs": 1984,
       "checks": [
         {
           "id": "interaction",
@@ -193,7 +193,7 @@
       "id": "citylife",
       "repo": "City-of-Small-Chances",
       "status": "pass",
-      "elapsedMs": 45318,
+      "elapsedMs": 37086,
       "checks": [
         {
           "id": "webgl",
@@ -225,8 +225,8 @@
     {
       "id": "mori",
       "repo": "Tamagochi---Open-Source-Game",
-      "status": "fail",
-      "elapsedMs": 6549,
+      "status": "pass",
+      "elapsedMs": 2093,
       "checks": [
         {
           "id": "bootstrap",
@@ -237,11 +237,35 @@
         {
           "id": "story",
           "label": "正常完成真实首次剧情弹层，不绕过界面",
-          "status": "fail",
-          "reason": "AssertionError: "
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "实际投喂导致宠物存档行为次数增加",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "save",
+          "label": "实际刷新后宠物照料历史持久保存",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
         }
       ],
-      "message": "AssertionError: "
+      "message": ""
     }
   ],
   "note": "Real browser interactions on public Pages; not comprehensive gameplay, performance or full product certification."
