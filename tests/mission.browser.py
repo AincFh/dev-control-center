@@ -114,7 +114,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==1)
   assert driver.find_element(By.CSS_SELECTOR,'#missionProjects .mission-project').get_attribute('data-repo')=='broken-game'
   Select(driver.find_element(By.ID,'missionFilter')).select_by_value('all')
-  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==3)
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==4)
   assert len(driver.find_elements(By.CSS_SELECTOR,'#missionTaskFeed .mission-task'))==2
   assert "任务" not in driver.find_element(By.ID,'missionFreshness').text or True
   driver.save_screenshot(str(OUT/'01-mission-desktop.png'))
@@ -130,7 +130,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   driver.find_element(By.CSS_SELECTOR,'#missionReviewForm button[type=submit]').click()
   until(lambda:'1/6' in driver.find_element(By.CSS_SELECTOR,'#missionProjects .mission-review-button').text)
   driver.refresh()
-  until(lambda:driver.find_element(By.ID,'missionCount').text=='3')
+  until(lambda:driver.find_element(By.ID,'missionCount').text=='4')
   Select(driver.find_element(By.ID,'missionFilter')).select_by_value('failure')
   until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#missionProjects .mission-project'))==1)
   assert driver.find_element(By.CSS_SELECTOR,'#missionProjects .mission-pin').get_attribute('aria-pressed')=='true'
