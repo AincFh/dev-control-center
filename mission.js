@@ -34,6 +34,8 @@ function snapshotNotice(){
  $('missionUnknown').textContent=String(model.states.unknown+model.states.neutral);
  $('missionProbeGood').textContent=String(model.probes?.reachable??0);
  $('missionProbeBad').textContent=String(model.probes?.broken??0);
+ $('missionGameQAFail').textContent=String(model.gameQA?.failed??0);
+ $('missionGameQAPass').textContent=String(model.gameQA?.passed??0);
  const nav=$('missionNavCount');if(nav){const c=model.states.failure;nav.textContent=String(c);nav.hidden=!c}
  const health=$('missionStateBreakdown');health.replaceChildren();
  const kinds=[
@@ -66,6 +68,11 @@ function card(a){
  const indicators=n('div',null,'mission-card-indicators');
  indicators.append(n('span','Issue '+size(a.issues)+(p.countsTruncated?'+':'')),n('span','PR '+size(a.prs)+(p.countsTruncated?'+':'')));
  if(p.isFork)indicators.append(n('span','Fork · 上游项目','mission-fork'));
+ if(p.runtimeQa?.isCurrent){
+  if(p.runtimeQa.status==='pass')indicators.append(n('span','浏览器玩法抽样通过','mission-qa-pass'));
+  if(['fail','timeout'].includes(p.runtimeQa.status))indicators.append(n('span','真实浏览器玩法验收失败','mission-qa-error'));
+ }
+
  if(p.probe?.state==='reachable')indicators.append(n('span','HTTP 可达 · 资源检查通过','mission-probe-ok'));
  else if(p.probe&&['http_error','resource_error','network_error','content_error'].includes(p.probe.state))
   indicators.append(n('span','在线资源异常 · '+p.probe.state,'mission-probe-error'));
