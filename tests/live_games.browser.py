@@ -1,5 +1,5 @@
 """ATLAS: actual Chromium acceptance against PUBLIC deployed games.
-Four independent browser profiles; real gameplay buttons and persistence.
+Ten independent browser profiles; real gameplay buttons and persistence.
 No monkeypatching fetch, injecting success, or altering player accounts.
 All scenario outcomes (including failures) are written to public JSON evidence.
 """
@@ -15,6 +15,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]
@@ -26,6 +27,9 @@ SITES={
  "factory":("Midnight-Factory","https://aincfh.github.io/Midnight-Factory/"),
  "citylife":("City-of-Small-Chances","https://aincfh.github.io/City-of-Small-Chances/"),
  "mori":("Tamagochi---Open-Source-Game","https://aincfh.github.io/Tamagochi---Open-Source-Game/"),
+ "qube":("qubecraft","https://aincfh.github.io/qubecraft/"),
+ "cimulity":("cimulity","https://aincfh.github.io/cimulity/"),
+ "spacefortress":("spacefortress","https://aincfh.github.io/spacefortress/"),
 }
 LABELS={
  "bootstrap":"真实页面启动",
@@ -270,7 +274,102 @@ def run_mori(driver,check):
   return restored
  check("save","实际刷新后宠物照料历史持久保存",persist)
  check("mobile",LABELS["mobile"],lambda:assert_mobile(driver))
-RUNNERS={"bistro":run_bistro,"paradise":run_paradise,"wildlands":run_wildlands,"fishing":run_fishing,"factory":run_factory,"citylife":run_citylife,"mori":run_mori}
+
+def run_qube(driver,check):
+ def open_world_creator():
+  wait_for(driver,"return window.blockhaven?.mode==='title'",30)
+  driver.find_element(By.CSS_SELECTOR,'#title .title-menu button').click()
+  WebDriverWait(driver,20).until(lambda d:'show' in d.find_element(By.ID,'worlds').get_attribute('class'))
+  driver.find_element(By.XPATH,"//div[@id='worlds']//button[normalize-space(.)='Create new world']").click()
+  WebDriverWait(driver,16).until(lambda d:'show' in d.find_element(By.ID,'create').get_attribute('class'))
+  driver.find_element(By.ID,'wname').clear()
+  driver.find_element(By.ID,'wname').send_keys("ATLAS QA / Creative")
+  driver.find_element(By.ID,'wseed').send_keys("atlas-real-game-qa")
+  driver.find_element(By.XPATH,"//div[@id='create']//div[@aria-label='Game mode']//button[normalize-space(.)='Creative']").click()
+  assert driver.find_element(By.XPATH,"//div[@id='create']//div[@aria-label='Game mode']//button[normalize-space(.)='Creative']").get_attribute('aria-pressed')=='true'
+  return True
+ check("bootstrap","实际进入世界管理器并配置独立创造模式存档",open_world_creator)
+ def create_and_enter():
+  driver.find_element(By.XPATH,"//div[@id='create']//button[normalize-space(.)='Create world']").click()
+  wait_for(driver,"return window.blockhaven?.mode==='playing' && !!window.blockhaven.player && !!window.blockhaven.world",110)
+  status=driver.execute_script("""return {mode:window.blockhaven.mode,
+    player:!!window.blockhaven.player,world:!!window.blockhaven.world,
+    canvas:document.querySelector('#game')?.width||0}""")
+  assert status["canvas"]>390,status
+  return status
+ check("interaction","真实点击创建世界并完成体素沙盒运行初始化",create_and_enter)
+ def save_and_quit():
+  ActionChains(driver).send_keys(Keys.ESCAPE).perform()
+  WebDriverWait(driver,18).until(lambda d:'show' in d.find_element(By.ID,'pause').get_attribute('class'))
+  driver.find_element(By.XPATH,"//div[@id='pause']//button[contains(., 'Save and quit')]").click()
+  wait_for(driver,"return window.blockhaven?.mode==='title'",35)
+  driver.find_element(By.CSS_SELECTOR,'#title .title-menu button').click()
+  WebDriverWait(driver,20).until(lambda d:d.find_elements(By.CSS_SELECTOR,'#worlds .world-row'))
+  assert driver.find_elements(By.CSS_SELECTOR,'#worlds .world-row')
+  return True
+ check("save","使用真实游戏菜单保存并返回世界列表，存档可重新找到",save_and_quit)
+ check("mobile",LABELS["mobile"],lambda:assert_mobile(driver))
+
+def run_cimulity(driver,check):
+ def boot():
+  wait_for(driver,"return !!document.querySelector('canvas') && !!document.querySelector('.city-desktop-vault') && [...document.querySelectorAll('button')].some(b=>b.textContent?.includes('Pause'))",50)
+  assert driver.execute_script("return document.querySelector('canvas').width")>400
+  return True
+ check("bootstrap","真正的城市模拟 Canvas、资金和工具栏完成初始化",boot)
+ def time_control():
+  driver.find_element(By.XPATH,"//button[contains(., 'Pause')]").click()
+  WebDriverWait(driver,10).until(lambda d:d.find_elements(By.XPATH,"//button[contains(., 'Play')]"))
+  driver.find_element(By.XPATH,"//button[contains(., 'Play')]").click()
+  WebDriverWait(driver,10).until(lambda d:d.find_elements(By.XPATH,"//button[contains(., 'Pause')]"))
+  return True
+ check("interaction","真实点击暂停与恢复城市时间模拟",time_control)
+ def vault():
+  driver.find_element(By.CSS_SELECTOR,'.city-desktop-vault').click()
+  assert WebDriverWait(driver,12).until(lambda d:d.find_element(By.CSS_SELECTOR,'.city-vault-dialog').is_displayed())
+  driver.find_element(By.CSS_SELECTOR,'.city-vault-close').click()
+  WebDriverWait(driver,10).until(lambda d:not d.find_element(By.CSS_SELECTOR,'.city-vault-dialog').is_displayed())
+  return True
+ check("save","真实打开并关闭城市存档管理器",vault)
+ def mobile_tools():
+  result=assert_mobile(driver)
+  build=driver.find_element(By.XPATH,"//div[contains(@class,'city-mobile-dock')]/button[normalize-space(.)='Build']")
+  build.click()
+  assert driver.find_element(By.ID,'city-mobile-tools').get_attribute('data-open')=='true'
+  build.click()
+  assert driver.find_element(By.ID,'city-mobile-tools').get_attribute('data-open')=='false'
+  return result
+ check("mobile","390px 城市视图及真实手机 Build 抽屉交互",mobile_tools)
+
+def run_spacefortress(driver,check):
+ def boot():
+  wait_for(driver,"return document.querySelector('#world')?.width>400 && !!document.querySelector('#resources')?.textContent?.trim() && !!document.querySelector('#site-name')?.textContent?.trim()",40)
+  snap=driver.execute_script("""return {canvas:document.querySelector('#world').width,
+    resources:document.querySelector('#resources').textContent.trim().length,
+    site:document.querySelector('#site-name').textContent.trim()}""")
+  assert snap["canvas"]>400 and snap["resources"]>10,snap
+  return snap
+ check("bootstrap","实际启动等距殖民地 Canvas、资源状态及地点信息",boot)
+ def controls():
+  if driver.execute_script("return document.getElementById('guide').open"):
+   driver.find_element(By.ID,'close-guide').click()
+  driver.find_element(By.ID,'colony-menu').click()
+  assert driver.find_element(By.ID,'right-drawer').get_attribute('data-panel')=='colony'
+  assert 'open' in driver.find_element(By.ID,'right-drawer').get_attribute('class')
+  driver.find_element(By.ID,'colony-menu').click()
+  assert 'open' not in driver.find_element(By.ID,'right-drawer').get_attribute('class')
+  driver.find_element(By.ID,'help').click()
+  assert driver.execute_script("return document.getElementById('guide').open")
+  driver.find_element(By.ID,'close-guide').click()
+  assert not driver.execute_script("return document.getElementById('guide').open")
+  return True
+ check("interaction","真实打开殖民地面板与操作手册并正确关闭",controls)
+ def save():
+  driver.find_element(By.ID,'save').click()
+  WebDriverWait(driver,18).until(lambda d:'Colony saved on this device.' in d.find_element(By.ID,'toast').text)
+  return True
+ check("save","真实使用浏览器存储保存殖民地并收到成功确认",save)
+ check("mobile",LABELS["mobile"],lambda:assert_mobile(driver))
+RUNNERS={"bistro":run_bistro,"paradise":run_paradise,"wildlands":run_wildlands,"fishing":run_fishing,"factory":run_factory,"citylife":run_citylife,"mori":run_mori,"qube":run_qube,"cimulity":run_cimulity,"spacefortress":run_spacefortress}
 def run_game(id,artifact):
  repo,url=SITES[id]
  record={"id":id,"repo":repo,"status":"unknown","elapsedMs":0,"checks":[],"message":""}
