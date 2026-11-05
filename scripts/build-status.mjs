@@ -3,6 +3,7 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {latestWorkflow,workflowState,safeRepositoryPath} from '../status.js';
 import {normalizePreview} from '../mission-core.js';
+import {traceForRepo,normalizeTraceRun} from '../trace-core.js';
 import {deploymentVersion,fingerprintDist} from './asset-version.mjs';
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const OWNER='AincFh', API='https://api.github.com', TOKEN=process.env.GITHUB_TOKEN||'';
@@ -43,7 +44,15 @@ async function describe(r){
   optional(()=>get(root+'/pulls?state=open&per_page=100'),r.name,'pull_requests',null),
   optional(()=>get(root+'/pages'),r.name,'pages',null)
  ]);
+ const [closedPRs,prRuns]=await Promise.all([
+  optional(()=>get(root+'/pulls?state=closed&sort=updated&direction=desc&per_page=12'),r.name,'recent_closed_prs',null),
+  Array.isArray(prs)&&prs.length>0?optional(()=>get(root+'/actions/runs?event=pull_request&per_page=80'),r.name,'pr_checks',null):Promise.resolve(null)
+ ]);
  const w=latestWorkflow(runs?.workflow_runs,branch,skip);
+ const trace=traceForRepo({owner:OWNER,repo:r.name,issues:issues||[],openPRs:prs||[],closedPRs:closedPRs||[],
+  branchRuns:(runs?.workflow_runs||[]).map(x=>normalizeTraceRun(x,OWNER,r.name)).filter(Boolean),
+  prRuns:(prRuns?.workflow_runs||[]).map(x=>normalizeTraceRun(x,OWNER,r.name)).filter(Boolean)});
+
  return {
   name:r.name,repositoryUrl:r.html_url,description:r.description||'',language:r.language||null,
   updatedAt:r.pushed_at||r.updated_at||null,stars:r.stargazers_count||0,defaultBranch:branch,
@@ -53,6 +62,7 @@ async function describe(r){
   issuePreview:Array.isArray(issues)?normalizePreview(issues,'issue',r.name,OWNER):null,
   prPreview:Array.isArray(prs)?normalizePreview(prs,'pull',r.name,OWNER):null,
   fork:!!r.fork,archived:!!r.archived,
+  trace,
   countsTruncated:!!(issues?.length>=100||prs?.length>=100),
   site:pages?.html_url&&pages?.status==='built'?{state:'published',url:pages.html_url}:{state:pages?.status==='building'?'building':pages?'not_published':'unknown',url:null}
  };

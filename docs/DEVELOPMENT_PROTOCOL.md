@@ -46,3 +46,19 @@ Phase 2D：浏览器端到端/移动性能与恢复测试，作为后续发布�
 - 不展示私有项目、secret 或用户凭据。
 - 不凭猜测编造“上线”“在线”“测试通过”。
 - 不对现有仓库实施删除、覆盖、改名或重写历史来消除重复；需先取得明确授权。
+
+
+## Phase 3：需求到发布的证据关联
+
+ATLAS 开发链路工作区（#trace）只从公开 GitHub REST API 获取 Issue、PR、Actions 及 Pages 的可观察证据。
+
+| 阶段 | 关联条件 | 能证明 | 不能证明 |
+| --- | --- | --- | --- |
+| Issue → PR | 同仓库 PR 正文包含 Fixes/Closes/Resolves #N | PR 声明关联某 Issue | GitHub 已执行关闭、需求已完成 |
+| PR → CI | PR HEAD SHA、HEAD 分支、pull_request 事件严格匹配 | 此 PR 提交的可见工作流结论 | 所有检查完成、PR 已合并 |
+| Merge → CI | merge commit SHA、默认分支、push/dispatch 事件匹配 | 此合并提交的可见主分支运行 | 游戏已完成全部验收 |
+| 默认分支 → Pages | Pages API 当前公开状态 | 仓库存在已构建站点 | 这次 PR 的代码具体已上线 |
+
+所有阶段缺少可核验信息都显示“未知”，不能拿另一个事件的绿色 CI 替代。PR 工作流和 GitHub Pages 部署绝不是同一回事。
+
+交接时应保留 Issue、PR、提交 SHA、对应 Actions 运行和真实浏览器验证证据。开发链路可以导出 Markdown 报告，但只是公开样本，不代表整个仓库历史。Github Pages 不携带 PAT、不访问私有仓库，也没有远程合并发布权限。

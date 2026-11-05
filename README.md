@@ -119,3 +119,17 @@ ATLAS 不再只有 GitHub 搜索星图。#incubator 是独立的、无需服务�
 - 键盘上、下方向键选择，Enter 执行，Escape 关闭，点击结果执行；搜索记录仅存储最近八条命令 ID 于本地浏览器。
 
 命令面板不会持有 GitHub Token，也不能直接创建 Issue、合并 PR 或修改远端项目。应用和游戏链接均来自已登记的可信入口，外部仓库链接只由校验通过的 GitHub 仓库名生成。
+
+
+## Edition 08 · 可追溯的开发链路
+
+新增 [开发链路](https://aincfh.github.io/dev-control-center/#trace) 工作区，对自有公开 GitHub 仓库提供 **开放 PR、最近合并 PR、明确 Issue 引用、同提交 CI 和当前 Pages 状态** 的只读追踪。
+
+- 只解析同仓库 PR 描述里的 Fixes/Closes/Resolves #N 关闭关键字，不根据标题猜测需求关系。
+- PR 检查严格匹配源 SHA + 分支 + pull_request 事件；合并后 CI 只匹配合并提交 SHA + 默认分支 + push/dispatch 事件。
+- 区分“PR 开放”“检查通过”“代码已合并”“仓库 Pages 已公开”。Pages 已发布并不证明具体 PR 已部署，不能自动显示该 PR 已上线。
+- 详情面板保留 GitHub Issue / Actions 原始链接与明确的状态来源，支持搜索、按仓库与阶段过滤、Markdown 交接报告。
+- 公开快照采样每仓库最多 8 条开放 PR、6 条最近已合并 PR、8 条开放 Issue，以及近期 PR Actions 运行；缺失数据必须标记未知。
+- Node 领域测试验证引用关系、URL 安全和 SHA 关联；Chromium 验证桌面/手机与交互。
+
+ATLAS 依然是公开只读观测层。真正的 GitHub 修改、游戏 Playtest 和发布验收必须在独立仓库中完成。

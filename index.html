@@ -40,6 +40,7 @@
 <a class="nav" href="#universe" data-view-link="universe"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>GitHub 星图</span><small class="nav-counter">1K+</small></a>
 <a class="nav" href="#incubator" data-view-link="incubator"><svg class="i" aria-hidden="true"><use href="#i-layers"></use></svg><span>项目孵化</span><small class="nav-counter" id="candidateCount" hidden>0</small></a>
 <a class="nav" href="#mission" data-view-link="mission"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>研发总控</span><small class="nav-counter" id="missionNavCount" hidden>0</small></a>
+<a class="nav" href="#trace" data-view-link="trace"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>开发链路</span></a>
 <a class="nav" href="#delivery" data-view-link="delivery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>交付健康</span></a>
 <a class="nav" href="#pipeline" data-view-link="pipeline" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>构建流程</span></a>
 <a class="nav" href="#activity" data-view-link="activity" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-activity"></use></svg><span>开发动态</span></a>
@@ -166,6 +167,29 @@
   </aside>
  </div>
 </section>
+<section class="view" id="trace" aria-label="跨仓库开发链路证据">
+ <header class="view-header"><span class="eyebrow">ENGINEERING / VERIFIED TRACEABILITY</span><div class="view-heading-row"><div><h1>每一项交付，<span>都有出处。</span></h1><p>按 GitHub 公开证据串联 Issue → PR → 同提交检查 → 发布状态。缺失的步骤明确标记未知，不伪造完成。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg></div></div></header>
+ <section class="trace-hero"><div><span class="eyebrow">ATLAS / DEVELOPMENT TRACE 08</span><h2>从需求到上线。<br><em>追踪，而不是猜测。</em></h2><p>跨独立仓库观察开放 PR、近期已合并提交、工作流证据和 Issue 的明确关闭引用。每个结论都可追溯至公开 GitHub 数据。</p><div class="trace-hero-actions"><button type="button" id="traceExport">导出链路证据报告 ↗</button><a href="#mission">返回研发总控 ↗</a></div></div><div class="trace-hero-mark" aria-hidden="true"><span>ISSUE</span><i></i><span>PR</span><i></i><span>CI</span><i></i><span>SHIP</span></div></section>
+ <div class="trace-stats" aria-label="链路证据统计">
+  <div><span>可追踪 PR 样本</span><strong id="traceTotal">0</strong></div>
+  <div><span>尚未合并</span><strong id="traceOpen">0</strong></div>
+  <div><span>最近已合并</span><strong id="traceMerged">0</strong></div>
+  <div><span>同提交检查失败</span><strong id="traceBlocked">0</strong></div>
+  <div><span>明确 Issue 引用</span><strong id="traceLinked">0</strong></div>
+ </div>
+ <p class="trace-freshness" id="traceFreshness" role="status" aria-live="polite">等待 GitHub Actions 公开快照。</p>
+ <div class="trace-layout">
+ <section class="trace-main" aria-label="开发链路项目卡片"><div class="trace-heading"><div><span class="eyebrow">ISSUE → PR → CHECK → RELEASE</span><h2>开发交付链路</h2></div><span id="traceMatches">载入中…</span></div>
+ <div class="trace-filters">
+  <label><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input type="search" id="traceQuery" placeholder="搜索 PR、分支、仓库或 Issue 编号…" autocomplete="off" aria-label="搜索开发链路"></label>
+  <select id="tracePhase" aria-label="按状态筛选"><option value="all">全部状态</option><option value="open">开放 PR</option><option value="merged">最近已合并</option><option value="failing">检查失败</option><option value="unknown">检查无证据</option></select>
+  <select id="traceRepo" aria-label="按仓库筛选"><option value="all">全部仓库</option></select>
+ </div>
+ <div id="traceGrid" class="trace-grid" aria-live="polite"></div><button id="traceMore" type="button" hidden>继续显示</button>
+ </section>
+ <aside class="trace-aside" aria-label="开放需求与可信度边界"><article class="trace-side-panel"><span class="eyebrow">CURRENT PUBLIC ISSUES</span><h3>需求仍在等待关联</h3><small id="traceIssueCount">0 条</small><div id="traceIssues" class="trace-issues"></div></article>
+ <article class="trace-side-panel"><span class="eyebrow">DATA PROVENANCE</span><h3>哪些结论可以相信？</h3><p>只以 GitHub 明确的 SHA、分支和 Actions 运行记录匹配代码检查。PR 正文关闭关键字只是<strong>声明的引用</strong>，不是自动关闭结果。</p><p>Pages 目前已发布只能证明仓库有站点，不能证明某个 PR 已上线。未找到证据时，所有环节都保留“未知”。</p><a href="https://github.com/AincFh/dev-control-center/issues/1" target="_blank" rel="noopener noreferrer">查看追踪系统的研发任务 ↗</a></article></aside></div>
+</section>
 <section class="view" id="delivery" aria-label="交付状态">
  <header class="view-header"><span class="eyebrow">OPERATIONS 01 / DELIVERY</span><div class="view-heading-row"><div><h1>交付健康<span>.</span></h1><p>以 GitHub Actions 为依据，区分构建成功、部署完成与产品真正可用。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg></div></div></header>
  <div class="deliverygrid"><article class="deliverypane"><div class="deliverytop"><div><span class="eyebrow">BUILD & RELEASE STATUS</span><strong id="healthSummary">加载中</strong></div><span class="mini-status">LIVE DATA</span></div><div id="deliveryList" aria-live="polite"></div><p class="healthnote" id="healthNote">等待状态快照</p></article>
@@ -188,6 +212,7 @@
 <footer class="global-footer"><span>ATLAS © 2026 · CRAFTED TO BUILD</span><span>PUBLIC REPOSITORIES ONLY · UPSTREAM AUTHORS CREDITED</span></footer>
 </main></div></div>
 <div id="universeNotice" class="universe-notice" role="status" aria-live="polite"></div>
+<div id="traceFeedback" class="trace-feedback" role="status" aria-live="polite"></div>
 <div id="missionFeedback" class="mission-feedback" role="status" aria-live="polite"></div>
 <dialog id="missionReviewDialog" class="mission-review-dialog" aria-label="项目本地产品验收记录">
  <div class="mission-review-header"><div><span class="eyebrow">PRODUCT QUALITY / LOCAL EVIDENCE</span><h2 id="missionReviewTitle">项目质量验收</h2><p id="missionReviewRepo">仅当前浏览器保存</p></div><button type="button" id="missionReviewClose" aria-label="关闭验收记录">×</button></div>
