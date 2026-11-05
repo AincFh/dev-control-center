@@ -145,3 +145,12 @@ ATLAS 依然是公开只读观测层。真正的 GitHub 修改、游戏 Playtest
 - 匹配 Deployment 成功后，发布 URL 仍需与仓库 Pages URL 同源且路径匹配才予显示。这样不会把不受信任的跳转注入公开页面。
 
 只采样最近 50 个 Pages Deployment，每仓库最多核实 4 个合并 PR 的部署状态，按公开信息分批获取。**部署成功只证明 GitHub 环境记录，不代表完整 Playtest、性能验收和用户端质量全部通过。**
+
+
+## Edition 10 · Pages 状态证据一致性修复
+
+在线快照核验发现 GitHub Pages 公开站点有成功的同 SHA Deployment，但某些仓库的 Pages API 返回了非 built 状态，旧代码错误显示为“未发布”。
+
+修复策略：若 Pages API 明确为 built/active/published 且 URL 为 HTTPS，则标记 published；否则允许 30 日内 **同仓库、同合并提交 SHA、github-pages 环境且最新状态为 success** 的 Deployment 作为 Pages 发布证据，并保留来源、部署 SHA、验证时间。两种证据都缺失时显示 unknown，不编造“未发布”。
+
+前台项目详情现在区分“Pages API 已证实”和“GitHub Deployment 提交级已证实”。源证据不能替代浏览器打开后的真实游戏 Playtest。
