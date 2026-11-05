@@ -1,0 +1,38 @@
+name: ATLAS · Grow Public GitHub Universe
+on:
+  schedule:
+    - cron: '27 4 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: atlas-public-universe-catalog
+  cancel-in-progress: false
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate GitHub provenance and dedupe
+        run: node --test tests/universe-refresh.test.js tests/universe.test.js
+      - name: Search GitHub public repositories with rate spacing
+        run: node scripts/refresh-universe.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Commit new public catalog results if changed
+        run: |
+          set -euo pipefail
+          git add data/github-universe.json
+          if git diff --cached --quiet; then
+            echo "No new public repositories."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "data(universe): refresh public GitHub repository discovery"
+          git push origin HEAD:main
+# Token-authored push does not trigger Pages; existing hourly Pages cron publishes next.
