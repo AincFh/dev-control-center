@@ -154,3 +154,12 @@ ATLAS 依然是公开只读观测层。真正的 GitHub 修改、游戏 Playtest
 修复策略：若 Pages API 明确为 built/active/published 且 URL 为 HTTPS，则标记 published；否则允许 30 日内 **同仓库、同合并提交 SHA、github-pages 环境且最新状态为 success** 的 Deployment 作为 Pages 发布证据，并保留来源、部署 SHA、验证时间。两种证据都缺失时显示 unknown，不编造“未发布”。
 
 前台项目详情现在区分“Pages API 已证实”和“GitHub Deployment 提交级已证实”。源证据不能替代浏览器打开后的真实游戏 Playtest。
+
+
+## Edition 11 · 无 PR 仓库的发布验证
+
+对 GitHub Pages 仓库级发布补充默认分支 Deployment 证明：即使某个游戏仓库没有近期 PR，只要其默认分支 SHA 与 github-pages 环境的最近 Deployment 对应、最新状态 success、URL 安全且不超过 30 天，就可展示“主分支部署已证实”。
+
+仓库级证明与 PR 级证明是两套不同的归因：仓库级证明 **不代表某个 PR 合并或通过 Playtest**；PR 级证明仍须匹配具体 merge SHA。最新部署失败或正在进行时不能拿历史成功 PR 的结果覆盖当前状态。
+
+目前所有网页仍只读，没有用户凭证或 GitHub Token。所有证据来自 GitHub Actions 中的公开 API 快照，可在网页上查看和交接。
