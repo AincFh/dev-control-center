@@ -237,3 +237,9 @@ ATLAS 的研发总控现在读取每日公开 Chromium 游戏验收记录，按�
 
 除每日 UTC 03:27 定时执行与显式 workflow_dispatch 以外，ATLAS 实际游戏 Chromium 验收在以下代码合并到 main 后自动执行：live-game-qa.yml 工作流本身、tests/live_games.browser.py。
 工作流不会对公开结果 data/game-runtime.json 的自动提交再次触发，避免递归排队和无意义的 Actions 消耗。真实运行完成后，继续提交公开通过/失败证据并触发 Pages 更新；实际游戏失败仍会将该 QA 运行标记为失败。
+
+## Edition 19 · 午夜工厂内置教程遮挡的真实操作验收
+
+首次引入每游戏截图的自动 QA 运行 #42018072064 真实取得 20 张桌面和手机截图，最终 9/10 款通过。午夜工厂失败原因不是页面无法启动，而是**原游戏 iframe 内的首次引导横幅 tutorial-banner 覆盖了矿机建造按钮**，Selenium 用户点击被拒绝。这属于真实用户也可能遇到的界面流程。
+修复只修改自动化操作顺序：进入原游戏后，等待首次提示条出现，通过其自带的 tutorial-skip 按钮真实点击关闭，再验证矿机工具选择和取消。不会使用 JavaScript 直接隐藏横幅、写入本地已完成标志或调用游戏内部控制方法。新增 tutorial 单独检查项。
+该测试脚本合并到 main 后，将由 Edition 18 的受限 push 事件自动重新触发完整十款 Chromium 验收；失败也继续保留截图和错误记录。
