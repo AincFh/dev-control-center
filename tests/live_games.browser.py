@@ -240,8 +240,16 @@ def run_mori(driver,check):
   time.sleep(.3)
   dialogs=driver.find_elements(By.CSS_SELECTOR,'.story-overlay')
   if dialogs:
-   assert driver.find_element(By.CSS_SELECTOR,'.story-dialog #story-title').text
-   driver.find_element(By.CSS_SELECTOR,'button[aria-label="Close story"]').click()
+   # On the real page story-dialog may be visually visible while Selenium
+   # WebElement.text is empty during overlay transitions. Verify React's
+   # actual DOM title, then close using the visible accessible button.
+   title=WebDriverWait(driver,15).until(lambda d:
+    (d.find_element(By.CSS_SELECTOR,'.story-dialog #story-title').get_attribute('textContent') or '').strip())
+   assert title,"Story title missing from actual game DOM"
+   close=WebDriverWait(driver,15).until(lambda d:
+    d.find_element(By.CSS_SELECTOR,'button[aria-label="Close story"]')
+    if d.find_element(By.CSS_SELECTOR,'button[aria-label="Close story"]').is_displayed() else False)
+   close.click()
    WebDriverWait(driver,12).until(lambda d:not d.find_elements(By.CSS_SELECTOR,'.story-overlay'))
   return True
  check("story","正常完成真实首次剧情弹层，不绕过界面",first_story)
