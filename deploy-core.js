@@ -9,12 +9,13 @@ export function planDeploymentChecks(prs=[],records=[],owner='AincFh',repo='dev-
  const keys=new Map();
  for(const pr of prs){
   if(pr?.state!=='merged'||!SHA.test(pr.mergeSha||''))continue;
-  keys.set(pr.mergeSha.toLowerCase(),pr.number);
+  keys.set(pr.mergeSha.toLowerCase(),{number:pr.number,baseBranch:pr.baseBranch||'main'});
  }
  const found=[],seen=new Set();
  for(const d of records){
   if(!Number.isSafeInteger(d?.id)||d.id<1||d.environment!=='github-pages'||!SHA.test(d.sha||'')||seen.has(d.id))continue;
-  const number=keys.get(d.sha.toLowerCase());if(!number||found.some(x=>x.prNumber===number))continue;
+  const matching=keys.get(d.sha.toLowerCase());if(!matching||d.ref!==matching.baseBranch||found.some(x=>x.prNumber===matching.number))continue;
+  const number=matching.number;
   seen.add(d.id);found.push({id:d.id,prNumber:number,sha:d.sha,
    recordUrl:'https://github.com/'+owner+'/'+repo+'/deployments/'+d.id,
    environment:'github-pages',createdAt:safeDate(d.created_at)});
