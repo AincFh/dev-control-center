@@ -2,8 +2,8 @@ import test from'node:test';import assert from'node:assert/strict';
 import{planDeploymentChecks,normalizeDeploymentEvidence,applyDeploymentEvidence}from'../deploy-core.js';
 const SHA='a'.repeat(40),OTHER='b'.repeat(40);
 test('only exact merged commit sha and github-pages environment are eligible',()=>{
- const prs=[{number:4,state:'merged',mergeSha:SHA},{number:5,state:'open',mergeSha:OTHER}];
- const rows=[{id:1,sha:OTHER,environment:'github-pages'},{id:2,sha:SHA,environment:'staging'},{id:3,sha:SHA,environment:'github-pages'},{id:4,sha:SHA,environment:'github-pages'}];
+ const prs=[{number:4,state:'merged',mergeSha:SHA,baseBranch:'main'},{number:5,state:'open',mergeSha:OTHER,baseBranch:'main'}];
+ const rows=[{id:1,sha:OTHER,environment:'github-pages'},{id:2,sha:SHA,environment:'staging'},{id:3,sha:SHA,ref:'main',environment:'github-pages'},{id:4,sha:SHA,ref:'dev',environment:'github-pages'}];
  const candidates=planDeploymentChecks(prs,rows,'AincFh','demo');
  assert.equal(candidates.length,1);assert.equal(candidates[0].id,3);
  assert.equal(candidates[0].recordUrl,'https://github.com/AincFh/demo/deployments/3');
