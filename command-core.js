@@ -3,6 +3,7 @@ export const COMMAND_ROUTES=[
  {id:'home',title:'总览',description:'回到 ATLAS 创造者工作空间',keywords:'主页 开始 home dashboard'},
  {id:'arcade',title:'游戏大厅',description:'进入已经确认的游戏入口',keywords:'游戏 玩 耕种 钓鱼 play'},
  {id:'mission',title:'研发总控',description:'跨仓库 CI、PR、Issue 与质量验收',keywords:'任务 风险 状态 运营 mission'},
+ {id:'trace',title:'开发链路',description:'真实 Issue、PR、CI 与发布证据追踪',keywords:'trace lifecycle delivery pipeline 链路 关联'},
  {id:'workstreams',title:'项目路线',description:'查看独立项目的下一开发目标',keywords:'roadmap 产品 计划'},
  {id:'projects',title:'全部仓库',description:'搜索本账户所有公开 GitHub 仓库',keywords:'repo repositories Github 项目 仓库'},
  {id:'incubator',title:'项目孵化',description:'外部项目候选、研发评估和 Issue 草稿',keywords:'候选 想法 立项 孵化'},
