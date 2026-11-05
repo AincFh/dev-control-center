@@ -62,7 +62,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         assert len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))>=2
         click_visible("#arcadeGenres button[data-genre='all']")
         fav=driver.find_element(By.CSS_SELECTOR,"[data-game='paradise'] .arcade-favorite")
-        fav.click()
+        click_visible("[data-game='paradise'] .arcade-favorite")
         # Favorites re-render the entire card grid; requery the new DOM node.
         fav=driver.find_element(By.CSS_SELECTOR,"[data-game='paradise'] .arcade-favorite")
         assert fav.get_attribute("aria-pressed")=="true"
