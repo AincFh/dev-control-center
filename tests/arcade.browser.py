@@ -72,8 +72,13 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         # Data is real evidence from the checked-in last QA run, not a fixed
         # fabricated fixture. Future scheduled Chromium runs may change counts.
         assert len(driver.find_elements(By.CSS_SELECTOR,"#gameQACards .game-qa-tile"))==7
-        qa_counts=[int(driver.find_element(By.ID,part).text) for part in
-                   ("gameQAPassed","gameQAFailed","gameQAUnknown")]
+        # Game QA evidence loads asynchronously and may arrive after the
+        # arcade cards; do not assert the initial dashboard placeholders.
+        for _ in range(55):
+            qa_counts=[int(driver.find_element(By.ID,part).text or 0) for part in
+                       ("gameQAPassed","gameQAFailed","gameQAUnknown")]
+            if sum(qa_counts)==7:break
+            time.sleep(.2)
         assert sum(qa_counts)==7,qa_counts
         assert driver.find_element(By.ID,"gameQAStamp").text
         driver.save_screenshot(str(OUT/"01-arcade-desktop.png"))
