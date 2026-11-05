@@ -804,3 +804,12 @@ html.atlas-restricted-selection textarea{
 .arcade-status .arcade-qa-fail{background:#f9e6dd;color:#9f513f;font-size:10px;border-radius:5px;padding:5px 7px;font-weight:740}
 @media(max-width:900px){.game-qa-intro{align-items:flex-start;flex-direction:column}.game-qa-cards{grid-template-columns:1fr}}
 @media(max-width:610px){.game-qa{padding:19px 14px}.game-qa-metrics{grid-template-columns:1fr;gap:7px}.game-qa-metrics>div{padding:10px 13px}.game-qa-header{align-items:flex-start;flex-wrap:wrap}.game-qa-state{white-space:normal}}
+
+/* Edition 14: independent actual Chromium gameplay signals are not CI health. */
+.mission-kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
+.mission-kpi strong{font-variant-numeric:tabular-nums}
+.mission-card-indicators .mission-qa-pass{background:#e3f0e5;color:#296c4b;border-color:#bbd7c3}
+.mission-card-indicators .mission-qa-error{background:#f9e5dc;color:#ad513e;border-color:#ebbead}
+@media(max-width:1500px){.mission-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1050px){.mission-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.mission-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-kpi:last-child{grid-column:auto}}
