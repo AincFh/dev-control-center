@@ -6,6 +6,7 @@ import {normalizePreview} from '../mission-core.js';
 import {traceForRepo,normalizeTraceRun} from '../trace-core.js';
 import {planDeploymentChecks,normalizeDeploymentEvidence,applyDeploymentEvidence} from '../deploy-core.js';
 import {siteEvidence} from '../site-core.js';
+import {probeSite} from '../site-probe-core.js';
 import {deploymentVersion,fingerprintDist} from './asset-version.mjs';
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const OWNER='AincFh', API='https://api.github.com', TOKEN=process.env.GITHUB_TOKEN||'';
@@ -65,7 +66,10 @@ async function describe(r){
   return{prNumber:candidate.prNumber,evidence:normalizeDeploymentEvidence(candidate,statuses||[],pages?.html_url||null)};
  }));
  const trace=applyDeploymentEvidence(rawTrace,proven);
-
+ const site=siteEvidence({pages,trace});
+ // Probe actual public Pages HTML and same-origin JS/CSS, independently of CI.
+ // Only the pinned aincfh.github.io/<repo>/ path is fetched; unknown sites are not probed.
+ const probe=site.state==='published'?await probeSite({repo:r.name,url:site.url,timeoutMs:6500}):null;
  return {
   name:r.name,repositoryUrl:r.html_url,description:r.description||'',language:r.language||null,
   updatedAt:r.pushed_at||r.updated_at||null,stars:r.stargazers_count||0,defaultBranch:branch,
@@ -77,7 +81,7 @@ async function describe(r){
   fork:!!r.fork,archived:!!r.archived,
   trace,
   countsTruncated:!!(issues?.length>=100||prs?.length>=100),
-  site:siteEvidence({pages,trace})
+  site,probe
  };
 }
 // Copy the actual relative module dependency graph, not a manually curated
