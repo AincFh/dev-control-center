@@ -4,6 +4,7 @@ from http.server import SimpleHTTPRequestHandler
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
 ROOT=pathlib.Path(__file__).resolve().parents[1];OUT=ROOT/"test-artifacts"/"universe";OUT.mkdir(parents=True,exist_ok=True)
@@ -77,7 +78,23 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   assert mobile['contentScroll']<=4,mobile
   assert mobile['cards']==24 and mobile['route']=='universe',mobile
   driver.save_screenshot(str(OUT/"02-universe-mobile.png"))
-  severe=[x['message'] for x in driver.get_log("browser") if x["level"]=="SEVERE"]
+  # Global Cmd/Ctrl+K palette searches routes, games and the real external catalog.
+  driver.execute_script("location.hash='#home'")
+  driver.find_element(By.ID,'quickFind').click()
+  until(lambda:driver.execute_script("return document.getElementById('commandDialog').open"))
+  input=driver.find_element(By.ID,'commandInput')
+  input.send_keys('研发总控')
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#commandResults .command-entry'))==1)
+  input.send_keys(Keys.ENTER)
+  until(lambda:driver.execute_script("return location.hash==='#mission'"))
+  driver.find_element(By.ID,'quickFind').click()
+  input=driver.find_element(By.ID,'commandInput')
+  input.send_keys('qubecraft')
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#commandResults .command-entry'))>=1)
+  driver.save_screenshot(str(OUT/"04-global-search.png"))
+  input.send_keys(Keys.ESCAPE)
+  assert not driver.execute_script("return document.getElementById('commandDialog').open")
+    severe=[x['message'] for x in driver.get_log("browser") if x["level"]=="SEVERE"]
   critical=[s for s in severe if "Uncaught" in s or ("/universe" in s and "404" in s)]
   assert not critical,critical
   # Connect the real GitHub source directory to the local research Kanban.
