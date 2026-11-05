@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": "2026-11-05T10:21:47Z",
-  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42009542622",
+  "generatedAt": "2026-11-05T11:04:23Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42015510367",
   "source": "real_chromium_public_games",
   "browser": "Chromium / Selenium / fresh profile per game",
   "results": [
@@ -10,7 +10,7 @@
       "id": "bistro",
       "repo": "cozy-bistro-sim",
       "status": "pass",
-      "elapsedMs": 11859,
+      "elapsedMs": 6087,
       "checks": [
         {
           "id": "interaction",
@@ -49,7 +49,7 @@
       "id": "paradise",
       "repo": "paradise-isle",
       "status": "pass",
-      "elapsedMs": 3465,
+      "elapsedMs": 3331,
       "checks": [
         {
           "id": "bootstrap",
@@ -88,7 +88,7 @@
       "id": "wildlands",
       "repo": "wildlands-anglerfishing-world-3d",
       "status": "pass",
-      "elapsedMs": 8118,
+      "elapsedMs": 7686,
       "checks": [
         {
           "id": "webgl",
@@ -121,7 +121,7 @@
       "id": "fishing",
       "repo": "fishing-world-3d",
       "status": "pass",
-      "elapsedMs": 15590,
+      "elapsedMs": 4982,
       "checks": [
         {
           "id": "webgl",
@@ -154,7 +154,7 @@
       "id": "factory",
       "repo": "Midnight-Factory",
       "status": "pass",
-      "elapsedMs": 2453,
+      "elapsedMs": 2188,
       "checks": [
         {
           "id": "interaction",
@@ -193,7 +193,7 @@
       "id": "citylife",
       "repo": "City-of-Small-Chances",
       "status": "pass",
-      "elapsedMs": 47057,
+      "elapsedMs": 46398,
       "checks": [
         {
           "id": "webgl",
@@ -226,7 +226,7 @@
       "id": "mori",
       "repo": "Tamagochi---Open-Source-Game",
       "status": "pass",
-      "elapsedMs": 12822,
+      "elapsedMs": 2684,
       "checks": [
         {
           "id": "bootstrap",
@@ -270,8 +270,8 @@
     {
       "id": "qube",
       "repo": "qubecraft",
-      "status": "timeout",
-      "elapsedMs": 52947,
+      "status": "pass",
+      "elapsedMs": 34526,
       "checks": [
         {
           "id": "bootstrap",
@@ -286,19 +286,37 @@
           "reason": ""
         },
         {
+          "id": "pause",
+          "label": "真实点击游戏内置触控暂停按钮显示暂停菜单",
+          "status": "pass",
+          "reason": ""
+        },
+        {
           "id": "save",
-          "label": "使用真实游戏菜单保存并返回世界列表，存档可重新找到",
-          "status": "timeout",
-          "reason": "TimeoutException: Message: "
+          "label": "实际保存退出并验证刚创建的独立世界仍在列表",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
         }
       ],
-      "message": "TimeoutException: Message: "
+      "message": ""
     },
     {
       "id": "cimulity",
       "repo": "cimulity",
-      "status": "timeout",
-      "elapsedMs": 15603,
+      "status": "pass",
+      "elapsedMs": 3887,
       "checks": [
         {
           "id": "bootstrap",
@@ -315,17 +333,29 @@
         {
           "id": "save",
           "label": "真实打开并关闭城市存档管理器",
-          "status": "timeout",
-          "reason": "TimeoutException: Message: "
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 城市视图及真实手机 Build 抽屉交互",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
         }
       ],
-      "message": "TimeoutException: Message: "
+      "message": ""
     },
     {
       "id": "spacefortress",
       "repo": "spacefortress",
       "status": "pass",
-      "elapsedMs": 48563,
+      "elapsedMs": 53309,
       "checks": [
         {
           "id": "bootstrap",
