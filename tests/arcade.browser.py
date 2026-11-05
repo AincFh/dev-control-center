@@ -37,9 +37,9 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
             if len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))>=10:break
             time.sleep(.35)
         cards=driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card")
-        assert len(cards)==10, f"Arcade cards missing: {len(cards)}"
+        assert len(cards)==11, f"Arcade cards missing: {len(cards)}"
         live=driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid a.arcade-play")
-        assert len(live)==7, f"Incorrect playable count: {len(live)}"
+        assert len(live)==8, f"Incorrect playable count: {len(live)}"
         assert len(driver.find_elements(By.CSS_SELECTOR,"[data-game='qube'] a.arcade-play"))==0
         driver.save_screenshot(str(OUT/"01-arcade-desktop.png"))
         search=driver.find_element(By.ID,"arcadeSearch")
@@ -50,7 +50,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
         driver.execute_script("arguments[0].dispatchEvent(new Event('input',{bubbles:true}))",search)
         driver.find_element(By.ID,"arcadePlayable").click()
         count=len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))
-        assert count==7, f"Playable filter expected 7, got {count}; search={search.get_attribute('value')!r}"
+        assert count==8, f"Playable filter expected 8, got {count}; search={search.get_attribute('value')!r}"
         driver.find_element(By.ID,"arcadePlayable").click()
         driver.find_element(By.CSS_SELECTOR,"#arcadeGenres button[data-genre='life']").click()
         assert len(driver.find_elements(By.CSS_SELECTOR,"#arcadeGrid .arcade-card"))>=2
@@ -80,7 +80,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
           columns: getComputedStyle(document.getElementById('arcadeGrid')).gridTemplateColumns,
           links: document.querySelectorAll('#arcadeGrid .arcade-play').length
         }""")
-        assert mobile["cards"]==10,mobile
+        assert mobile["cards"]==11,mobile
         assert mobile["scrollWidth"]<=mobile["width"]+4,mobile
         driver.save_screenshot(str(OUT/"02-arcade-mobile.png"))
         severe=[x["message"] for x in driver.get_log("browser") if x["level"]=="SEVERE" and "favicon" not in x["message"]]

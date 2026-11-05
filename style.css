@@ -121,3 +121,6 @@
 @media(max-width:1260px){.arcade-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.arcade-search{min-width:210px}}
 @media(max-width:700px){.arcade-section{padding:19px 15px 22px;margin:26px 0 40px;border-radius:18px}.arcade-grid{grid-template-columns:1fr}.arcade-art{height:172px}.arcade-toolbar{gap:10px}.arcade-search{max-width:none;flex-basis:100%}.arcade-filters{gap:5px}.arcade-filters button{padding:8px 10px}.arcade-summary{min-height:0}}
 @media(prefers-reduced-motion:reduce){.arcade-art:before,.arcade-art-lake:after,.arcade-art-lake2:after{animation:none}.arcade-card,.arcade-cover{transition:none}}
+
+/* SPACEFORTRESS: planet-facing command deck fallback cover. */
+.arcade-art-space{background:radial-gradient(circle at 70% 26%,#a6bfc4 0%,#6c8b8d 12%,transparent 28%),radial-gradient(circle at 29% 78%,#477870 0%,transparent 36%),linear-gradient(145deg,#1c2f42,#263e4b 54%,#0c1628)}
