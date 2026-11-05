@@ -3,8 +3,8 @@ import {summarizeHealth,repoHealthLabel,isoAge,workflowState,latestWorkflow} fro
 const OWNER='AincFh', API='https://api.github.com';
 const CATALOG={
  'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,description:'多项目状态、开发任务与交付管理'},
- 'fishing-world-3d':{label:'FISHING WORLD · 湖光物语',symbol:'♒',category:'game',featured:true,description:'程序化 3D 湖钓 · 图鉴、装备与成长'},
- 'wildlands-anglerfishing-world-3d':{label:'WILDLANDS · 山野钓行',symbol:'♒',category:'game',featured:true,description:'第一人称 3D 钓鱼与探索'},
+ 'fishing-world-3d':{label:'FISHING WORLD · 湖光物语',symbol:'♒',category:'game',featured:true,maturity:'可玩原型',description:'轻休闲 3D 钓鱼原型；非完整游戏，地图与玩法深度仍有限'},
+ 'wildlands-anglerfishing-world-3d':{label:'WILDLANDS · 山野钓行',symbol:'♒',category:'game',featured:true,maturity:'可玩原型',description:'第一人称 3D 钓鱼开发中；非完整游戏，质量与内容尚未全面验收'},
  'Saintlaurent':{label:'圣罗兰平台',symbol:'✦',category:'web'},
  'shengluolan-app':{label:'圣罗兰应用',symbol:'⬡',category:'tool'},
  'my-anime-blog':{label:'动漫内容空间',symbol:'✳',category:'web'},
@@ -20,7 +20,7 @@ function fromRepo(repo,st){
  const p=normalize(repo,CATALOG[repo.name]||{});
  p.ci=st?.ci||{state:'unknown'};p.openIssues=Number.isInteger(st?.openIssues)?st.openIssues:null;
  p.openPRs=Number.isInteger(st?.openPRs)?st.openPRs:null;p.countsTruncated=!!st?.countsTruncated;
- p.site=st?.site||{state:'unknown',url:null};p.preview=p.site.state==='published'?p.site.url:null;
+ p.site=st?.site||{state:'unknown',url:null};p.preview=p.site.state==='published'?p.site.url:null;p.maturity=CATALOG[repo.name]?.maturity||null;
  p.branch=st?.defaultBranch||'main';return p;
 }
 function statPill(p){
@@ -31,7 +31,7 @@ function card(p){
  top.append(n('span',p.symbol,'symbol'),statPill(p));root.append(top);
  root.append(n('h3',p.label),n('p',p.description||'独立开发仓库。'));
  const sub=n('div','','projectmeta');
- sub.append(n('span','Issues '+(p.openIssues??'—')),n('span','PR '+(p.openPRs??'—')));
+ sub.append(n('span','Issues '+(p.openIssues??'—')),n('span','PR '+(p.openPRs??'—')));if(p.maturity)sub.append(n('span',p.maturity,'prototype'));
  if(p.site.state==='published')sub.append(n('span','● 已发布','published'));
  root.append(sub);
  const bottom=n('div','','cardbottom'),language=n('span',p.language,'language'),links=n('div','','cardlinks');
@@ -79,7 +79,7 @@ function detailPanel(name){
  const body=$('detailBody');body.replaceChildren(n('div','PROJECT HEALTH / GITHUB','eyebrow'),n('h2',p.label),n('p',p.description||'GitHub 项目'));
  const list=n('div','','detailsstats');
  list.append(dataLine('主分支',p.branch),dataLine('构建状态',repoHealthLabel(p.ci?.state)),dataLine('最近更新',isoAge(p.ci?.updatedAt)),dataLine('打开 Issues',p.openIssues??'未知'),dataLine('打开 PR',p.openPRs??'未知'),dataLine('Pages',p.site?.state==='published'?'已发布':p.site?.state==='not_published'?'未发布':'未确认'));
- body.append(list);
+ if(p.maturity)list.append(dataLine('产品成熟度',p.maturity+'（仍需开发）'));body.append(list);
  const links=n('div','','detailactions');links.append(link(p.url,'源代码 ↗'),link(p.ci?.url||ghUrl(p.name,'/actions'),'Actions ↗'),link(ghUrl(p.name,'/issues'),'Issues ↗'),link(ghUrl(p.name,'/pulls'),'PR ↗'));
  if(p.preview)links.append(link(p.preview,'在线访问 ↗'));
  body.append(links);
