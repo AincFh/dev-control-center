@@ -6,10 +6,23 @@ const validUrl=x=>{
   const u=new URL(x);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;
  }catch{return null}
 };
-export function siteEvidence({pages=null,trace=null,now=Date.now()}={}){
+export function siteEvidence({pages=null,trace=null,latestDeployment=null,now=Date.now()}={}){
  const pageUrl=validUrl(pages?.html_url);
  if(pageUrl&&['built','active','published'].includes(pages?.status)){
   return{state:'published',url:pageUrl,source:'pages_api',deploymentSha:null,verifiedAt:null};
+ }
+ if(latestDeployment&&Number.isFinite(Date.parse(latestDeployment.updatedAt||''))){
+  const age=now-Date.parse(latestDeployment.updatedAt);
+  if(age>=0&&age<=30*DAY){
+   if(latestDeployment.state==='failure')return{state:'error',url:null,source:'github_deployment_branch',deploymentSha:latestDeployment.sha,verifiedAt:latestDeployment.updatedAt};
+   if(latestDeployment.state==='running')return{state:'building',url:null,source:'github_deployment_branch',deploymentSha:latestDeployment.sha,verifiedAt:latestDeployment.updatedAt};
+   if(latestDeployment.state==='success'&&latestDeployment.verified&&validUrl(latestDeployment.url)){
+    const url=validUrl(latestDeployment.url);
+    if(!pageUrl||(new URL(pageUrl).origin===new URL(url).origin&&new URL(url).pathname.startsWith(new URL(pageUrl).pathname))){
+     return{state:'published',url,source:'github_deployment_branch',deploymentSha:latestDeployment.sha,verifiedAt:latestDeployment.updatedAt};
+    }
+   }
+  }
  }
  const proofs=(trace?.prs||[]).filter(p=>p?.state==='merged'&&p.mergeSha&&
   p.deployment?.verified===true&&p.deployment.state==='success'&&p.deployment.sha===p.mergeSha&&

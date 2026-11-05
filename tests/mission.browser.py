@@ -48,6 +48,9 @@ projects[1]["trace"]["prs"][0]["deployment"]={
  "evidenceUrl":"https://github.com/AincFh/healthy-game/deployments/447",
  "updatedAt":STAMP,"scope":"exact_merge_commit_sha","verified":True
 }
+# A published project can have branch-only Pages proof without a PR.
+projects[2]["site"]={"state":"published","url":"https://aincfh.github.io/unverified/",
+ "source":"github_deployment_branch","deploymentSha":MERGE,"verifiedAt":STAMP}
 repos=[{"name":p["name"],"description":p["description"],"html_url":p["repositoryUrl"],"language":p["language"],"pushed_at":STAMP,"stargazers_count":0,"private":False} for p in projects]
 snapshot={"schemaVersion":2,"publicOnly":True,"owner":"AincFh","generatedAt":STAMP,"errors":[],"projects":projects}
 script="""(() => {
@@ -159,6 +162,13 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   assert trace_mobile['mainOverflow']<=4,trace_mobile
   assert trace_mobile['route']=='trace' and trace_mobile['cardCount']==1,trace_mobile
   driver.save_screenshot(str(OUT/'04-trace-mobile.png'))
+  # Branch-level deploy proof must surface in ordinary repository cards.
+  driver.set_window_size(1440,900)
+  driver.execute_script("location.hash='#projects'")
+  until(lambda:driver.execute_script("return document.getElementById('projects').classList.contains('is-active')"))
+  assert driver.execute_script("""return [...document.querySelectorAll('#grid .project')].some(
+    x=>x.textContent.includes('unverified')&&x.textContent.includes('部署证实'))""")
+  driver.save_screenshot(str(OUT/'05-branch-deployment-repository.png'))
   severe=[x['message'] for x in driver.get_log("browser") if x['level']=='SEVERE']
   fatal=[x for x in severe if 'Uncaught' in x or ('mission' in x and '404' in x)]
   assert not fatal,fatal
