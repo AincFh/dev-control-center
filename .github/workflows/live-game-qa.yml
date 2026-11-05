@@ -1,6 +1,14 @@
 name: ATLAS · Real Game Browser QA
 on:
   workflow_dispatch:
+  # Run real gameplay checks automatically when their implementation changes.
+  # The result JSON is deliberately excluded: publishing evidence must not
+  # start an infinite loop or burn GitHub Actions minutes.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-game-qa.yml'
+      - 'tests/live_games.browser.py'
   schedule:
     - cron: '27 3 * * *'
 permissions:
