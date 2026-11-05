@@ -146,7 +146,11 @@ function initArcade(){
    filters.querySelectorAll('button').forEach(x=>x.classList.toggle('selected',x===button));renderArcade()});
   filters.append(button);
  }
- $('arcadeSearch').addEventListener('input',e=>{arcadeChoice.query=e.target.value;renderArcade()});
+ const search=$('arcadeSearch');
+ const applySearch=e=>{arcadeChoice.query=e.target.value;renderArcade()};
+ search.addEventListener('input',applySearch);
+ search.addEventListener('search',applySearch);
+ search.addEventListener('change',applySearch);
  $('arcadePlayable').addEventListener('change',e=>{arcadeChoice.mode=e.target.checked?'playable':'all';renderArcade()});
  renderArcade();
 }
