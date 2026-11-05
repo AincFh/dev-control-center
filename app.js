@@ -9,6 +9,8 @@ import {initIncubator} from './incubator.js';
 import {initMission} from './mission.js';
 import {initCommandPalette} from './command.js';
 import {initTrace} from './trace.js';
+import {normalizeGameReport,gameEvidenceFor} from './game-runtime-core.js';
+import {initGameRuntime} from './game-runtime-ui.js';
 const OWNER='AincFh', API='https://api.github.com';
 const CATALOG={
  'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,description:'多项目状态、开发任务与交付管理'},
@@ -33,6 +35,7 @@ const CATALOG={
  'QingJi':{label:'QingJi 工具',symbol:'⌘',category:'tool'}
 };
 let projects=[],selection={type:'all',query:'',sort:'latest'},snapshot={generatedAt:null,errors:[],publicOnly:true},syncing=false;
+let gameRunReport=normalizeGameReport(null);
 const $=id=>document.getElementById(id);
 const n=(tag,text='',cls='')=>{const node=document.createElement(tag);if(cls)node.className=cls;node.textContent=String(text??'');return node;};
 const link=(url,label,cls='')=>{const e=n('a',label,cls);e.href=url;e.target='_blank';e.rel='noopener noreferrer';return e;};
@@ -154,6 +157,12 @@ function renderArcade(){
   const info=n('div','','arcade-info');
   const status=n('div','','arcade-status');
   status.append(n('span',statusText(item.status),'arcade-state '+item.status));
+  const browserQA=gameEvidenceFor(item.repo,gameRunReport);
+  if(browserQA.isCurrent){
+   if(browserQA.status==='pass')status.append(n('span','Chromium 实测通过','arcade-qa-pass'));
+   if(browserQA.status==='fail'||browserQA.status==='timeout')
+    status.append(n('span','浏览器验收失败','arcade-qa-fail'));
+  }
   status.append(n('span',item.source==='fork'?'独立 Fork · 保留原作者':'原创项目','arcade-origin'));
   info.append(status,n('h3',item.title),n('p',item.summary,'arcade-summary'));
   const foot=n('div','','arcade-actions');
@@ -333,7 +342,11 @@ document.addEventListener('keydown',e=>{
 async function load(){
  if(syncing)return;syncing=true;$('refresh').disabled=true;$('connection').textContent='正在更新项目状态…';
  const fetchJson=async(url)=>{const res=await fetch(url,{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);return res.json();};
- const [status,live]=await Promise.allSettled([fetchJson('./data/status.json'),fetchJson(API+'/users/'+OWNER+'/repos?per_page=100&sort=updated&type=public')]);
+ const [status,live,gameQA]=await Promise.allSettled([
+  fetchJson('./data/status.json'),
+  fetchJson(API+'/users/'+OWNER+'/repos?per_page=100&sort=updated&type=public'),
+  fetchJson('./data/game-runtime.json')
+ ]);
  try{
   const data=status.status==='fulfilled'&&status.value?.schemaVersion===2&&status.value?.publicOnly===true?status.value:null;
   const dataMap=new Map((data?.projects||[]).map(p=>[p.name,p]));
@@ -344,6 +357,7 @@ async function load(){
   const repos=[...merged.values()];
   if(!repos.length)throw Error('无有效仓库数据');
   snapshot=data||{generatedAt:null,errors:[],publicOnly:true};
+  gameRunReport=updateGameRuntime(gameQA.status==='fulfilled'?gameQA.value:null);
   projects=repos.map(p=>fromRepo(p,dataMap.get(p.name)));
   $('connection').textContent=data?'已连接 · '+projects.length+' 个公开仓库':'在线索引 · 状态快照不可用';
   $('synced').textContent=data?.generatedAt?new Date(data.generatedAt).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}):'待生成';
@@ -371,4 +385,4 @@ $('query').addEventListener('input',e=>{selection.query=e.target.value;render()}
 $('sort').addEventListener('change',e=>{selection.sort=e.target.value;render()});
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;selection.type=b.dataset.type;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x===b));render();});
 $('reset').onclick=()=>{selection.query='';selection.type='all';$('query').value='';document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.type==='all'));render();};
-$('refresh').onclick=load;initDiscovery();initArcade();initIncubator();initUniverse();const updateMission=initMission();const updateTrace=initTrace();initStudioExperience();load();
+$('refresh').onclick=load;initDiscovery();initArcade();initIncubator();initUniverse();const updateMission=initMission();const updateTrace=initTrace();const updateGameRuntime=initGameRuntime();initStudioExperience();load();
