@@ -813,3 +813,8 @@ html.atlas-restricted-selection textarea{
 @media(max-width:1500px){.mission-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:1050px){.mission-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){.mission-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-kpi:last-child{grid-column:auto}}
+
+/* Browser gameplay evidence: screenshots live in the original Actions artifact. */
+.game-qa-telemetry{font-size:10px;line-height:1.7;color:var(--muted);font-variant-numeric:tabular-nums;margin:0 0 7px}
+.game-qa-evidence-link{display:inline-flex;font-size:10px;line-height:1.6;font-weight:735;color:var(--accent-dark);text-decoration:underline;text-underline-offset:3px;margin:0 0 12px}
+.game-qa-evidence-link:hover{opacity:.74}
