@@ -160,7 +160,11 @@ def run_fishing(driver,check):
 def run_factory(driver,check):
  def guide():
   WebDriverWait(driver,24).until(lambda d:d.find_elements(By.ID,"factory"))
-  driver.find_element(By.ID,"guide-toggle").click()
+  # First-time users may already have the guide open. Toggling blindly
+  # would CLOSE it and make Selenium's visible .text empty.
+  panel=driver.find_element(By.ID,"guide-panel")
+  if panel.get_attribute("hidden") is not None:
+   driver.find_element(By.ID,"guide-toggle").click()
   title=WebDriverWait(driver,12).until(lambda d:d.find_element(By.ID,"step-title").text)
   driver.find_element(By.ID,"locale").click()
   translated=driver.find_element(By.ID,"step-title").text
@@ -230,6 +234,17 @@ def run_mori(driver,check):
   assert driver.find_elements(By.CSS_SELECTOR,'button[aria-label="Feed"]')
   return True
  check("bootstrap","真实 React 宠物界面启动并完成首次引导",boot)
+ def first_story():
+  # The real first-run pet opens a narrative choice overlay after the tour.
+  # Dismiss it via its accessible Close story button before attempting care.
+  time.sleep(.3)
+  dialogs=driver.find_elements(By.CSS_SELECTOR,'.story-overlay')
+  if dialogs:
+   assert driver.find_element(By.CSS_SELECTOR,'.story-dialog #story-title').text
+   driver.find_element(By.CSS_SELECTOR,'button[aria-label="Close story"]').click()
+   WebDriverWait(driver,12).until(lambda d:not d.find_elements(By.CSS_SELECTOR,'.story-overlay'))
+  return True
+ check("story","正常完成真实首次剧情弹层，不绕过界面",first_story)
  def care():
   before=driver.execute_script("""return JSON.parse(localStorage.getItem('pocket-worlds-save-v1')||'{}').state?.actionNonce??0""")
   driver.find_elements(By.CSS_SELECTOR,'button[aria-label="Feed"]')[0].click()
