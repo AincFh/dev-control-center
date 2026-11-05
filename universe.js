@@ -12,7 +12,7 @@ function refreshMeta(){
  $('universeSaved').textContent=markCount(x.saved);
  $('universeQueryCount').textContent=String(scene.queries);
  $('universeHomeCount').textContent=markCount(x.total);
- $('universeBannerCount').textContent=markCount(x.total);
+ if($('universeBannerCount'))$('universeBannerCount').textContent=markCount(x.total);
  if($('universeIntroCount'))$('universeIntroCount').textContent=markCount(x.total);
 }
 function categoryMenu(){
