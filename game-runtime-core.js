@@ -7,7 +7,10 @@ export const GAME_QA_CASES=Object.freeze([
  {id:'fishing',repo:'fishing-world-3d',label:'湖光物语',title:'WebGL 启动与钓鱼状态变化'},
  {id:'factory',repo:'Midnight-Factory',label:'午夜工厂',title:'工厂引导、矿机交互与 Canvas 启动'},
  {id:'citylife',repo:'City-of-Small-Chances',label:'小城人生',title:'WebGL 城市启动、行走与触控移动'},
- {id:'mori',repo:'Tamagochi---Open-Source-Game',label:'MORI 宠物日记',title:'照料行为、自动存档与恢复'}
+ {id:'mori',repo:'Tamagochi---Open-Source-Game',label:'MORI 宠物日记',title:'照料行为、自动存档与恢复'},
+ {id:'qube',repo:'qubecraft',label:'方块世界',title:'真正创建体素世界、进入游戏与保存'},
+ {id:'cimulity',repo:'cimulity',label:'城市模拟',title:'城市 Canvas、时间控制、备份管理与移动端'},
+ {id:'spacefortress',repo:'spacefortress',label:'星际前哨',title:'殖民地模拟、操作面板与真实浏览器存档'}
 ]);
 const ISO=x=>typeof x==='string'&&Number.isFinite(Date.parse(x))?x:null;
 const ID=/^[a-z][a-z0-9-]{0,39}$/;
