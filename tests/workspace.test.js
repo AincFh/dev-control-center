@@ -7,7 +7,7 @@ test('information architecture has eleven separate navigable views',()=>{
  assert.match(app,/window\.addEventListener\('hashchange',route\)/);
 });
 test('important functional widgets are preserved',()=>{
- for(const id of ['arcadeGrid','arcadePlayable','arcadeSearch','arcadeGenres','discoveryGrid','discoverySearch','grid','query','sort','tabs','deliveryList','queueList','events','workstreamGrid','universeGrid','universeSearch','universeCanvas','universePrev','universeNext','missionCount','missionProjects','missionTaskFeed','missionReviewDialog','missionReport','details','close','refresh','total','live','active','synced','connection'])assert.ok(html.includes('id="'+id+'"'),id);
+ for(const id of ['arcadeGrid','arcadePlayable','arcadeSearch','arcadeGenres','discoveryGrid','discoverySearch','grid','query','sort','tabs','deliveryList','queueList','events','workstreamGrid','universeGrid','universeSearch','universeCanvas','universePrev','universeNext','missionCount','missionProjects','missionTaskFeed','missionReviewDialog','missionReport','commandDialog','commandInput','commandResults','details','close','refresh','total','live','active','synced','connection'])assert.ok(html.includes('id="'+id+'"'),id);
 });
 test('real website uses original bundled CSS without remote fonts',()=>{
  assert.match(html,/href="\.\/atlas-v3\.css"/);assert.doesNotMatch(css,/@import\s+url\(https?:/);
@@ -16,7 +16,7 @@ test('real website uses original bundled CSS without remote fonts',()=>{
 test('theme/search keyboard features persist and keep accessible controls',()=>{
  assert.match(html,/id="themeBtn"/);assert.match(html,/id="quickFind"/);
  assert.match(app,/atlas-v3-theme/);assert.match(app,/e\.metaKey\|\|e\.ctrlKey/);
- assert.match(app,/aria-current/);
+ assert.match(app,/aria-current/);assert.match(app,/initCommandPalette/);
 });
 test('game routes remain real and blocked previews never appear by default',()=>{
  assert.match(html,/href="https:\/\/aincfh\.github\.io\/wildlands-anglerfishing-world-3d\/"/);
