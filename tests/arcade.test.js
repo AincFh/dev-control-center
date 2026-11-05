@@ -23,7 +23,7 @@ test('only known deployed entries display working-owned Pages links',()=>{
 test('search, filter and status control work independently',()=>{
  assert.ok(filterGames(GAMES,'餐馆','management').some(g=>g.repo==='cozy-bistro-sim'));
  assert.ok(filterGames(GAMES,'种田','life').some(g=>g.repo==='paradise-isle'));
- assert.equal(filterGames(GAMES,'','builder','playable').length,0);
+ assert.equal(filterGames(GAMES,'','builder','playable').length,1);
  assert.ok(filterGames(GAMES,'','all','playable').every(playableGame));
  assert.ok(filterGames(GAMES,'','all','fork').every(g=>g.source==='fork'));
 });
@@ -41,6 +41,7 @@ test('blocked games cannot inherit success from unrelated CI',()=>{
  assert.equal(statusText(x.status),'发布受阻');
  const metrics=arcadeStats();
  assert.equal(metrics.total,GAMES.length);
- assert.ok(metrics.playable>=3);
+ assert.equal(metrics.playable,7);
  assert.ok(metrics.blocked>=1);
+ for(const repo of ['Midnight-Factory','Tamagochi---Open-Source-Game','cimulity']) assert.ok(playableGame(GAMES.find(g=>g.repo===repo)));
 });
