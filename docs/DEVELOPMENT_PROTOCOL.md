@@ -62,3 +62,12 @@ ATLAS 开发链路工作区（#trace）只从公开 GitHub REST API 获取 Issue
 所有阶段缺少可核验信息都显示“未知”，不能拿另一个事件的绿色 CI 替代。PR 工作流和 GitHub Pages 部署绝不是同一回事。
 
 交接时应保留 Issue、PR、提交 SHA、对应 Actions 运行和真实浏览器验证证据。开发链路可以导出 Markdown 报告，但只是公开样本，不代表整个仓库历史。Github Pages 不携带 PAT、不访问私有仓库，也没有远程合并发布权限。
+
+
+### Phase 3 补充：同 SHA GitHub Pages Deployment 证明
+
+在已合并 PR 中，根据 merge commit SHA + base branch 精确匹配公开 GitHub Deployment 的 sha/ref，且必须属于 github-pages 环境。只有对应 Deployment 最新状态为 success 才能标记“提交级 Pages 部署已确认”。
+
+环境 URL 需严格校验与 Pages API 返回 URL 的 origin 与路径，拒绝非 HTTPS 和不同来源，避免公开数据中的恶意跳转。已启用 Pages 或主分支 CI 通过不足以作为特定提交的发布证明。若仅查询到 in_progress / failure / 无状态，必须保留原始结论。
+
+此检查只读取 GitHub 公共 REST；GitHub Actions 给部署读取权限，但公开网页没有 GitHub Token。合并后的状态可以被后续部署覆盖，应结合 GitHub 最新状态及实际浏览器功能继续验收。
