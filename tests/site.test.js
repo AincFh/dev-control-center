@@ -23,3 +23,18 @@ test('building and errored are not success',()=>{
  assert.equal(siteEvidence({pages:{status:'building'},now:NOW}).state,'building');
  assert.equal(siteEvidence({pages:{status:'errored'},now:NOW}).state,'error');
 });
+
+
+test('direct branch deployment proves an online Pages site without any PR history',()=>{
+ const direct={state:'success',verified:true,sha:SHA,url:'https://aincfh.github.io/spacefortress/',updatedAt:'2026-11-05T08:35:00Z'};
+ const result=siteEvidence({pages:null,trace:{prs:[]},latestDeployment:direct,now:NOW});
+ assert.equal(result.state,'published');
+ assert.equal(result.source,'github_deployment_branch');
+ assert.equal(result.deploymentSha,SHA);
+});
+test('latest branch deployment failure supersedes old successful merged PR',()=>{
+ const direct={state:'failure',verified:false,sha:'b'.repeat(40),updatedAt:'2026-11-05T08:35:00Z'};
+ const result=siteEvidence({pages:null,trace:trace(),latestDeployment:direct,now:NOW});
+ assert.equal(result.state,'error');
+ assert.equal(result.source,'github_deployment_branch');
+});
