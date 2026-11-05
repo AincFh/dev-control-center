@@ -1,21 +1,147 @@
-import{normalize,filtered,sorted,summary,ago}from'./core.js';
-const owner='AincFh',catalog={
-'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,preview:'https://aincfh.github.io/dev-control-center/',description:'多项目控制台，实时统计与自动交付'},
-'fishing-world-3d':{label:'FISHING WORLD · 3D',symbol:'♒',category:'game',featured:true,preview:'https://aincfh.github.io/fishing-world-3d/'},
-'wildlands-anglerfishing-world-3d':{label:'Wildlands Angler',symbol:'♒',category:'game',featured:true},
-'Saintlaurent':{label:'圣罗兰平台',symbol:'✦',category:'web'},
-'shengluolan-app':{label:'圣罗兰应用',symbol:'⬡',category:'tool'},
-'my-anime-blog':{label:'动漫内容空间',symbol:'✳',category:'web'},
-'AincFh':{label:'GitHub 主页',symbol:'◆',category:'web'},
-'QingJi':{label:'QingJi 工具',symbol:'⌘',category:'tool'}};
-let items=[],type='all',query='',sort='latest';const el=id=>document.getElementById(id);
-const text=(tag,value,className)=>{const n=document.createElement(tag);n.textContent=String(value??'');if(className)n.className=className;return n};
-function row(p){const card=text('article','','project'+(p.featured?' featured':'')),top=text('div','','cardtop');top.append(text('span',p.symbol,'symbol'),text('span',p.preview?'● 可预览':'● 代码仓库','pill'+(p.preview?' live':'')));card.append(top,text('h3',p.label),text('p',p.description||'持续开发中的项目。'));const bot=text('div','','cardbottom'),language=text('span',p.language,'language'),links=text('div','','cardlinks');const git=text('a','⌘');git.href=p.url;git.target='_blank';git.rel='noopener noreferrer';git.title='GitHub 仓库';links.append(git);if(p.preview){const prev=text('a','↗');prev.href=p.preview;prev.target='_blank';prev.rel='noopener noreferrer';prev.title='在线预览';links.append(prev)}const detail=text('button','···');detail.title='项目详情';detail.setAttribute('aria-label','查看 '+p.label);detail.onclick=()=>show(p);links.append(detail);bot.append(language,links);card.append(bot);return card}
-function show(p){const body=el('detailBody');body.replaceChildren(text('div','PROJECT DETAIL / '+p.category.toUpperCase(),'eyebrow'),text('h2',p.label),text('p',p.description||'项目详情'),text('p','技术：'+p.language+'　·　Stars：'+p.stars+'　·　最近更新：'+ago(p.updated)));const a=text('a','打开仓库 ↗');a.href=p.url;a.target='_blank';a.rel='noopener';body.append(a);if(p.preview){const x=text('a','在线预览 ↗');x.href=p.preview;x.target='_blank';x.rel='noopener';body.append(x)}const b=text('a','构建记录 ↗');b.href=p.url+'/actions';b.target='_blank';b.rel='noopener';body.append(b);el('details').showModal()}
-el('close').onclick=()=>el('details').close();el('details').addEventListener('click',e=>{if(e.target===el('details'))el('details').close()});
-function render(){const shown=sorted(filtered(items,query,type),sort);el('grid').replaceChildren(...shown.map(row));if(!shown.length)el('grid').append(text('div','没有找到匹配的项目','placeholder'));el('noresults').hidden=shown.length>0;const x=summary(items);el('total').textContent=x.total;el('live').textContent=x.live;el('active').textContent=x.active;}
-function clock(){const d=new Date();el('clock').textContent=d.toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});}clock();setInterval(clock,6e4);
-const fallback=[{name:'dev-control-center',html_url:'https://github.com/AincFh/dev-control-center',description:'多仓库控制台',updated_at:new Date().toISOString(),language:'JavaScript',stargazers_count:0}];
-async function load(){el('refresh').disabled=true;el('connection').textContent='正在同步仓库数据…';try{const res=await fetch('https://api.github.com/users/'+owner+'/repos?per_page=100&sort=updated',{headers:{Accept:'application/vnd.github+json'}});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();items=data.filter(r=>!r.private).map(r=>normalize(r,catalog[r.name]||{}));el('connection').textContent='实时在线 · '+items.length+' 个公开仓库';el('synced').textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});loadEvents()}catch(e){items=fallback.map(r=>normalize(r,catalog[r.name]||{}));el('connection').textContent='API 暂不可用 · 离线回退';el('synced').textContent='离线';el('events').textContent='公开 API 访问受限：'+e.message}finally{render();el('refresh').disabled=false;}}
-async function loadEvents(){try{const r=await fetch('https://api.github.com/users/'+owner+'/events/public?per_page=12');if(!r.ok)throw Error();const data=await r.json();const box=el('events');box.replaceChildren();for(const e of data.filter(v=>['PushEvent','CreateEvent','PullRequestEvent','IssuesEvent','ReleaseEvent'].includes(v.type)).slice(0,5)){const line=text('div','','event'),ic=text('span',e.type==='PushEvent'?'↥':'◇'),words=text('div');words.append(text('b',e.repo?.name||'GitHub'),text('small',e.type.replace('Event','')+' · '+ago(e.created_at)));line.append(ic,words);box.append(line)}if(!box.childNodes.length)box.textContent='暂无公开活动。'}catch{el('events').textContent='GitHub 活动信息暂不可用。'}}
-el('query').addEventListener('input',e=>{query=e.target.value;render()});el('sort').addEventListener('change',e=>{sort=e.target.value;render()});el('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;type=b.dataset.type;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x===b));render()});el('reset').onclick=()=>{query='';type='all';el('query').value='';document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.type==='all'));render()};el('refresh').onclick=load;load();
+import {normalize,filtered,sorted,summary,ago} from './core.js';
+import {summarizeHealth,repoHealthLabel,isoAge,workflowState,latestWorkflow} from './status.js';
+const OWNER='AincFh', API='https://api.github.com';
+const CATALOG={
+ 'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,description:'多项目状态、开发任务与交付管理'},
+ 'fishing-world-3d':{label:'FISHING WORLD · 湖光物语',symbol:'♒',category:'game',featured:true,description:'程序化 3D 湖钓 · 图鉴、装备与成长'},
+ 'wildlands-anglerfishing-world-3d':{label:'WILDLANDS · 山野钓行',symbol:'♒',category:'game',featured:true,description:'第一人称 3D 钓鱼与探索'},
+ 'Saintlaurent':{label:'圣罗兰平台',symbol:'✦',category:'web'},
+ 'shengluolan-app':{label:'圣罗兰应用',symbol:'⬡',category:'tool'},
+ 'my-anime-blog':{label:'动漫内容空间',symbol:'✳',category:'web'},
+ 'AincFh':{label:'GitHub 主页',symbol:'◆',category:'web'},
+ 'QingJi':{label:'QingJi 工具',symbol:'⌘',category:'tool'}
+};
+let projects=[],selection={type:'all',query:'',sort:'latest'},snapshot={generatedAt:null,errors:[],publicOnly:true},syncing=false;
+const $=id=>document.getElementById(id);
+const n=(tag,text='',cls='')=>{const node=document.createElement(tag);if(cls)node.className=cls;node.textContent=String(text??'');return node;};
+const link=(url,label,cls='')=>{const e=n('a',label,cls);e.href=url;e.target='_blank';e.rel='noopener noreferrer';return e;};
+const ghUrl=(name,suffix='')=>'https://github.com/'+OWNER+'/'+encodeURIComponent(name)+suffix;
+function fromRepo(repo,st){
+ const p=normalize(repo,CATALOG[repo.name]||{});
+ p.ci=st?.ci||{state:'unknown'};p.openIssues=Number.isInteger(st?.openIssues)?st.openIssues:null;
+ p.openPRs=Number.isInteger(st?.openPRs)?st.openPRs:null;p.countsTruncated=!!st?.countsTruncated;
+ p.site=st?.site||{state:'unknown',url:null};p.preview=p.site.state==='published'?p.site.url:null;
+ p.branch=st?.defaultBranch||'main';return p;
+}
+function statPill(p){
+ const val=p.ci?.state||'unknown';return n('span',repoHealthLabel(val),'ci ci-'+val);
+}
+function card(p){
+ const root=n('article','','project'+(p.featured?' featured':'')),top=n('div','','cardtop');
+ top.append(n('span',p.symbol,'symbol'),statPill(p));root.append(top);
+ root.append(n('h3',p.label),n('p',p.description||'独立开发仓库。'));
+ const sub=n('div','','projectmeta');
+ sub.append(n('span','Issues '+(p.openIssues??'—')),n('span','PR '+(p.openPRs??'—')));
+ if(p.site.state==='published')sub.append(n('span','● 已发布','published'));
+ root.append(sub);
+ const bottom=n('div','','cardbottom'),language=n('span',p.language,'language'),links=n('div','','cardlinks');
+ links.append(link(p.url,'⌘'));if(p.preview)links.append(link(p.preview,'↗'));
+ if(p.ci?.url)links.append(link(p.ci.url,'◷'));
+ const detail=n('button','···');detail.title='查看构建和任务详情';detail.setAttribute('aria-label','查看 '+p.label);
+ detail.addEventListener('click',()=>detailPanel(p.name));links.append(detail);bottom.append(language,links);root.append(bottom);
+ return root;
+}
+function render(){
+ const shown=sorted(filtered(projects,selection.query,selection.type),selection.sort);
+ $('grid').replaceChildren(...shown.map(card));
+ if(!shown.length)$('grid').append(n('div','没有匹配的仓库，试着清除筛选条件。','placeholder'));
+ $('noresults').hidden=shown.length>0;
+ const h=summarizeHealth(projects),s=summary(projects);
+ $('total').textContent=s.total;$('live').textContent=h.success;$('active').textContent=h.failure+h.running;
+ $('syncCaption').textContent=(h.failure?'失败 '+h.failure+' · ':'')+'运行中 '+h.running+' · 未知 '+h.unknown;
+ renderDelivery(h);renderQueue();
+}
+function renderDelivery(health){
+ const holder=$('deliveryList');holder.replaceChildren();
+ const ordered=[...projects].sort((a,b)=>({failure:0,running:1,unknown:2,neutral:3,success:4}[a.ci.state]??5)-({failure:0,running:1,unknown:2,neutral:3,success:4}[b.ci.state]??5));
+ for(const p of ordered){
+  const line=n('div','','healthrow');
+  const title=n('div','','healthname');title.append(n('strong',p.label),n('small',p.ci?.sha?('Commit '+p.ci.sha+' · '+isoAge(p.ci.updatedAt)):'暂无最近一次主分支工作流'));
+  const action=p.ci?.url?link(p.ci.url,'查看运行 ↗','healthlink'):link(ghUrl(p.name,'/actions'),'查看 Actions ↗','healthlink');
+  line.append(n('span','●','healthdot '+(p.ci?.state||'unknown')),title,statPill(p),action);holder.append(line);
+ }
+ $('healthNote').textContent=snapshot.generatedAt?'数据快照：'+new Date(snapshot.generatedAt).toLocaleString('zh-CN')+' · 每小时更新，可在项目详情实时核验':'状态快照不可用；暂无成功/失败证据。';
+ $('healthSummary').textContent=health.success+' 通过 / '+health.failure+' 失败 / '+health.running+' 运行中 / '+health.unknown+' 未知';
+}
+function renderQueue(){
+ const holder=$('queueList');holder.replaceChildren();
+ const tasks=projects.filter(p=>(p.openIssues??0)>0||(p.openPRs??0)>0).sort((a,b)=>((b.openIssues??0)+(b.openPRs??0))-((a.openIssues??0)+(a.openPRs??0)));
+ if(!tasks.length)holder.append(n('div','当前公开仓库没有可见的开放 Issue/PR，或对应 API 数据尚不可用。','mutedtext'));
+ for(const p of tasks){
+  const item=n('div','','queuerow'),info=n('div');
+  info.append(n('strong',p.label),n('small',(p.openIssues??'未知')+' Issues · '+(p.openPRs??'未知')+' PRs'+(p.countsTruncated?' · 至少 100 项':'') ));
+  const actions=n('div','','queuelinks');actions.append(link(ghUrl(p.name,'/issues'),'Issue ↗'),link(ghUrl(p.name,'/pulls'),'PR ↗'));item.append(info,actions);holder.append(item);
+ }
+}
+function dataLine(label,value){const e=n('div','','detailrow');e.append(n('span',label),n('strong',value));return e;}
+function detailPanel(name){
+ const p=projects.find(x=>x.name===name);if(!p)return;
+ const body=$('detailBody');body.replaceChildren(n('div','PROJECT HEALTH / GITHUB','eyebrow'),n('h2',p.label),n('p',p.description||'GitHub 项目'));
+ const list=n('div','','detailsstats');
+ list.append(dataLine('主分支',p.branch),dataLine('构建状态',repoHealthLabel(p.ci?.state)),dataLine('最近更新',isoAge(p.ci?.updatedAt)),dataLine('打开 Issues',p.openIssues??'未知'),dataLine('打开 PR',p.openPRs??'未知'),dataLine('Pages',p.site?.state==='published'?'已发布':p.site?.state==='not_published'?'未发布':'未确认'));
+ body.append(list);
+ const links=n('div','','detailactions');links.append(link(p.url,'源代码 ↗'),link(p.ci?.url||ghUrl(p.name,'/actions'),'Actions ↗'),link(ghUrl(p.name,'/issues'),'Issues ↗'),link(ghUrl(p.name,'/pulls'),'PR ↗'));
+ if(p.preview)links.append(link(p.preview,'在线访问 ↗'));
+ body.append(links);
+ const fresh=n('button','实时核验此仓库','liveRefresh');
+ const outcome=n('p','状态快照不是实时推送；点击可直接查询 GitHub 公共 API。','mutedtext');
+ fresh.addEventListener('click',async()=>{
+  if(fresh.disabled)return;fresh.disabled=true;fresh.textContent='正在连接 GitHub…';
+  try{
+   const apiPath='/repos/'+OWNER+'/'+encodeURIComponent(p.name);
+   const fetchApi=async(url)=>{const r=await fetch(API+url,{cache:'no-store',headers:{Accept:'application/vnd.github+json'}});if(!r.ok)throw Error('GitHub HTTP '+r.status);return r.json();};
+   const [runs,issues,prs]=await Promise.allSettled([fetchApi(apiPath+'/actions/runs?per_page=12&branch='+encodeURIComponent(p.branch)),fetchApi(apiPath+'/issues?state=open&per_page=100'),fetchApi(apiPath+'/pulls?state=open&per_page=100')]);
+   let changed=false;
+   if(runs.status==='fulfilled'){const w=latestWorkflow(runs.value.workflow_runs,p.branch);p.ci={state:workflowState(w),url:w?.html_url||null,name:w?.name||null,updatedAt:w?.updated_at||null,sha:w?.head_sha?.slice(0,8)||null};changed=true;}
+   if(issues.status==='fulfilled'){p.openIssues=issues.value.filter(v=>!v.pull_request).length;changed=true;}
+   if(prs.status==='fulfilled'){p.openPRs=prs.value.length;changed=true;}
+   if(!changed)throw Error('公共 API 请求失败或被限流');
+   outcome.textContent='已核验 '+new Date().toLocaleTimeString('zh-CN')+'；构建 '+repoHealthLabel(p.ci?.state)+' · Issue '+(p.openIssues??'未知')+' · PR '+(p.openPRs??'未知');
+   render();list.replaceChildren(dataLine('主分支',p.branch),dataLine('构建状态',repoHealthLabel(p.ci?.state)),dataLine('最近更新',isoAge(p.ci?.updatedAt)),dataLine('打开 Issues',p.openIssues??'未知'),dataLine('打开 PR',p.openPRs??'未知'),dataLine('Pages',p.site?.state==='published'?'已发布':'未确认'));
+  }catch(e){outcome.textContent='无法核验：'+e.message+'。保留此前快照，不将未知结果视为成功。';}
+  finally{fresh.disabled=false;fresh.textContent='再次核验实时状态';}
+ });
+ body.append(fresh,outcome);$('details').showModal();
+}
+$('close').onclick=()=>$('details').close();
+$('details').addEventListener('click',e=>{if(e.target===$('details'))$('details').close()});
+function clock(){$('clock').textContent=new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});}clock();setInterval(clock,60_000);
+async function load(){
+ if(syncing)return;syncing=true;$('refresh').disabled=true;$('connection').textContent='正在更新项目状态…';
+ const fetchJson=async(url)=>{const res=await fetch(url,{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);return res.json();};
+ const [status,live]=await Promise.allSettled([fetchJson('./data/status.json'),fetchJson(API+'/users/'+OWNER+'/repos?per_page=100&sort=updated&type=public')]);
+ try{
+  const data=status.status==='fulfilled'&&status.value?.schemaVersion===2&&status.value?.publicOnly===true?status.value:null;
+  const dataMap=new Map((data?.projects||[]).map(p=>[p.name,p]));
+  const repos=live.status==='fulfilled'&&Array.isArray(live.value)?live.value.filter(x=>!x.private):
+   (data?.projects||[]).map(x=>({name:x.name,html_url:x.repositoryUrl,description:x.description,language:x.language,pushed_at:x.updatedAt,stargazers_count:x.stars}));
+  if(!repos.length)throw Error('无有效仓库数据');
+  snapshot=data||{generatedAt:null,errors:[],publicOnly:true};
+  projects=repos.map(p=>fromRepo(p,dataMap.get(p.name)));
+  $('connection').textContent=data?'已连接 · '+projects.length+' 个公开仓库':'在线索引 · 状态快照不可用';
+  $('synced').textContent=data?.generatedAt?new Date(data.generatedAt).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}):'待生成';
+  render();loadEvents();
+ }catch(e){
+  projects=[];snapshot={generatedAt:null,errors:[],publicOnly:true};render();
+  $('connection').textContent='API 连接失败，点击刷新重试';$('healthNote').textContent=e.message;
+ }finally{syncing=false;$('refresh').disabled=false;}
+}
+async function loadEvents(){
+ try{
+  const r=await fetch(API+'/users/'+OWNER+'/events/public?per_page=16');
+  if(!r.ok)throw Error('HTTP '+r.status);
+  const feed=(await r.json()).filter(e=>['PushEvent','CreateEvent','PullRequestEvent','IssuesEvent','ReleaseEvent'].includes(e.type)).slice(0,5);
+  const box=$('events');box.replaceChildren();
+  for(const e of feed){
+   const line=n('div','','event'),ic=n('span',e.type==='PushEvent'?'↥':'◇'),info=n('div');
+   info.append(n('b',e.repo?.name||'GitHub'),n('small',e.type.replace('Event','')+' · '+ago(e.created_at)));
+   line.append(ic,info);box.append(line);
+  }
+  if(!feed.length)box.append(n('p','暂无公开活动。'));
+ }catch{$('events').textContent='GitHub 动态暂时不可用；不影响仓库构建状态快照。';}
+}
+$('query').addEventListener('input',e=>{selection.query=e.target.value;render()});
+$('sort').addEventListener('change',e=>{selection.sort=e.target.value;render()});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;selection.type=b.dataset.type;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x===b));render();});
+$('reset').onclick=()=>{selection.query='';selection.type='all';$('query').value='';document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.type==='all'));render();};
+$('refresh').onclick=load;load();
