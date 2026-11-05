@@ -39,6 +39,7 @@
 <a class="nav" href="#discovery" data-view-link="discovery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>发现实验室</span></a>
 <a class="nav" href="#universe" data-view-link="universe"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>GitHub 星图</span><small class="nav-counter">1K+</small></a>
 <a class="nav" href="#incubator" data-view-link="incubator"><svg class="i" aria-hidden="true"><use href="#i-layers"></use></svg><span>项目孵化</span><small class="nav-counter" id="candidateCount" hidden>0</small></a>
+<a class="nav" href="#mission" data-view-link="mission"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>研发总控</span><small class="nav-counter" id="missionNavCount" hidden>0</small></a>
 <a class="nav" href="#delivery" data-view-link="delivery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>交付健康</span></a>
 <a class="nav" href="#pipeline" data-view-link="pipeline" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>构建流程</span></a>
 <a class="nav" href="#activity" data-view-link="activity" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-activity"></use></svg><span>开发动态</span></a>
@@ -136,6 +137,35 @@
  <div id="candidateBoard" class="candidate-board" aria-label="候选项目五阶段看板"></div>
  <p class="candidate-disclaimer">所有候选均保留第三方来源属性；勾选核验表示使用者自行核查，不能替代法律授权、安全审查或实际运行测试。项目从候选进入开发，需要独立立项、代码评审和发布门禁。</p>
 </section>
+<section class="view" id="mission" aria-label="多项目研发总控">
+ <header class="view-header"><span class="eyebrow">OPERATIONS / THE REAL PORTFOLIO</span><div class="view-heading-row"><div><h1>研发总控<span>.</span></h1><p>从真实 GitHub 状态发现阻塞、审查待办和下一步行动。公开数据观测，不冒充后台 Agent 或正式发布审批。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg></div></div></header>
+ <section class="mission-hero"><div class="mission-hero-copy"><span class="eyebrow">ATLAS / MISSION CONTROL 05</span><h2>让每一个仓库，<br><em>都有清晰的下一步。</em></h2><p>跟踪主分支构建、开放问题、代码审查、人工产品核验和交接报告。真实的研发工作，不能用一个绿色勾代替。</p><div class="mission-hero-actions"><a href="#workstreams" class="mission-hero-link">查看项目路线 ↗</a><button id="missionReport" type="button">导出研发交接报告 <span aria-hidden="true">↗</span></button></div></div>
+ <div class="mission-pulse" aria-hidden="true"><div class="mission-pulse-ring r1"></div><div class="mission-pulse-ring r2"></div><div class="mission-pulse-ring r3"></div><div class="mission-pulse-core">ATLAS<small>ENGINEERING</small></div><span class="mission-pulse-caption">LIVE SIGNALS / PUBLIC DATA</span></div></section>
+ <section class="mission-kpis" aria-label="公开研发状态统计">
+  <div class="mission-kpi"><span>公开仓库</span><strong id="missionCount">—</strong><small>GitHub 项目样本</small></div>
+  <div class="mission-kpi" data-state="failure"><span>失败构建</span><strong id="missionFail">—</strong><small>最近主分支工作流</small></div>
+  <div class="mission-kpi"><span>待审 PR</span><strong id="missionReview">—</strong><small>开放的 Pull Requests</small></div>
+  <div class="mission-kpi"><span>公开 Issue</span><strong id="missionIssues">—</strong><small>开放任务</small></div>
+  <div class="mission-kpi"><span>待核验</span><strong id="missionUnknown">—</strong><small>未知与中立工作流</small></div>
+ </section>
+ <p id="missionFreshness" class="mission-freshness" data-state="missing" role="status" aria-live="polite">正在读取状态快照…</p>
+ <div class="mission-body">
+  <section class="mission-main" aria-label="跨项目操作清单">
+   <div class="mission-section-head"><div><span class="eyebrow">ACTIONABLE REPOSITORIES</span><h2>跨项目行动队列</h2></div><span id="missionMatches">载入中…</span></div>
+   <div class="mission-controls"><label class="mission-search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input type="search" id="missionSearch" autocomplete="off" placeholder="搜索项目名称、类型、说明…" aria-label="搜索总控项目"></label>
+    <select id="missionFilter" aria-label="筛选项目关注类型"><option value="all">全部项目</option><option value="action">需要处理</option><option value="failure">构建失败</option><option value="review">待审 PR</option><option value="unverified">待核验</option><option value="game">游戏项目</option></select>
+    <select id="missionSort" aria-label="排序"><option value="urgency">风险优先</option><option value="updated">最新推送</option><option value="name">项目名称</option></select>
+    <button type="button" id="missionOnlyPinned" aria-pressed="false">☆ 我的关注</button>
+   </div>
+   <div id="missionProjects" class="mission-projects" aria-live="polite"><div class="placeholder">等待公开快照…</div></div>
+   <div class="mission-project-pagination"><span id="missionRange">加载中</span><button id="missionMore" type="button" hidden>查看更多项目</button></div>
+  </section>
+  <aside class="mission-side" aria-label="跨项目的状态分布与任务">
+   <article class="mission-side-panel"><div class="mission-side-top"><span class="eyebrow">LATEST DEFAULT-BRANCH CI</span><h3>构建状态分布</h3></div><div id="missionStateBreakdown" class="mission-bars"></div><p id="missionDataNote">状态来源于公开 GitHub 快照。</p></article>
+   <article class="mission-side-panel mission-tasks-panel"><div class="mission-side-top"><span class="eyebrow">ISSUE / PULL REQUEST FEED</span><h3>最新开放事项</h3><small id="missionTaskCount">载入中…</small></div><div id="missionTaskFeed" class="mission-task-feed"></div><p class="mission-partial">仅显示当前公开快照中每个仓库最多 5 条 Issue 和 5 条 PR。不是全部任务，更不是实时权限写入。</p></article>
+  </aside>
+ </div>
+</section>
 <section class="view" id="delivery" aria-label="交付状态">
  <header class="view-header"><span class="eyebrow">OPERATIONS 01 / DELIVERY</span><div class="view-heading-row"><div><h1>交付健康<span>.</span></h1><p>以 GitHub Actions 为依据，区分构建成功、部署完成与产品真正可用。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg></div></div></header>
  <div class="deliverygrid"><article class="deliverypane"><div class="deliverytop"><div><span class="eyebrow">BUILD & RELEASE STATUS</span><strong id="healthSummary">加载中</strong></div><span class="mini-status">LIVE DATA</span></div><div id="deliveryList" aria-live="polite"></div><p class="healthnote" id="healthNote">等待状态快照</p></article>
@@ -158,6 +188,23 @@
 <footer class="global-footer"><span>ATLAS © 2026 · CRAFTED TO BUILD</span><span>PUBLIC REPOSITORIES ONLY · UPSTREAM AUTHORS CREDITED</span></footer>
 </main></div></div>
 <div id="universeNotice" class="universe-notice" role="status" aria-live="polite"></div>
+<div id="missionFeedback" class="mission-feedback" role="status" aria-live="polite"></div>
+<dialog id="missionReviewDialog" class="mission-review-dialog" aria-label="项目本地产品验收记录">
+ <div class="mission-review-header"><div><span class="eyebrow">PRODUCT QUALITY / LOCAL EVIDENCE</span><h2 id="missionReviewTitle">项目质量验收</h2><p id="missionReviewRepo">仅当前浏览器保存</p></div><button type="button" id="missionReviewClose" aria-label="关闭验收记录">×</button></div>
+ <p class="mission-review-warning">人工勾选不改变 GitHub CI 或游戏发布状态，也不表示平台已经执行了检查。只在实际测试并核实证据后勾选。</p>
+ <form id="missionReviewForm">
+  <div class="mission-review-checks">
+   <label><input type="checkbox" id="missionCheck_playtest">核心流程完成连续实际试玩</label>
+   <label><input type="checkbox" id="missionCheck_mobile">桌面与移动端交互已验收</label>
+   <label><input type="checkbox" id="missionCheck_performance">性能与资源加载达到目标</label>
+   <label><input type="checkbox" id="missionCheck_recovery">存档、恢复和异常处理已验证</label>
+   <label><input type="checkbox" id="missionCheck_rights">代码、素材与第三方许可已复核</label>
+   <label><input type="checkbox" id="missionCheck_accessibility">可访问性和键盘交互已核查</label>
+  </div>
+  <label class="mission-review-note">验收笔记<textarea id="missionReviewNote" maxlength="1200" rows="5" placeholder="记录真实测试设备、验证范围、证据链接、遗留 BUG 和上线阻塞项…"></textarea></label>
+  <div class="mission-review-footer"><small>6 项是人工检查维度，不是自动打分或发布许可证。</small><button type="submit">保存本地记录</button></div>
+ </form>
+</dialog>
 <div id="candidateFeedback" class="candidate-feedback" role="status" aria-live="polite"></div>
 <dialog id="candidateEditor" class="candidate-editor" aria-label="研发候选项目评估">
  <div class="candidate-editor-heading"><div><span class="eyebrow">SOURCE REVIEW / LOCAL RECORD</span><h2 id="candidateEditorTitle">研发候选</h2><span id="candidateEditorGenre" class="candidate-editor-genre"></span></div><button type="button" id="candidateEditorClose" aria-label="关闭评估弹窗">×</button></div>
