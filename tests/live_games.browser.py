@@ -176,7 +176,10 @@ def run_factory(driver,check):
     buttons:document.querySelectorAll('#build-panel button.build-btn').length,
     canvas:document.querySelector('#game-canvas')?.width||0
    }))()""")
-  state=WebDriverWait(driver,34).until(lambda d:(x:=ready(d)) if x["buttons"]>=15 and x["canvas"]>500 and x["money"] not in ("","0") else False)
+  def detected(d):
+   x=ready(d)
+   return x if x["buttons"]>=15 and x["canvas"]>500 and x["money"] not in ("","0") else False
+  state=WebDriverWait(driver,34).until(detected)
   return state
  check("bootstrap","真实工厂 Canvas、资金与建造菜单启动",scene)
  def mine():
