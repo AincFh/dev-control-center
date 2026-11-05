@@ -40,8 +40,11 @@ export const GAMES = Object.freeze([
   genre:'management',tag:'自动化 · 工业',summary:'完整生产链、矿机、传送带、熔炉、合成器、研发与自动存档；桌面/手机的浏览器烟测通过。',
   status:'playable',source:'fork',play:'https://aincfh.github.io/Midnight-Factory/',art:'factory',cover:null,updated:'Pages 已部署'},
  {id:'citylife',repo:'City-of-Small-Chances',title:'小城人生',english:'CITY OF SMALL CHANCES',
-  genre:'life',tag:'生活 · 职业 · 人生',summary:'城市打工、关系和人生选择的模拟世界；本仓库在线构建待核验。',
-  status:'unverified',source:'fork',play:null,art:'citylife',cover:null,updated:'部署待核验'},
+  genre:'life',tag:'3D · 打工 · 人生',summary:'真实可走动的海港街区、工作公告板、时间与天气、体力及工资；已通过 WebGL 启动、角色移动及手机端浏览器验收。',
+  status:'playable',source:'fork',play:'https://aincfh.github.io/City-of-Small-Chances/',art:'citylife',cover:null,updated:'独立 Pages 已验收'},
+ {id:'spacefortress',repo:'spacefortress',title:'星际前哨',english:'SPACEFORTRESS',
+  genre:'management',tag:'太空 · 基地 · 资源',summary:'上游完整殖民地代码包含船员、氧气、电力、建筑和轨道探险；Fork 测试与正式 Pages 验收进行中。',
+  status:'unverified',source:'fork',play:null,art:'space',cover:null,updated:'独立验收中'},
  {id:'coast',repo:'azure-coast',title:'蔚蓝海岸',english:'AZURE COAST',
   genre:'adventure',tag:'城市 · 驾驶 · 探索',summary:'海滨城市驾驶与步行探索，当前发布门槛未满足；暂不对外标记为可玩正式版。',
   status:'blocked',source:'original',play:null,art:'coast',cover:null,updated:'发布阻断'}

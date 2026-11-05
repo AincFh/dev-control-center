@@ -121,3 +121,7 @@
 @media(max-width:1260px){.arcade-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.arcade-search{min-width:210px}}
 @media(max-width:700px){.arcade-section{padding:19px 15px 22px;margin:26px 0 40px;border-radius:18px}.arcade-grid{grid-template-columns:1fr}.arcade-art{height:172px}.arcade-toolbar{gap:10px}.arcade-search{max-width:none;flex-basis:100%}.arcade-filters{gap:5px}.arcade-filters button{padding:8px 10px}.arcade-summary{min-height:0}}
 @media(prefers-reduced-motion:reduce){.arcade-art:before,.arcade-art-lake:after,.arcade-art-lake2:after{animation:none}.arcade-card,.arcade-cover{transition:none}}
+
+/* Space colony portfolio illustration: CSS only, no third-party asset dependency. */
+.arcade-art-space{background:radial-gradient(circle at 77% 29%,#eacdae 0%,#cca87c 6%,#516d83 7%,transparent 16%),radial-gradient(ellipse at 28% 96%,#789b98 5%,#244d5c 28%,transparent 56%),linear-gradient(155deg,#0b172c,#182c48 58%,#071225)}
+.arcade-art-space:after{content:"";position:absolute;width:160%;height:90%;left:-29%;bottom:-71%;border:2px solid rgba(163,218,222,.32);transform:rotate(-18deg);border-radius:50%;box-shadow:0 0 35px rgba(114,175,193,.16)}
