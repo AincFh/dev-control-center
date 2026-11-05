@@ -1,11 +1,17 @@
 import {normalize,filtered,sorted,summary,ago} from './core.js';
 import {summarizeHealth,repoHealthLabel,isoAge,workflowState,latestWorkflow} from './status.js';
 import {trackedWorkstreams,readiness} from './roadmap.js';
+import {DISCOVERY,GENRES,searchDiscovery,discoverySummary} from './discovery.js';
 const OWNER='AincFh', API='https://api.github.com';
 const CATALOG={
  'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,description:'多项目状态、开发任务与交付管理'},
  'cozy-bistro-sim':{label:'COZY BISTRO · 日落餐馆',symbol:'✦',category:'game',featured:true,maturity:'可玩基础版',description:'单机餐馆经营：订单、食材、厨房升级与多日收益'},
  'azure-coast':{label:'AZURE COAST · 海滨都市',symbol:'⌘',category:'game',featured:true,maturity:'开发中 · 未发布',description:'海滨开放世界原型，正式发布门禁尚未满足'},
+ 'paradise-isle':{label:'PARADISE ISLE · 天堂小岛',symbol:'❀',category:'game',maturity:'Fork · 上游作品',upstream:'appleweiping/paradise-isle',description:'MIT Fork · 岛屿种田、养殖、钓鱼、宠物和小镇生活'},
+ 'cimulity':{label:'CIMULITY · 城市模拟',symbol:'▦',category:'game',maturity:'Fork · 上游作品',upstream:'zeikar/cimulity',description:'MIT Fork · 等距城市规划、分区、交通和人口经济'},
+ 'qubecraft':{label:'QUBECRAFT · 方块生存',symbol:'◫',category:'game',maturity:'Fork · 上游作品',upstream:'krabduke/qubecraft',description:'MIT Fork · 3D 体素冒险、建造、合成与生存'},
+ 'Tamagochi---Open-Source-Game':{label:'MORI · 虚拟宠物',symbol:'♡',category:'game',maturity:'Fork · 上游作品',upstream:'Tech-aficionado/Tamagochi---Open-Source-Game',description:'MIT Fork · 宠物照顾、小游戏、性格成长和存档'},
+ 'Midnight-Factory':{label:'MIDNIGHT FACTORY · 自动工厂',symbol:'⚙',category:'game',maturity:'Fork · 上游作品',upstream:'Gakuseei/Midnight-Factory',description:'MIT Fork · 产线布置、资源加工与工厂物流'},
  'fishing-world-3d':{label:'FISHING WORLD · 湖光物语',symbol:'♒',category:'game',featured:true,maturity:'可玩原型',description:'轻休闲 3D 钓鱼原型；非完整游戏，地图与玩法深度仍有限'},
  'wildlands-anglerfishing-world-3d':{label:'WILDLANDS · 山野钓行',symbol:'♒',category:'game',featured:true,maturity:'可玩原型',description:'第一人称 3D 钓鱼开发中；非完整游戏，质量与内容尚未全面验收'},
  'Saintlaurent':{label:'圣罗兰平台',symbol:'✦',category:'web'},
@@ -24,7 +30,7 @@ function fromRepo(repo,st){
  p.ci=st?.ci||{state:'unknown'};p.openIssues=Number.isInteger(st?.openIssues)?st.openIssues:null;
  p.openPRs=Number.isInteger(st?.openPRs)?st.openPRs:null;p.countsTruncated=!!st?.countsTruncated;
  p.site=st?.site||{state:'unknown',url:null};p.preview=p.site.state==='published'?p.site.url:null;p.maturity=CATALOG[repo.name]?.maturity||null;
- p.branch=st?.defaultBranch||'main';return p;
+ p.branch=st?.defaultBranch||'main';p.upstream=CATALOG[repo.name]?.upstream||null;p.isFork=!!(repo.fork||st?.fork||p.upstream);return p;
 }
 function statPill(p){
  const val=p.ci?.state||'unknown';return n('span',repoHealthLabel(val),'ci ci-'+val);
@@ -34,7 +40,7 @@ function card(p){
  top.append(n('span',p.symbol,'symbol'),statPill(p));root.append(top);
  root.append(n('h3',p.label),n('p',p.description||'独立开发仓库。'));
  const sub=n('div','','projectmeta');
- sub.append(n('span','Issues '+(p.openIssues??'—')),n('span','PR '+(p.openPRs??'—')));if(p.maturity)sub.append(n('span',p.maturity,'prototype'));
+ sub.append(n('span','Issues '+(p.openIssues??'—')),n('span','PR '+(p.openPRs??'—')));if(p.maturity)sub.append(n('span',p.maturity,'prototype'));if(p.isFork)sub.append(n('span','上游署名保留','fork-label'));
  if(p.site.state==='published')sub.append(n('span','● 已发布','published'));
  root.append(sub);
  const bottom=n('div','','cardbottom'),language=n('span',p.language,'language'),links=n('div','','cardlinks');
@@ -52,7 +58,7 @@ function render(){
  const h=summarizeHealth(projects),s=summary(projects);
  $('total').textContent=s.total;$('live').textContent=h.success;$('active').textContent=h.failure+h.running;
  $('syncCaption').textContent=(h.failure?'失败 '+h.failure+' · ':'')+'运行中 '+h.running+' · 未知 '+h.unknown;
- renderWorkstreams();renderDelivery(h);renderQueue();
+ renderWorkstreams();renderDelivery(h);renderQueue();renderDiscovery();
 }
 function renderWorkstreams(){
  const holder=$('workstreamGrid');if(!holder)return;holder.replaceChildren();
@@ -72,6 +78,44 @@ function renderWorkstreams(){
   box.append(actions);holder.append(box);
  }
 }
+
+const libraryChoice={genre:'all',query:''};
+function renderDiscovery(){
+ const grid=$('discoveryGrid');if(!grid)return;
+ const entries=searchDiscovery(DISCOVERY,libraryChoice.query,libraryChoice.genre);
+ grid.replaceChildren();
+ $('discoveryCount').textContent=entries.length+' 项 / 已引入 '+discoverySummary().forks+' 个 Fork';
+ if(!entries.length){grid.append(n('p','没有找到匹配的游戏项目。','placeholder'));return;}
+ const symbols={life:'❀',builder:'▦',survival:'◫',industry:'⚙',stories:'◈'};
+ for(const p of entries){
+  const card=n('article','','discovery-card'),hd=n('div','','discovery-top');
+  hd.append(n('span',symbols[p.genre]||'✦','discovery-symbol'),n('span',p.forkName?'已引入 Fork':'参考项目','discovery-kind'+(p.forkName?' imported':'')));
+  card.append(hd,n('h3',p.title),n('p',p.description,'discovery-desc'));
+  const tags=n('div','','discovery-tags');tags.append(n('span',p.stack),n('span',p.license==='MIT'?'MIT 许可':'许可待审查','license'+(p.license!=='MIT'?' caution':'')));
+  card.append(tags);
+  const foot=n('div','','discovery-links');
+  foot.append(link('https://github.com/'+p.origin,'原项目 ↗'));
+  if(p.forkName){
+   const ours=projects.find(x=>x.name===p.forkName);
+   foot.append(link('https://github.com/'+OWNER+'/'+encodeURIComponent(p.forkName),'我们的 Fork ↗'));
+   if(ours?.site?.state==='published'&&ours?.preview)foot.append(link(ours.preview,'本地部署 ↗'));
+  }
+  if(p.play)foot.append(link(p.play,'上游试玩 ↗'));
+  card.append(foot);grid.append(card);
+ }
+}
+function initDiscovery(){
+ const filter=$('discoveryGenres');if(!filter)return;
+ filter.replaceChildren(...GENRES.map(g=>{
+  const b=n('button',g.label,g.id===libraryChoice.genre?'selected':'');
+  b.type='button';b.dataset.genre=g.id;
+  b.addEventListener('click',()=>{libraryChoice.genre=g.id;filter.querySelectorAll('button').forEach(x=>x.classList.toggle('selected',x===b));renderDiscovery()});
+  return b;
+ }));
+ $('discoverySearch').addEventListener('input',e=>{libraryChoice.query=e.target.value;renderDiscovery()});
+ renderDiscovery();
+}
+
 function renderDelivery(health){
  const holder=$('deliveryList');holder.replaceChildren();
  const ordered=[...projects].sort((a,b)=>({failure:0,running:1,unknown:2,neutral:3,success:4}[a.ci.state]??5)-({failure:0,running:1,unknown:2,neutral:3,success:4}[b.ci.state]??5));
@@ -100,9 +144,12 @@ function detailPanel(name){
  const body=$('detailBody');body.replaceChildren(n('div','PROJECT HEALTH / GITHUB','eyebrow'),n('h2',p.label),n('p',p.description||'GitHub 项目'));
  const list=n('div','','detailsstats');
  list.append(dataLine('主分支',p.branch),dataLine('构建状态',repoHealthLabel(p.ci?.state)),dataLine('最近更新',isoAge(p.ci?.updatedAt)),dataLine('打开 Issues',p.openIssues??'未知'),dataLine('打开 PR',p.openPRs??'未知'),dataLine('Pages',p.site?.state==='published'?'已发布':p.site?.state==='not_published'?'未发布':'未确认'));
- if(p.maturity)list.append(dataLine('产品成熟度',p.maturity+'（仍需开发）'));body.append(list);
+ if(p.maturity)list.append(dataLine('产品成熟度',p.maturity+'（仍需开发）'));if(p.isFork)list.append(dataLine('项目来源','Fork · '+(p.upstream||'GitHub 上游项目')));
+ body.append(list);
  const links=n('div','','detailactions');links.append(link(p.url,'源代码 ↗'),link(p.ci?.url||ghUrl(p.name,'/actions'),'Actions ↗'),link(ghUrl(p.name,'/issues'),'Issues ↗'),link(ghUrl(p.name,'/pulls'),'PR ↗'));
  if(p.preview)links.append(link(p.preview,'在线访问 ↗'));
+ if(p.upstream)links.append(link('https://github.com/'+p.upstream,'原作者源码 ↗'));
+
  body.append(links);
  const fresh=n('button','实时核验此仓库','liveRefresh');
  const outcome=n('p','状态快照不是实时推送；点击可直接查询 GitHub 公共 API。','mutedtext');
@@ -165,4 +212,4 @@ $('query').addEventListener('input',e=>{selection.query=e.target.value;render()}
 $('sort').addEventListener('change',e=>{selection.sort=e.target.value;render()});
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;selection.type=b.dataset.type;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x===b));render();});
 $('reset').onclick=()=>{selection.query='';selection.type='all';$('query').value='';document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.type==='all'));render();};
-$('refresh').onclick=load;load();
+$('refresh').onclick=load;initDiscovery();load();

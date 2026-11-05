@@ -43,3 +43,31 @@
 .workstream-footnote{font-size:10px;color:#899bb6;margin-top:14px;line-height:1.8}
 @media(max-width:1320px){.workstream-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.workstream-grid{grid-template-columns:1fr}.workstream-card{min-height:190px}.workstreams{margin:30px 0}.workstream-card h3{font-size:14px}}
+
+/* Game discovery / attribution-aware fork research */
+.discovery-section{margin:44px 0 45px;scroll-margin-top:28px}.discovery-intro{font-size:11px;line-height:1.85;color:#a8b9ce;max-width:930px;margin:0 0 19px}
+.discovery-filters{display:flex;flex-wrap:wrap;align-items:center;gap:11px;margin-bottom:15px}
+.discovery-search{display:flex;align-items:center;gap:8px;flex:1 1 210px;min-width:0;border:1px solid #62799a66;background:#172b3d;border-radius:10px;padding:11px 13px;color:#b4c9e9}
+.discovery-search input{background:transparent;border:0;outline:0;color:#edf3fc;min-width:0;width:100%;font:inherit;font-size:11px}
+.discovery-search input::placeholder{color:#869cb9}
+.discovery-genres{display:flex;gap:5px;overflow-x:auto;max-width:100%;scrollbar-width:thin;padding-bottom:2px}
+.discovery-genres button{border:1px solid #677d9c54;border-radius:9px;padding:10px 11px;white-space:nowrap;font-size:10px;color:#b9cce6;background:#17283a}
+.discovery-genres button.selected{color:#182c45;background:#b9cceb;border-color:#b9cceb;font-weight:800}
+.discovery-count{font-size:10px;color:#99b0d0;margin:0 0 12px}
+.discovery-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.discovery-card{background:linear-gradient(150deg,#182d42,#111f31);border:1px solid #b1c6e12c;border-radius:14px;min-width:0;padding:16px;display:flex;flex-direction:column;min-height:215px}
+.discovery-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.discovery-symbol{font-size:23px;color:#bacceb}.discovery-kind{font-size:9px;border:1px solid #8299ba62;border-radius:6px;color:#a4bad4;padding:5px 7px;white-space:nowrap}
+.discovery-kind.imported{color:#aee0c6;border-color:#6cba9a7a;background:#18403477}
+.discovery-card h3{font-size:13px;line-height:1.5;margin:12px 0 6px}
+.discovery-desc{font-size:10px;line-height:1.85;color:#a1b4cd;margin:0;min-height:49px}
+.discovery-tags{display:flex;gap:6px;flex-wrap:wrap;margin:11px 0 14px}
+.discovery-tags span{font-size:8px;color:#a6c0de;background:#ffffff07;border:1px solid #8ca0bd37;border-radius:6px;padding:5px 7px}
+.discovery-tags .license{color:#a5d7bd;border-color:#5b9d7c66}.discovery-tags .license.caution{color:#edbb98;border-color:#ba896d88}
+.discovery-links{border-top:1px solid #8da4bd29;margin-top:auto;padding-top:12px;display:flex;gap:12px;flex-wrap:wrap}
+.discovery-links a{font-size:10px;color:#b8cced}.discovery-links a:hover{color:white}
+.discovery-disclaimer{font-size:10px;line-height:1.8;color:#8297b5;margin-top:15px}
+.fork-label{color:#b2e0cb!important;border-color:#65ad8999!important}
+@media(max-width:1390px){.discovery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:1000px){.discovery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:630px){.discovery-grid{grid-template-columns:1fr}.discovery-section{margin:30px 0}.discovery-card{min-height:185px}.discovery-card h3{font-size:14px}}

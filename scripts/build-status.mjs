@@ -58,7 +58,7 @@ async function main(){
  const projects=await mapLimited(repos,4,describe);
  const data={schemaVersion:2,owner:OWNER,generatedAt:new Date().toISOString(),source:'GitHub Actions / GitHub REST API',refreshIntervalMinutes:60,publicOnly:true,projects,errors};
  await mkdir(path.join(ROOT,'dist','data'),{recursive:true});
- for(const file of ['index.html','style.css','app.js','core.js','status.js','roadmap.js','favicon.svg'])await copyFile(path.join(ROOT,file),path.join(ROOT,'dist',file));
+ for(const file of ['index.html','style.css','app.js','core.js','status.js','roadmap.js','discovery.js','favicon.svg'])await copyFile(path.join(ROOT,file),path.join(ROOT,'dist',file));
  await writeFile(path.join(ROOT,'dist','data','status.json'),JSON.stringify(data,null,2));
  console.log('Public project snapshot:',projects.length,'repositories;',errors.length,'nonfatal API errors.');
 }
