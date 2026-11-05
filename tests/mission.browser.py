@@ -16,6 +16,32 @@ projects=[
  {"name":"healthy-game","description":"Working world","language":"TypeScript","updatedAt":STAMP,"defaultBranch":"main","repositoryUrl":"https://github.com/AincFh/healthy-game","ci":{"state":"success","sha":"c1234","updatedAt":STAMP},"openIssues":0,"openPRs":0,"site":{"state":"published","url":"https://aincfh.github.io/healthy-game/"},"issuePreview":[],"prPreview":[]},
  {"name":"unverified","description":"Pending metadata","language":"JavaScript","updatedAt":STAMP,"defaultBranch":"main","repositoryUrl":"https://github.com/AincFh/unverified","ci":{"state":"unknown"},"openIssues":None,"openPRs":None,"site":{"state":"unknown"},"issuePreview":None,"prPreview":None}
 ]
+# Real data shape returned by the trace collector, isolated from private tokens.
+HEAD="a"*40
+MERGE="b"*40
+projects[0]["trace"]={
+ "repo":"broken-game","partial":True,
+ "issues":[{"number":3,"title":"Fix game input","url":"https://github.com/AincFh/broken-game/issues/3","relatedPRs":[5]}],
+ "prs":[{"repo":"broken-game","number":5,"title":"Repair controls with real input handling",
+  "url":"https://github.com/AincFh/broken-game/pull/5","state":"open","phase":"blocked","draft":False,
+  "headSha":HEAD,"mergeSha":None,"headBranch":"feature/input","baseBranch":"main",
+  "updatedAt":STAMP,"mergedAt":None,"closes":[3],
+  "links":[{"issueNumber":3,"url":"https://github.com/AincFh/broken-game/issues/3",
+    "basis":"PR 正文关闭关键字","verifiedOpen":True}],
+  "checks":{"state":"failure","checked":1,"checks":[{"id":31,"workflow":"Mobile Playtest",
+    "state":"failure","url":"https://github.com/AincFh/broken-game/actions/runs/31",
+    "sha":HEAD,"event":"pull_request","scope":"pull_request_head"}]}}]
+}
+projects[1]["trace"]={
+ "repo":"healthy-game","partial":True,"issues":[],
+ "prs":[{"repo":"healthy-game","number":7,"title":"Gameplay quality release",
+  "url":"https://github.com/AincFh/healthy-game/pull/7","state":"merged","phase":"merged_checked","draft":False,
+  "headSha":HEAD,"mergeSha":MERGE,"headBranch":"feature/game","baseBranch":"main",
+  "updatedAt":STAMP,"mergedAt":STAMP,"closes":[],"links":[],
+  "checks":{"state":"success","checked":1,"checks":[{"id":42,"workflow":"Main CI",
+    "state":"success","url":"https://github.com/AincFh/healthy-game/actions/runs/42",
+    "sha":MERGE,"event":"push","scope":"merged_branch_commit"}]}}]
+}
 repos=[{"name":p["name"],"description":p["description"],"html_url":p["repositoryUrl"],"language":p["language"],"pushed_at":STAMP,"stargazers_count":0,"private":False} for p in projects]
 snapshot={"schemaVersion":2,"publicOnly":True,"owner":"AincFh","generatedAt":STAMP,"errors":[],"projects":projects}
 script="""(() => {
@@ -93,6 +119,36 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   assert mobile['mainWidth']<=4,mobile
   assert mobile['cards']==3 and mobile['route']=='mission',mobile
   driver.save_screenshot(str(OUT/'02-mission-mobile.png'))
+  # Traceability: open PR failure, recent merged SHA check and explicit Issue edge.
+  driver.set_window_size(1440,900)
+  driver.execute_script("location.hash='#trace'")
+  until(lambda:driver.find_element(By.ID,'traceTotal').text=='2')
+  assert driver.find_element(By.ID,'traceBlocked').text=='1'
+  assert driver.find_element(By.ID,'traceLinked').text=='1'
+  assert len(driver.find_elements(By.CSS_SELECTOR,'#traceGrid .trace-card'))==2
+  assert "PR 检查失败" in driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card').text
+  driver.save_screenshot(str(OUT/'03-trace-desktop.png'))
+  Select(driver.find_element(By.ID,'tracePhase')).select_by_value('merged')
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,'#traceGrid .trace-card'))==1)
+  assert "已合并" in driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card').text
+  assert "无法归因到该 PR" in driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card').text
+  Select(driver.find_element(By.ID,'tracePhase')).select_by_value('open')
+  until(lambda:driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card').get_attribute('data-repo')=='broken-game')
+  driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card summary').click()
+  assert "Issue #3" in driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card .trace-detail-body').text
+  assert "Mobile Playtest" in driver.find_element(By.CSS_SELECTOR,'#traceGrid .trace-card .trace-detail-body').text
+  driver.set_window_size(390,844)
+  time.sleep(.5)
+  trace_mobile=driver.execute_script("""return {
+   width:innerWidth,docWidth:document.documentElement.scrollWidth,
+   mainOverflow:document.getElementById('content').scrollWidth-document.getElementById('content').clientWidth,
+   route:document.querySelector('.view.is-active')?.id,
+   cardCount:document.querySelectorAll('#traceGrid .trace-card').length
+  }""")
+  assert trace_mobile['docWidth']<=trace_mobile['width']+4,trace_mobile
+  assert trace_mobile['mainOverflow']<=4,trace_mobile
+  assert trace_mobile['route']=='trace' and trace_mobile['cardCount']==1,trace_mobile
+  driver.save_screenshot(str(OUT/'04-trace-mobile.png'))
   severe=[x['message'] for x in driver.get_log("browser") if x['level']=='SEVERE']
   fatal=[x for x in severe if 'Uncaught' in x or ('mission' in x and '404' in x)]
   assert not fatal,fatal
