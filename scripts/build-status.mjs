@@ -2,6 +2,7 @@ import {mkdir,copyFile,writeFile,readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {latestWorkflow,workflowState,safeRepositoryPath} from '../status.js';
+import {normalizePreview} from '../mission-core.js';
 import {deploymentVersion,fingerprintDist} from './asset-version.mjs';
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const OWNER='AincFh', API='https://api.github.com', TOKEN=process.env.GITHUB_TOKEN||'';
@@ -49,6 +50,9 @@ async function describe(r){
   ci:{state:workflowState(w),name:w?.name||null,url:w?.html_url||null,conclusion:w?.conclusion||null,updatedAt:w?.updated_at||null,sha:w?.head_sha?.slice(0,8)||null,runNumber:w?.run_number||null},
   openIssues:Array.isArray(issues)?issues.filter(x=>!x.pull_request).length:null,
   openPRs:Array.isArray(prs)?prs.length:null,
+  issuePreview:Array.isArray(issues)?normalizePreview(issues,'issue',r.name,OWNER):null,
+  prPreview:Array.isArray(prs)?normalizePreview(prs,'pull',r.name,OWNER):null,
+  fork:!!r.fork,archived:!!r.archived,
   countsTruncated:!!(issues?.length>=100||prs?.length>=100),
   site:pages?.html_url&&pages?.status==='built'?{state:'published',url:pages.html_url}:{state:pages?.status==='building'?'building':pages?'not_published':'unknown',url:null}
  };
