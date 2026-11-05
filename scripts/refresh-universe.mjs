@@ -15,7 +15,8 @@ export function mergeRows(previous,incoming,genres,cap=12000){
  return [...out.values()];
 }
 export function workload(searches,{secondPages=9,day=Math.floor(Date.now()/86400000)}={}){
- const base=searches.filter(s=>s&&s.ok&&typeof s.q==='string'&&/^[a-z0-9]+$/.test(s.genre)).map(s=>({genre:s.genre,q:s.q,page:1}));
+ const seen=new Set();
+ const base=searches.filter(s=>s&&typeof s.q==='string'&&/^[a-z0-9]+$/.test(s.genre)).filter(s=>{const key=s.genre+'|'+s.q;if(seen.has(key))return false;seen.add(key);return true}).map(s=>({genre:s.genre,q:s.q,page:1}));
  const broad=base.filter(s=>/game|simulation|adventure/i.test(s.q));
  for(let k=0;k<Math.min(secondPages,broad.length);k++){const p=broad[(day+k)%broad.length];base.push({...p,page:2})}
  return base;
@@ -46,7 +47,9 @@ export async function refresh({file=FILE,token=process.env.GITHUB_TOKEN||'',fetc
  if(!ok)throw Error('All GitHub searches failed; original index preserved');
  const next=mergeRows(previous.rows,incoming,genres),added=next.length-previous.rows.length;
  if(added<=0){console.log('No new names; preserved validated index',previous.rows.length);return{count:next.length,added:0}}
- const data={...previous,source:'GitHub public REST search; scheduled collection',compiledOn:new Date().toISOString().slice(0,10),searches:logs,rows:next};
+ // Keep original research queries immutable. Daily page-two logs must never
+ // become new base queries and cause unbounded API calls on later runs.
+ const data={...previous,source:'GitHub public REST search; scheduled collection',compiledOn:new Date().toISOString().slice(0,10),lastSourceRun:{attempts:logs.length,ok,failed:logs.length-ok,added},rows:next};
  if(!dryRun)await writeFile(file,JSON.stringify(data)+'\n');
  console.log(JSON.stringify({old:previous.rows.length,count:next.length,added,queries:queries.length,passed:ok,failed:queries.length-ok,dryRun}));
  return{count:next.length,added};
