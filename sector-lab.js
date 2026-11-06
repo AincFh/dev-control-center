@@ -35,6 +35,7 @@ function renderPlan(plan){
  }
  root.append(list);
  $('sectorLabCandidate').disabled=!plan.source;
+ $('sectorLabWorkboard').disabled=!plan.source;
  $('sectorLabIssue').href=issueUrl(plan);
 }
 function generate(){
@@ -84,6 +85,14 @@ export function initSectorLab(catalogCategories){
  $('sectorLabGenerate').onclick=generate;
  $('sectorLabExport').onclick=download;
  $('sectorLabCategory').onchange=generate;
+ $('sectorLabWorkboard').onclick=()=>{
+  if(!currentPlan?.source)return;
+  const detail={category:currentPlan.category,repository:currentPlan.source.slice('https://github.com/'.length),label:currentPlan.label,result:null};
+  window.dispatchEvent(new CustomEvent('atlas:import-domain-plan',{detail}));
+  if(detail.result?.reason)sendFeedback('导入执行工作台失败：'+detail.result.reason,true);
+  else if(detail.result)sendFeedback('已新增 '+detail.result.added+' 个本地执行工作包；已有任务不覆盖。');
+  else sendFeedback('执行工作台尚未提供导入处理器。',true);
+ };
  $('sectorLabCandidate').onclick=()=>{
   if(!currentPlan?.source)return;
   const name=currentPlan.source.slice('https://github.com/'.length);
