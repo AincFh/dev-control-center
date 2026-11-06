@@ -294,3 +294,12 @@ ATLAS 的研发总控现在读取每日公开 Chromium 游戏验收记录，按�
 真实响应按 HTTP 状态、速率限制、受控 JSON 路径树、最多 20 条结构化样本展示；本地搜索字段、取消请求、清空、导出 Markdown 检查记录及原始 JSON。未找到数据不能当作仓库没有记录；Issues 样本排除 GitHub 在 Issues API 返回的 PR 记录；两个仓库的样本数量不能当全量统计。
 
 安全边界：无 GitHub Token、无自定义 URL/Headers、无任意网络请求、无 POST/PUT/PATCH/DELETE；仅访问官方公共 REST API、限制响应 1 MB 并设置 12 秒超时。输入及报告只在本次浏览器内存中存在，下载为用户操作，不自动持久化或上传到 ATLAS 服务端。GitHub 403/429 有可能由匿名访问限额触发。实际 Chromium 测试使用模拟公开网络传输，验证的是真正页面交互与响应处理；并不把测试 fixture 当线上真实数据。
+
+
+## Edition 24 · OpenAPI 3.x 本地接口契约检查器
+
+在 [ATLAS API 接口实验室](https://aincfh.github.io/dev-control-center/#api-lab) 的折叠面板中新增真正可运行的本地 OpenAPI 3.0/3.1 JSON 审查工具。可载入完整演示、手动输入或导入不超过 500 KB 的本地 JSON 文件，并逐项列出 GET/POST/PUT/PATCH/DELETE/HEAD/OPTIONS/TRACE HTTP operations；支持按方法、路径、标签、operationId、描述搜索及 Markdown 交接导出。
+
+实际检查了 JSON 语法、主信息、paths 路径、操作对象、responses 缺失、operationId 冲突、{path} 路径参数声明与 required:true，以及尚未解析的参数 $ref。错误和提醒分离，保留对应路径与接口名。单文档最多检查 200 条 paths / 300 个 HTTP operations，避免冻结浏览器。
+
+所有数据都只在浏览器本地处理，不请求 OpenAPI server，不上传用户的规范，不处理远程 $ref；**暂不支持 YAML、完整 Schema 校验或鉴权/接口真实运行验收**。局部无错误并非规范合规认证。GitHub Pages 的静态网站不会存储用户导入的文档。新增 Node 单元测试与真实 Chromium 文件导入、筛选、错误和移动端回归。
