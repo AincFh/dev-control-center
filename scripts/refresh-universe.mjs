@@ -14,12 +14,37 @@ export function mergeRows(previous,incoming,genres,cap=12000){
  }
  return [...out.values()];
 }
-export function workload(searches,{secondPages=9,day=Math.floor(Date.now()/86400000)}={}){
- const seen=new Set();
- const base=searches.filter(s=>s&&typeof s.q==='string'&&/^[a-z0-9]+$/.test(s.genre)).filter(s=>{const key=s.genre+'|'+s.q;if(seen.has(key))return false;seen.add(key);return true}).map(s=>({genre:s.genre,q:s.q,page:1}));
- const broad=base.filter(s=>/game|simulation|adventure/i.test(s.q));
- for(let k=0;k<Math.min(secondPages,broad.length);k++){const p=broad[(day+k)%broad.length];base.push({...p,page:2})}
- return base;
+export function workload(searches,{secondPages=9,day=Math.floor(Date.now()/86400000),maxBaseQueries=42}={}){
+ const seen=new Set(),buckets=new Map();
+ for(const source of searches){
+  if(!source||typeof source.q!=='string'||!source.q.trim()||!(/^[a-z0-9]+$/).test(source.genre))continue;
+  const key=source.genre+'|'+source.q;
+  if(seen.has(key))continue;seen.add(key);
+  if(!buckets.has(source.genre))buckets.set(source.genre,[]);
+  buckets.get(source.genre).push({genre:source.genre,q:source.q,page:1});
+ }
+ const categories=[...buckets.keys()],base=[],limit=Math.min(Math.max(1,maxBaseQueries),seen.size);
+ if(!categories.length)return [];
+ // Each category gets a turn before any gets a second query; daily rotation
+ // gives newer categories and older game topics equal opportunity over time.
+ const start=(day%categories.length+categories.length)%categories.length;
+ for(let round=0;base.length<limit;round++){
+  let progressed=false;
+  for(let i=0;i<categories.length&&base.length<limit;i++){
+   const genre=categories[(i+start)%categories.length],items=buckets.get(genre);
+   if(round>=items.length)continue;
+   base.push(items[(round+day%items.length+items.length)%items.length]);progressed=true;
+  }
+  if(!progressed)break;
+ }
+ const second=[],picked=new Set();
+ // Page 2 rotates across distinct categories, not just game queries.
+ for(let i=0;i<base.length&&second.length<secondPages;i++){
+  const task=base[(day+i+base.length)%base.length];
+  if(picked.has(task.genre))continue;picked.add(task.genre);
+  second.push({...task,page:2});
+ }
+ return [...base,...second];
 }
 export async function searchPublic({q,page},token,fetcher=fetch){
  const params=new URLSearchParams({q:q+' stars:>5 archived:false',per_page:'100',page:String(page)});
