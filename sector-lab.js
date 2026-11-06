@@ -39,7 +39,7 @@ function renderPlan(plan){
 }
 function generate(){
  const category=$('sectorLabCategory').value,raw=$('sectorLabRepo').value.trim();
- if(raw&&(!REPO.test(raw)||raw.length>240)){sendFeedback('仓库路径应为 owner/repo；请输入 GitHub 仓库路径或留空。',true);return;}
+ if(raw&&(!REPO.test(raw)||raw.length>240||raw.split('/').some(part=>part==='.'||part==='..'))){sendFeedback('仓库路径应为 owner/repo；请输入 GitHub 仓库路径或留空。',true);return;}
  if(!categories.some(c=>c.id===category)){sendFeedback('请选择已收录的技术领域。',true);return;}
  try{
   const label=categories.find(c=>c.id===category).name;
