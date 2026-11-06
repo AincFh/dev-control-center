@@ -29,7 +29,7 @@ test('native Android and OS products do not inherit web Pages gates',()=>{
  assert.equal(android.state,'evidence');
  assert.equal(android.steps.find(s=>s.key==='ship').status,'unknown');
  assert.equal(android.steps.find(s=>s.key==='run').status,'unknown');
- assert.match(android.next,/安装产物/);
+ assert.match(android.next,/发行文件/);
  const os=review({name:'AincFh',category:'system',ci:{state:'success'}});
  assert.equal(os.state,'evidence');
  assert.equal(os.web,false);
