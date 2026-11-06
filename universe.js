@@ -218,20 +218,24 @@ function drawMap(){
   ctx.fillStyle='rgba(212,238,222,'+(0.05+star(j+831)*.20)+')';ctx.beginPath();ctx.arc(x,y,.45+star(j+180)*1.05,0,Math.PI*2);ctx.fill();
  }
  const by=statsOf(scene.items).byGenre;scene.points=[];
- const cats=scene.categories.filter(g=>scene.family==='all'||g.family===scene.family);
+ const broad=scene.group==='all';
+ const cats=broad?DOMAIN_GROUPS.filter(g=>scene.family==='all'||scene.family==='game'&&g.id==='games'||scene.family==='software'&&g.id!=='games').map(g=>({
+   id:g.id,name:g.label,isGroup:true,count:scene.items.filter(x=>x.group===g.id).length
+ })) : scene.categories.filter(g=>g.group===scene.group&&(scene.family==='all'||g.family===scene.family));
  cats.forEach((genre,i)=>{
   const multipleRings=cats.length>14,ring=multipleRings?(i%2?0.62:1):1;
   const angle=(multipleRings?Math.floor(i/2)/Math.ceil(cats.length/2):i)/ (multipleRings?Math.ceil(cats.length/2):cats.length)*Math.PI*2-Math.PI/2+(scene.motion?Math.sin(time+i)*.014:0);
   const x=center[0]+Math.cos(angle)*radius*1.45*ring,y=center[1]+Math.sin(angle)*radius*.85*ring;
-  const size=Math.min(29,16+Math.sqrt(by[genre.id]||0)*.75);
-  const on=scene.genre===genre.id;
+  const amount=genre.isGroup?genre.count:(by[genre.id]||0);
+  const size=Math.min(29,16+Math.sqrt(amount)*.75);
+  const on=genre.isGroup?scene.group===genre.id:scene.genre===genre.id;
   ctx.beginPath();ctx.strokeStyle=on?'rgba(228,247,217,.74)':'rgba(177,220,196,.21)';ctx.lineWidth=1.1;
   ctx.moveTo(center[0],center[1]);ctx.lineTo(x,y);ctx.stroke();
   const halo=ctx.createRadialGradient(x,y,2,x,y,size*1.9);halo.addColorStop(0,on?'rgba(203,243,210,.48)':'rgba(159,200,178,.24)');halo.addColorStop(1,'rgba(59,93,81,0)');
   ctx.fillStyle=halo;ctx.beginPath();ctx.arc(x,y,size*1.9,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.fillStyle=CATEGORY_COLORS[genre.id]||'#cadad0';ctx.globalAlpha=on?1:.8;ctx.arc(x,y,size*.49,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
-  ctx.fillStyle='#edf9f0';ctx.font='600 11px system-ui';ctx.textAlign='center';ctx.fillText(genre.name,x,y+size*.9+9);ctx.font='9px system-ui';ctx.fillStyle='#b7d5c6';ctx.fillText(markCount(by[genre.id]||0),x,y+size*.9+22);
-  scene.points.push({x,y,r:size*.77,id:genre.id});
+  ctx.beginPath();ctx.fillStyle=CATEGORY_COLORS[genre.id]||({foundation:'#8ebacd',intelligent:'#b1afe1',creative:'#c4ba9d',games:'#99bfaa'}[genre.id]||'#cadad0');ctx.globalAlpha=on?1:.8;ctx.arc(x,y,size*.49,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+  ctx.fillStyle='#edf9f0';ctx.font='600 11px system-ui';ctx.textAlign='center';ctx.fillText(genre.name,x,y+size*.9+9);ctx.font='9px system-ui';ctx.fillStyle='#b7d5c6';ctx.fillText(markCount(amount),x,y+size*.9+22);
+  scene.points.push({x,y,r:size*.77,id:genre.id,isGroup:!!genre.isGroup});
  });
  const core=ctx.createRadialGradient(center[0],center[1],4,center[0],center[1],48);core.addColorStop(0,'#bce1c6');core.addColorStop(.35,'#386e5d');core.addColorStop(1,'rgba(23,51,48,0)');
  ctx.fillStyle=core;ctx.beginPath();ctx.arc(...center,49,0,Math.PI*2);ctx.fill();
@@ -247,7 +251,7 @@ function initMap(){
  const can=$('universeCanvas'),reduced=matchMedia('(prefers-reduced-motion:reduce)');
  scene.motion=!reduced.matches;
  can.addEventListener('pointermove',e=>{if(!scene.ready)return;const rect=can.getBoundingClientRect(),p=scene.points.find(x=>Math.hypot((e.clientX-rect.left)-x.x,(e.clientY-rect.top)-x.y)<x.r);can.style.cursor=p?'pointer':'default';});
- can.addEventListener('click',e=>{const rect=can.getBoundingClientRect(),p=scene.points.find(x=>Math.hypot(e.clientX-rect.left-x.x,e.clientY-rect.top-x.y)<x.r);if(p){scene.genre=p.id;scene.page=1;categoryMenu();render();drawMap();$('universeGrid').scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});}});
+ can.addEventListener('click',e=>{const rect=can.getBoundingClientRect(),p=scene.points.find(x=>Math.hypot(e.clientX-rect.left-x.x,e.clientY-rect.top-x.y)<x.r);if(p){if(p.isGroup){scene.group=p.id;scene.genre='all';groupMenu();}else scene.genre=p.id;scene.page=1;categoryMenu();render();drawMap();$('universeGrid').scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});}});
  window.addEventListener('resize',drawMap,{passive:true});
  window.addEventListener('hashchange',()=>{if(location.hash==='#universe')requestAnimationFrame(drawMap)});
  if(reduced.addEventListener)reduced.addEventListener('change',()=>{scene.motion=!reduced.matches;drawMap()});
