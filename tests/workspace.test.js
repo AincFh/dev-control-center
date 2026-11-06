@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import{readFileSync}from'node:fs';
 const html=readFileSync('index.html','utf8'),css=readFileSync('atlas-v3.css','utf8'),app=readFileSync('app.js','utf8'),build=readFileSync('scripts/build-status.mjs','utf8');
 const arcade=readFileSync('arcade.js','utf8');
-const pages=['home','arcade','workstreams','projects','discovery','universe','incubator','workboard','utilities','data-studio','api-lab','mission','trace','delivery','pipeline','activity'];
+const pages=['home','arcade','workstreams','projects','discovery','universe','incubator','workboard','utilities','data-studio','image-studio','api-lab','mission','trace','delivery','pipeline','activity'];
 test('information architecture has fifteen navigable views, including workboard and developer utilities',()=>{
  for(const id of pages){assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,new RegExp('data-view-link="'+id+'"'));assert.match(app,new RegExp("(?:^|\\n) ['\\\"]?"+id+"['\\\"]?:\\['"));}
  assert.match(css,/\.view\.is-active\s*\{display:block\}/);
@@ -99,4 +99,11 @@ test('local CSV/JSON analytics workbench has a routed, usable and private UI',()
  assert.ok(app.includes('initDataStudio()'));
  assert.ok(css.includes('.data-bar-row{'));
  assert.ok(html.includes('data-view-link="data-studio"'));
+});
+
+test('local image editor is a genuinely interactive and private media workspace',()=>{
+ for(const id of ['imageFile','imageOriginalPreview','imageSourceInfo','imageWidth','imageHeight','imageRotation','imageFit','imageAspectLock','imageFormat','imageQuality','imageProcessedCanvas','imageProcess','imageDownload','imageFeedback','imageReset'])assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(html.includes('data-view-link="image-studio"'));
+ assert.ok(app.includes('initImageStudio()'));
+ assert.ok(css.includes('.image-workspace{'));
 });

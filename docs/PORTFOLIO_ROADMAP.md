@@ -82,3 +82,8 @@ ATLAS 是跨领域软件研发平台，不是游戏集合。项目覆盖系统�
 
 以 `npm test`、真实 Chromium 文件导入与文件下载、移动视口测试为发布门禁。任何规模上限、缺失值、列类型解释需在界面上明确。此功能不是专业 ETL 系统、BI SaaS 或数据仓库，不夸大现有能力。
 
+
+## Media 产品线：真正可处理本地文件的 Image Studio
+
+ATLAS 本轮增加 `#image-studio`，提供浏览器原生像素级图像处理：本地加载 PNG/JPEG/WebP、动态尺寸规划、等比缩放、Contain/Cover/Stretch、旋转、镜像、灰度、RGB JPEG 背景、质量调节和 PNG/JPEG/WebP 文件导出。使用 Chrome 实际加载已知像素文件，核实变换尺寸、像素灰度、输出文件魔数与响应式布局。图像文件默认不上传/不长期存储；不允许将其宣传为已交付的 Windows 桌面发行版或具有专业 RAW/PSD 解码器。
+

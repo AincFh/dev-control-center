@@ -20,6 +20,18 @@ ATLAS 是多项目 **Developer Studio**，覆盖系统软件 / Web OS、全栈 W
 
 在 [GitHub 全领域研发实验室](https://aincfh.github.io/dev-control-center/#universe) 从真实来源生成领域蓝图后，可以点击 **「转为五阶段执行工作包」**。ATLAS 会在本地执行工作台创建来源/许可证、运行验证、产品开发、质量验收、交付维护五项具备依赖关系的工作包，保留源仓库链接和具体任务。重复导入不会覆盖此前已经修改的状态、负责人和备注。所有操作只处理浏览器本地数据，不代表 GitHub Issue 已提交，也不意味着已获得上游复用许可。
 
+
+## 新增：本地图片处理工作台
+
+[打开 ATLAS Image Studio](https://aincfh.github.io/dev-control-center/#image-studio)，选择一张真实 PNG、JPEG 或 WebP 本地图片，即可进行**宽高与等比缩放、完整适配/铺满裁剪/拉伸、90°/180°/270° 旋转、水平翻转、灰度处理、JPEG 背景色、图片质量选择**，并真正下载浏览器编码后的 PNG、JPEG 或 WebP 文件。
+
+- 原始文件和处理结果只存在于当前浏览器，会话清空时释放 ImageBitmap 和临时 Blob URL；图片不会上传至任何后端。
+- 最大输入文件 25 MB、最长输出边 4,096 px、最大 1,200 万像素；超过限制明确报错。Animated GIF/PSD/RAW 未受支持。
+- Canvas 绘图与编码是实际运行的图像处理，转换为 JPEG 时透明区域填充指定背景色；不把它称为原生 Windows 专业图像软件。
+- 单元测试覆盖缩放/裁剪几何、旋转输出、授权格式与限制；实际 Chromium 浏览器 E2E 从文件导入红蓝 PNG，执行缩放与灰度，分别下载并检查 PNG/JPEG/WebP 文件头及 390px 手机布局。
+
+源码：`image-studio-core.js`、`image-studio.js`；验收：`tests/image-studio.test.js`、`tests/image-studio.browser.py`。
+
 ## 新增：本地数据分析工作台（真实可用）
 
 [打开 Data Studio](https://aincfh.github.io/dev-control-center/#data-studio)。支持在浏览器内导入本地 **CSV 或 JSON 对象数组**（粘贴或本地文件），自动识别数值、日期、文本与布尔字段，筛选/数值比较、列排序、分页、分组计数/求和/平均值、条形统计图、数值列概览与**筛选结果 CSV/JSON 导出**。

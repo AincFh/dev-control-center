@@ -5,6 +5,7 @@ import {DISCOVERY,GENRES,searchDiscovery,discoverySummary} from './discovery.js'
 import {GAMES,GAME_GENRES,filterGames,sortGames,playableGame,arcadeStats,statusText} from './arcade.js';
 import {initUniverse} from './universe.js';
 import {initDataStudio} from './data-studio.js';
+import {initImageStudio} from './image-studio.js';
 import {initDeveloperUtils} from './developer-utils.js';
 import {initApiLab} from './api-lab.js';
 import {initStudioExperience} from './studio-motion.js';
@@ -309,6 +310,7 @@ const VIEWS={
  incubator:['项目孵化','外部项目研究、人工核验与立项计划'],
  workboard:['执行工作台','系统、应用、AI、工具与游戏的跨项目任务执行'],
  'data-studio':['数据分析工作台','浏览器本地 CSV/JSON 数据筛选、图表和结果导出'],
+ 'image-studio':['图片处理工作台','本地图片裁剪缩放、旋转、效果与真实文件导出'],
  utilities:['开发工具工坊','七个可运行、仅在浏览器本地处理数据的开发者工具'],
  'api-lab':['API 接口实验室','公共 GitHub REST API 检查、响应解析与双仓库对比'],
  mission:['研发总控','跨项目 CI、问题、审查和产品人工核验'],
@@ -400,4 +402,4 @@ $('query').addEventListener('input',e=>{selection.query=e.target.value;render()}
 $('sort').addEventListener('change',e=>{selection.sort=e.target.value;render()});
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;selection.type=b.dataset.type;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x===b));render();});
 $('reset').onclick=()=>{selection.query='';selection.type='all';$('query').value='';document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.type==='all'));render();};
-$('refresh').onclick=load;initDiscovery();initArcade();initIncubator();initUniverse();initDeveloperUtils();initDataStudio();initApiLab();const updateMission=initMission();const updateTrace=initTrace();const updateReleaseReview=initReleaseReview();const updateWorkboard=initWorkboard();const updateGameRuntime=initGameRuntime();initStudioExperience();load();
+$('refresh').onclick=load;initDiscovery();initArcade();initIncubator();initUniverse();initDeveloperUtils();initDataStudio();initImageStudio();initApiLab();const updateMission=initMission();const updateTrace=initTrace();const updateReleaseReview=initReleaseReview();const updateWorkboard=initWorkboard();const updateGameRuntime=initGameRuntime();initStudioExperience();load();
