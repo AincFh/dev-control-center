@@ -1,5 +1,15 @@
 # ATLAS · Developer Studio
 
+## 定位：跨领域软件研发工作空间
+
+ATLAS 是多项目 **Developer Studio**，覆盖系统软件 / Web OS、全栈 Web 应用、Android 原生应用、开发工具、AI 与自动化方向，以及独立游戏。游戏大厅只是其中一个独立分区，不代表平台总体定位。
+
+**已有的公开非游戏项目：** [AincFh OS](https://github.com/AincFh/AincFh)、[A.T. Field](https://github.com/AincFh/my-anime-blog)、[轻记 QingJi](https://github.com/AincFh/QingJi)、[Squiffy Fork](https://github.com/AincFh/squiffy) 和 ATLAS 控制中心本身。各项目实际完成度必须以其仓库、CI、真实功能与部署证据为准；Squiffy 保留上游作者和 Fork 属性。
+
+**后续扩展方向：** AI Agents 与工作流、Windows 工具与诊断、跨平台应用、数据分析与可视化、设计/内容生产、教育学习、基础设施及更多实验作品。参考索引不是已开发项目；现有 GitHub 星图仍以游戏/模拟来源为主，跨领域索引需另行搜集和验证。对应 [Issue #32](https://github.com/AincFh/dev-control-center/issues/32) 与 [跨领域路线图](docs/PORTFOLIO_ROADMAP.md)。
+
+公开站点只展示 GitHub 公共信息，不公开内部仓库，不持有管理令牌。开发产物继续独立仓库化，并以 Issue → PR → CI → 产品测试 → 发布验收形成可追溯闭环。
+
 ## 新增：在线游戏大厅
 
 访问 [ATLAS 游戏大厅](https://aincfh.github.io/dev-control-center/#arcade) —— 汇总多个独立游戏仓库。提供类型筛选、关键词搜索、仅看可试玩、浏览器本地收藏，以及直达每款游戏的源码和在线运行入口。所有入口都基于实际 GitHub Pages 部署记录核验；未发布或未通过 Playtest 的项目只给出源代码链接，不提供虚假的可玩按钮。游戏封面仅有注明的真实仓库截图，其余是主题动效，不冒充游戏实拍。
