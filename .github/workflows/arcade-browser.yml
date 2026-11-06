@@ -25,6 +25,8 @@ jobs:
         run: python tests/arcade.browser.py
       - name: Test real 1,000+ GitHub project galaxy and selection restrictions
         run: python tests/universe.browser.py
+      - name: Test local CSV/JSON dataset dashboard, charts, export and mobile interactions
+        run: python tests/data-studio.browser.py
       - name: Test seven local developer tools with real desktop/mobile Chromium interaction
         run: python tests/utilities.browser.py
       - name: Test real public GitHub REST API requests, comparisons and mobile inspector
@@ -44,6 +46,7 @@ jobs:
             test-artifacts/arcade/
             test-artifacts/universe/
             test-artifacts/mission/
+            test-artifacts/data-studio/
             test-artifacts/utilities/
             test-artifacts/api-lab/
             test-artifacts/release-review/
