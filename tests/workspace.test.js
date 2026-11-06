@@ -1,5 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';import{readFileSync}from'node:fs';
 const html=readFileSync('index.html','utf8'),css=readFileSync('atlas-v3.css','utf8'),app=readFileSync('app.js','utf8'),build=readFileSync('scripts/build-status.mjs','utf8');
+const arcade=readFileSync('arcade.js','utf8');
 const pages=['home','arcade','workstreams','projects','discovery','universe','incubator','mission','trace','delivery','pipeline','activity'];
 test('information architecture has twelve separate navigable views',()=>{
  for(const id of pages){assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,new RegExp('data-view-link="'+id+'"'));assert.match(app,new RegExp('(?:^|\\n) '+id+":\\['"));}
@@ -20,7 +21,8 @@ test('theme/search keyboard features persist and keep accessible controls',()=>{
 });
 test('game routes remain real and blocked previews never appear by default',()=>{
  assert.match(html,/href="https:\/\/aincfh\.github\.io\/wildlands-anglerfishing-world-3d\/"/);
- assert.match(html,/href="https:\/\/aincfh\.github\.io\/City-of-Small-Chances\/"/);
+ assert.match(arcade,/repo:'City-of-Small-Chances'/);
+ assert.match(arcade,/play:'https:\/\/aincfh\.github\.io\/City-of-Small-Chances\/'/);
  assert.doesNotMatch(html,/href="https:\/\/aincfh\.github\.io\/qubecraft\/"/);
 });
 
