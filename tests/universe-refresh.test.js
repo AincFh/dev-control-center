@@ -16,3 +16,10 @@ test('search rejects private or archived repositories',async()=>{
 test('rate limits report a failure rather than fabricated projects',async()=>{
  await assert.rejects(()=>searchPublic({q:'games',page:1},null,async()=>({ok:false,status:403})),/403/);
 });
+
+test('scheduled refresh retains new software topics without losing legacy game topics',()=>{
+ const jobs=workload([{genre:'game',q:'game simulation',ok:true},{genre:'ai',q:'topic:ai-agent',ok:true},{genre:'devtools',q:'topic:developer-tools',ok:true}],{secondPages:2,day:0});
+ assert.ok(jobs.some(x=>x.genre==='ai'&&x.q==='topic:ai-agent'));
+ assert.ok(jobs.some(x=>x.genre==='devtools'&&x.q==='topic:developer-tools'));
+ assert.ok(jobs.some(x=>x.genre==='game'&&x.q==='game simulation'));
+});
