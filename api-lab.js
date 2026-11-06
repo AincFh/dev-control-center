@@ -154,6 +154,7 @@ export function initApiLab(){
  for(const item of API_LAB_ENDPOINTS){const opt=make('option',item.label+' · '+item.note);opt.value=item.id;select.append(opt)}
  $('apiLabCompareEnabled').addEventListener('change',e=>{
   $('apiLabSecond').hidden=!e.target.checked;
+  $('apiLabResult2').hidden=!e.target.checked;
   if(!e.target.checked){state.results[1]=null;state.rawExpanded[1]=false;render()}
  });
  $('apiLabForm').addEventListener('submit',e=>{e.preventDefault();void run()});
@@ -170,5 +171,6 @@ export function initApiLab(){
   render();status('已清空会话记录。没有写入本地存储。');
  };
  $('apiLabFilter').addEventListener('input',e=>{state.filter=e.target.value;render()});
+ $('apiLabResult2').hidden=!$('apiLabCompareEnabled').checked;
  render();
 }
