@@ -72,4 +72,6 @@ test('Delivery view exposes accessible, interactive cross-domain evidence contro
  assert.match(app,/updateReleaseReview\(projects,snapshot\)/);
  assert.match(build,/release-review\.css/);
  assert.match(build,/release-review-core\.js/);
+ assert.match(build,/native-release-core\.js/);
+ assert.match(build,/releases\/latest/);
 });
