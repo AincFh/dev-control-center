@@ -308,7 +308,7 @@ const VIEWS={
  utilities:['开发工具工坊','七个可运行、仅在浏览器本地处理数据的开发者工具'],
  mission:['研发总控','跨项目 CI、问题、审查和产品人工核验'],
  trace:['开发链路','真实 Issue、PR、CI 和部署证据追踪'],
- universe:['GitHub 星图','数千条外部游戏与模拟项目索引'],
+ universe:['GitHub 星图','42 个领域的外部 GitHub 仓库研究与研发蓝图'],
  delivery:['交付健康','CI、PR 和发布状态'],
  pipeline:['构建流程','从开发到验收发布'],
  activity:['开发动态','来自 GitHub 的公开活动']
