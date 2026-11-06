@@ -44,6 +44,21 @@ test('fingerprintDist stamps output without needing live GitHub access',async()=
   assert.equal(await readFile(path.join(root,'arcade.js'),'utf8'),'export const foo = 12;');
  }finally{await rm(root,{recursive:true,force:true});}
 });
+test('fingerprints additional linked stylesheets and refuses missing bundled CSS',async()=>{
+ const dir=await mkdtemp(path.join(os.tmpdir(),'atlas-styles-'));
+ try{
+  await writeFile(path.join(dir,'index.html'),'<link href="./atlas-v3.css" rel="stylesheet"><link href="./workboard.css" rel="stylesheet"><link href="./release-review.css" rel="stylesheet"><script type="module" src="./app.js"></script>');
+  for(const name of ['app.js','arcade.js','atlas-v3.css','workboard.css','release-review.css'])
+   await writeFile(path.join(dir,name),'export const ok=1;');
+  const files=['index.html','app.js','arcade.js','atlas-v3.css','workboard.css','release-review.css'];
+  await fingerprintDist(dir,files,'sha-456');
+  const html=await readFile(path.join(dir,'index.html'),'utf8');
+  assert.ok(html.includes('href="./release-review.css?v=sha-456"'));
+  assert.ok(html.includes('href="./workboard.css?v=sha-456"'));
+  await assert.rejects(()=>fingerprintDist(dir,files.filter(x=>x!=='release-review.css'),'next'),/Missing linked stylesheet/);
+ }finally{await rm(dir,{recursive:true,force:true});}
+});
+
 test('refuse builds without the actual complete game module',async()=>{
  const root=await mkdtemp(path.join(os.tmpdir(),'atlas-missing-'));
  try{
