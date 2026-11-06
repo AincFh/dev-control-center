@@ -41,3 +41,20 @@ test('homepage prioritizes real non-game projects without removing the playable 
  assert.ok(html.includes('id="universeDomains"'));
  assert.ok(html.includes('id="arcade"'));
 });
+
+test('external open-source app library integrates provenance and functional exploration',()=>{
+ for(const id of ['universeFeaturedShelf','universeFeaturedGrid','universeFeaturedToggle','universeFeaturedCount','universeCompare','universeCompareCount','universeCompareClear','universeCompareGrid'])
+  assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(css.includes('.external-shelf-grid{'));
+ assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.ok(html.includes('第三方'));
+});
+
+test('comparison workbench is wired to live source lookups instead of fabricated repository telemetry',()=>{
+ const universe=readFileSync('universe.js','utf8');
+ assert.ok(universe.includes('function toggleCompare(name)'));
+ assert.ok(universe.includes('validateComparison'));
+ assert.ok(universe.includes('api.github.com/repos/'));
+ assert.ok(universe.includes('scene.comparison.size>=4'));
+ assert.ok(html.includes('最近推送')||universe.includes('最近推送'));
+});

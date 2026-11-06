@@ -1,5 +1,5 @@
 import test from'node:test';import assert from'node:assert/strict';import{readFileSync}from'node:fs';
-import{normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName,balanceGenres,PAGE_SIZE}from'../universe-core.js';
+import{normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName,balanceGenres,chooseHighlights,PAGE_SIZE}from'../universe-core.js';
 const file=JSON.parse(readFileSync('data/github-universe.json','utf8'));
 const catalog=normalizeCatalog(file);
 test('GitHub-based external index exceeds thousand REAL unique upstream repository names',()=>{
@@ -49,4 +49,30 @@ test('cross-domain index contains source-backed software and game families',()=>
  assert.equal(statsOf(catalog.items).byFamily.software,software.length);
  assert.equal(statsOf(catalog.items).byFamily.game,games.length);
  assert.ok(catalog.categories.every(x=>['software','game'].includes(x.family)));
+});
+
+test('third-party software spotlights are verified GitHub-sourced but never owned or pre-cleared',()=>{
+ assert.equal(catalog.featured.length,36);
+ const indexed=new Set(catalog.items.map(x=>x.name.toLowerCase()));
+ for(const item of catalog.featured){assert.ok(indexed.has(item.name.toLowerCase()));assert.equal(item.family,'software');assert.ok(validRepoName(item.name));assert.ok(item.summary.length<=210);}
+ const first=chooseHighlights(catalog.featured,{limit:6});assert.equal(first.length,6);
+ assert.equal(new Set(first.map(x=>x.genre)).size,6);
+ assert.equal(chooseHighlights(catalog.featured,{family:'game'}).length,0);
+ assert.equal(chooseHighlights(catalog.featured,{genre:'ai'}).length,2);
+ assert.equal(chooseHighlights(catalog.featured,{query:'a-query-with-no-repo-match'}).length,0);
+});
+test('broader discovery covers productivity, security, science, finance and accessibility',()=>{
+ assert.ok(catalog.items.length>=4100);
+ assert.ok(catalog.categories.length>=26);
+ for(const genre of ['productivity','communication','security','science','business','accessibility']){
+  assert.ok(filterCatalog(catalog.items,{family:'software',genre}).length>=70,genre);
+ }
+});
+test('spotlight index rejects unknown, duplicate or malformed external records',()=>{
+ const input={schemaVersion:1,kind:'external-discovery',categories:[['ai','AI']],rows:[['A/Repo','ai']],spotlights:[
+  {name:'A/Repo',genre:'ai',summary:'Valid',stars:3},
+  {name:'a/repo',genre:'ai',summary:'Duplicated'},
+  {name:'A/B/C',genre:'ai',summary:'Invalid'},
+  {name:'Missing/Repo',genre:'ai',summary:'Not indexed'}]};
+ assert.equal(normalizeCatalog(input).featured.length,1);
 });

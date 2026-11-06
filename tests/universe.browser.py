@@ -32,6 +32,23 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   assert count>=1000,count
   cards=driver.find_elements(By.CSS_SELECTOR,"#universeGrid .universe-project")
   assert len(cards)==24,len(cards)
+  # Third-party portfolio is a real, source-backed interactive software shelf.
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card"))==6)
+  featured=driver.find_element(By.ID,"universeFeaturedShelf")
+  assert featured.is_displayed()
+  driver.find_element(By.ID,"universeFeaturedToggle").click()
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card"))==36)
+  assert driver.find_element(By.ID,"universeFeaturedToggle").get_attribute('aria-expanded')=='true'
+  driver.find_element(By.ID,"universeFeaturedToggle").click()
+  assert len(driver.find_elements(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card"))==6
+  # A user can compare third-party apps and remove them without a login or token.
+  driver.find_element(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card:first-child .external-highlight-actions button[aria-pressed]").click()
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeCompareGrid .universe-compare-card"))==1)
+  driver.find_element(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card:nth-child(2) .external-highlight-actions button[aria-pressed]").click()
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeCompareGrid .universe-compare-card"))==2)
+  assert driver.find_element(By.ID,"universeCompareCount").text=='2 / 4'
+  driver.find_element(By.ID,"universeCompareClear").click()
+  assert not driver.find_element(By.ID,"universeCompare").is_displayed()
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))>=9
   # Cross-domain family switch must be actual interactive filtering, not label-only navigation.
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeDomains button"))==3
@@ -39,11 +56,16 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   assert any('AI' in x.text for x in driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))
   driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='game']").click()
   until(lambda:driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='game']").get_attribute('aria-pressed')=='true')
+  assert not driver.find_element(By.ID,"universeFeaturedShelf").is_displayed()
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeGrid .universe-project"))==24
   driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='all']").click()
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))>=21
   driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='software']").click()
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeGrid .universe-project"))==24
+  assert driver.find_element(By.ID,"universeFeaturedShelf").is_displayed()
+  driver.find_element(By.CSS_SELECTOR,"#universeCategories button[data-genre='security']").click()
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card"))==2)
+  driver.find_element(By.CSS_SELECTOR,"#universeCategories button[data-genre='all']").click()
   canvas=driver.execute_script("return {w:document.getElementById('universeCanvas').width,h:document.getElementById('universeCanvas').height}")
   assert canvas['w']>250 and canvas['h']>200,canvas
   # Real DOM events are cancelled for copy, paste, context menus, and text selection.
