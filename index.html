@@ -39,6 +39,7 @@
 <a class="nav" href="#discovery" data-view-link="discovery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>发现实验室</span></a>
 <a class="nav" href="#universe" data-view-link="universe"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>GitHub 星图</span><small class="nav-counter">1K+</small></a>
 <a class="nav" href="#incubator" data-view-link="incubator"><svg class="i" aria-hidden="true"><use href="#i-layers"></use></svg><span>项目孵化</span><small class="nav-counter" id="candidateCount" hidden>0</small></a>
+<a class="nav" href="#workboard" data-view-link="workboard"><svg class="i" aria-hidden="true"><use href="#i-grid"></use></svg><span>执行工作台</span><small class="nav-counter" id="workNavCount" hidden>0</small></a>
 <a class="nav" href="#mission" data-view-link="mission"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>研发总控</span><small class="nav-counter" id="missionNavCount" hidden>0</small></a>
 <a class="nav" href="#trace" data-view-link="trace"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>开发链路</span></a>
 <a class="nav" href="#delivery" data-view-link="delivery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>交付健康</span></a>
@@ -148,6 +149,17 @@
  <div id="candidateBoard" class="candidate-board" aria-label="候选项目五阶段看板"></div>
  <p class="candidate-disclaimer">所有候选均保留第三方来源属性；勾选核验表示使用者自行核查，不能替代法律授权、安全审查或实际运行测试。项目从候选进入开发，需要独立立项、代码评审和发布门禁。</p>
 </section>
+<section class="view" id="workboard" aria-label="跨项目执行工作台">
+ <header class="view-header"><span class="eyebrow">ATLAS / CROSS-DOMAIN EXECUTION</span><div class="view-heading-row"><div><h1>把每个计划，<span>推进到交付。</span></h1><p>系统软件、Web、移动端、AI、工具、游戏都能分解为可执行工作包。关联 GitHub 公开仓库，人工记录责任、优先级、依赖与验收阶段。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-grid"></use></svg></div></div></header>
+ <section class="work-intro"><div><span class="eyebrow">MAKE THE NEXT STEP REAL</span><h2>统一计划。<em>独立交付。</em></h2><p>这里存储的是你在此浏览器创建的项目计划；真实 GitHub 构建和 PR 状态仅用于提供参考建议，不会伪造自动执行、同步完成或写入仓库。</p><div class="work-main-actions"><button id="workCreate" type="button">＋ 创建工作包</button><button id="workExport" type="button">导出工作包</button><label for="workImport" role="button" tabindex="0">导入备份<input id="workImport" type="file" accept=".json,application/json" hidden></label></div></div>
+ <div class="work-hero-mark" aria-hidden="true"><span>PLAN</span><i></i><span>BUILD</span><i></i><span>VERIFY</span><i></i><span>SHIP</span></div></section>
+ <div class="work-metrics" aria-label="工作包统计"><div><small>工作包总量</small><strong id="workTotal">0</strong></div><div><small>开发进行中</small><strong id="workActive">0</strong></div><div><small>依赖或执行受阻</small><strong id="workBlocked">0</strong></div><div><small>已完成</small><strong id="workDone">0</strong></div><div><small>超出计划日期</small><strong id="workOverdue">0</strong></div></div>
+ <div class="work-toolbar"><label><span>搜索工作包</span><input id="workSearch" type="search" placeholder="标题、说明或仓库" autocomplete="off"></label><label><span>仓库</span><select id="workRepoFilter"><option value="all">全部仓库</option></select></label><label><span>项目类别</span><select id="workCategoryFilter"><option value="all">全部类型</option></select></label><label><span>阶段</span><select id="workStageFilter"><option value="all">全部阶段</option></select></label><label><span>优先级</span><select id="workPriorityFilter"><option value="all">全部优先级</option></select></label></div>
+ <div class="work-meta"><strong id="workVisible">0 个工作包</strong><span>任务和人工验收只保存于本机浏览器；导入会保留已有同 ID 记录。GitHub Issue 草稿需人工提交。</span></div>
+ <div id="workBoard" class="work-board" aria-label="六阶段项目执行看板"></div>
+ <section class="work-suggestions-section" aria-label="公开项目状态建议"><div class="work-suggestions-header"><div><span class="eyebrow">RESEARCH TO ACTION</span><h2>从真实状态，识别下一项工作。</h2><p>根据最近公开 CI、PR、浏览器 QA 与已部署站点探针生成可选建议，不等同于后台自动任务或真实完成证据。</p></div><span id="workSuggestionCount">读取中…</span></div><div id="workSuggestions" class="work-suggestions"></div></section>
+ <p class="footnote">注：只有 GitHub 公开数据与本机工作计划。离线刷新、API 失败或数据过期可能造成建议不完整，不能据此认定项目没有待办。</p>
+</section>
 <section class="view" id="mission" aria-label="多项目研发总控">
  <header class="view-header"><span class="eyebrow">OPERATIONS / THE REAL PORTFOLIO</span><div class="view-heading-row"><div><h1>研发总控<span>.</span></h1><p>从真实 GitHub 状态发现阻塞、审查待办和下一步行动。公开数据观测，不冒充后台 Agent 或正式发布审批。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg></div></div></header>
  <section class="mission-hero"><div class="mission-hero-copy"><span class="eyebrow">ATLAS / MISSION CONTROL 05</span><h2>让每一个仓库，<br><em>都有清晰的下一步。</em></h2><p>跟踪主分支构建、开放问题、代码审查、人工产品核验和交接报告。真实的研发工作，不能用一个绿色勾代替。</p><div class="mission-hero-actions"><a href="#workstreams" class="mission-hero-link">查看项目路线 ↗</a><button id="missionReport" type="button">导出研发交接报告 <span aria-hidden="true">↗</span></button></div></div>
@@ -247,6 +259,22 @@
  </form>
 </dialog>
 <div id="candidateFeedback" class="candidate-feedback" role="status" aria-live="polite"></div>
+<div id="workFeedback" class="work-feedback" role="status" aria-live="polite" hidden></div>
+<dialog id="workEditor" class="work-editor" aria-label="创建和编辑跨项目工作包">
+ <div class="work-editor-head"><div><small>ATLAS / WORK PACKAGE</small><h2 id="workEditorHeading">创建工作包</h2></div><button id="workEditorClose" type="button" aria-label="关闭">×</button></div>
+ <form id="workEditForm">
+ <div class="work-form-grid"><label class="wide">工作包标题<input id="workEditTitle" required maxlength="160" placeholder="例如：完成客户端权限与登录恢复流程"></label>
+ <label>所属仓库<select id="workEditRepo" required></select></label>
+ <label>负责人 / 协作方<input id="workEditOwner" maxlength="80" placeholder="可选；人工填写"></label>
+ <label>所属领域<select id="workEditCategory"></select></label>
+ <label>优先级<select id="workEditPriority"></select></label>
+ <label>执行阶段<select id="workEditStage"></select></label>
+ <label>目标日期<input id="workEditDate" type="date"></label>
+ <label class="wide">任务目标与验收标准<textarea id="workEditDescription" rows="5" maxlength="3000" placeholder="描述预期功能、约束、真实测试和发布门槛。"></textarea></label></div>
+ <fieldset class="work-dependency-field"><legend>前置依赖：勾选必须先完成的工作包</legend><div id="workEditDependencies" class="work-dependency-grid"></div><p>有未完成的前置依赖时，不能把工作包推进到“开发中 / 待验收 / 已完成”。循环依赖无法保存。</p></fieldset>
+ <div class="work-form-actions"><button id="workDelete" type="button" hidden>移除工作包</button><button type="submit" class="work-submit">保存工作包</button></div>
+ </form>
+</dialog>
 <dialog id="candidateEditor" class="candidate-editor" aria-label="研发候选项目评估">
  <div class="candidate-editor-heading"><div><span class="eyebrow">SOURCE REVIEW / LOCAL RECORD</span><h2 id="candidateEditorTitle">研发候选</h2><span id="candidateEditorGenre" class="candidate-editor-genre"></span></div><button type="button" id="candidateEditorClose" aria-label="关闭评估弹窗">×</button></div>
  <form id="candidateForm">
