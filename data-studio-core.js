@@ -9,7 +9,8 @@ const primitive=v=>v==null?'':typeof v==='object'?JSON.stringify(v):String(v);
 export function parseData(text,{format='auto'}={}){
  if(typeof text!=='string'||text.length>DATA_LIMITS.characters)throw Error('输入过大或格式无效：最多 '+DATA_LIMITS.characters+' 字符');
  if(!text.trim())throw Error('请输入 CSV 或 JSON 数据');
- const chosen=format==='auto'?(text.trimStart().startsWith('[')?'json':'csv'):format;
+ const trimmed=text.trimStart();
+ const chosen=format==='auto'?((trimmed.startsWith('[')||trimmed.startsWith('{'))?'json':'csv'):format;
  if(!['json','csv'].includes(chosen))throw Error('只支持 CSV 或 JSON 数组');
  let raw;
  if(chosen==='json'){
