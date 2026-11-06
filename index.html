@@ -160,6 +160,21 @@
   <div class="api-lab-result-toolbar"><label>字段树搜索<input id="apiLabFilter" class="api-lab-filter" type="search" aria-label="筛选响应字段路径" placeholder="搜索路径或字段值（仅展开字段树后有效）" autocomplete="off"></label><div class="api-lab-export"><button id="apiLabExport" type="button" disabled>导出检查报告 .md</button><button id="apiLabJson" type="button" disabled>导出响应 JSON</button></div><span id="apiLabResultCount" class="api-lab-note">0 项记录</span></div>
   <div class="api-lab-result-grid"><article id="apiLabResult1" class="api-lab-result" aria-label="仓库 A 的请求结果"><p class="api-empty">尚未执行请求。</p></article><article id="apiLabResult2" class="api-lab-result" aria-label="仓库 B 的请求结果" hidden><p class="api-empty">尚未执行请求。</p></article></div>
   <section id="apiLabCompare" class="api-lab-compare" aria-label="双仓库公开 API 指标对比"><p class="api-empty">执行两个相同端点的请求后可进行对比。</p></section>
+  <details id="oasWorkbench" class="oas-workbench">
+   <summary class="oas-toggle"><span><small>LOCAL / OPENAPI CONTRACT DESIGN</small><strong>OpenAPI 3.x 契约检查器</strong><em>展开使用本地 JSON 接口规范分析</em></span><span aria-hidden="true" class="oas-toggle-arrow">+</span></summary>
+   <div class="oas-body">
+    <p class="api-lab-note">本模块独立于 GitHub 在线 GET：仅在浏览器本地检查 OpenAPI 3.0 / 3.1 JSON（暂不解析 YAML），不发送请求、不下载远程 $ref，也不会保存文档。</p>
+    <div class="oas-editor">
+     <label>OpenAPI JSON 规范<textarea id="oasInput" rows="10" spellcheck="false" placeholder='{"openapi":"3.1.0","info":{"title":"My API","version":"1.0.0"},"paths":{}}' aria-label="输入 OpenAPI JSON 规范"></textarea></label>
+     <div class="oas-editor-actions"><button id="oasExample" type="button">载入本地示例</button><label class="oas-file-picker">导入 JSON 文件<input id="oasFile" type="file" accept=".json,application/json" hidden></label><button id="oasAnalyze" type="button" class="oas-primary">分析契约</button><button id="oasClear" type="button">清空</button></div>
+    </div>
+    <p id="oasStatus" class="api-lab-status" data-kind="neutral" role="status" aria-live="polite">载入示例或粘贴 JSON 以开始检查。</p>
+    <div class="oas-results-head"><div><span class="eyebrow">RESULT / OPERATIONS</span><h3>HTTP 操作与结构审查</h3></div><button id="oasExport" type="button" disabled>导出 Markdown 结果</button></div>
+    <div class="oas-filters"><input id="oasFilter" type="search" placeholder="搜索路径、operationId、标签或描述" aria-label="搜索 OpenAPI 操作" autocomplete="off"><select id="oasMethod" aria-label="按 HTTP 方法筛选契约操作"></select><small id="oasCount" aria-live="polite">等待分析</small></div>
+    <div id="oasResults" class="oas-results" aria-live="polite"><p class="api-empty">等待本地 JSON 分析。</p></div>
+    <p class="api-lab-note">校验范围仅包括部分顶层结构、路径变量、必填参数、operationId 唯一性及 responses 定义。规范合法性、外部引用、认证、业务正确性和真实运行仍需专项测试；不能把本结果当作完整 OpenAPI 一致性认证。</p>
+   </div>
+  </details>
   <p class="api-lab-footnote">重要：HTTP 200、公开记录和少量指标不能证明产品已完成、安全合规或发布成功。401 / 403 / 429 需结合权限和限流判断；数据仅来自本次浏览器网络请求，不会自动写入 GitHub Issue。</p>
  </div>
 </section>
