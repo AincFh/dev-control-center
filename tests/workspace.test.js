@@ -45,7 +45,7 @@ test('homepage prioritizes real non-game projects without removing the playable 
 test('external open-source app library integrates provenance and functional exploration',()=>{
  for(const id of ['universeFeaturedShelf','universeFeaturedGrid','universeFeaturedToggle','universeFeaturedCount'])
   assert.ok(html.includes('id="'+id+'"'),id);
- assert.match(css,/\\.external-shelf-grid\\{/);
+ assert.ok(css.includes('.external-shelf-grid{'));
  assert.match(css,/prefers-reduced-motion:reduce/);
  assert.ok(html.includes('第三方'));
 });
