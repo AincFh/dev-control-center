@@ -14,7 +14,7 @@ ATLAS 是多项目 **Developer Studio**，覆盖系统软件 / Web OS、全栈 W
 
 ## 外部软件研究与比较
 
-进入 [GitHub 跨领域软件实验室](https://aincfh.github.io/dev-control-center/#universe)，优先浏览非游戏应用，筛选 18 个方向和 36 个有 GitHub 元信息快照的第三方实例。可对四个仓库进行主动实时比较；公开 API 达到限额时保留未知状态。精选档案与大量外部索引均不可冒充 ATLAS 自研产品。数据分类是 GitHub 主题检索归档，可能需人工纠正；正式开发需许可证和资产审核。
+进入 [GitHub 跨领域软件实验室](https://aincfh.github.io/dev-control-center/#universe)，优先浏览非游戏应用，筛选 18 个方向和 36 个有 GitHub 元信息快照的第三方实例。可对四个仓库进行主动实时比较并保存选择、重新核验，支持导出保留来源与授权审核提示的 Markdown 研究交接报告；公开 API 达到限额时保留未知状态。精选档案与大量外部索引均不可冒充 ATLAS 自研产品。数据分类是 GitHub 主题检索归档，可能需人工纠正；正式开发需许可证和资产审核。
 
 ## 新增：在线游戏大厅
 
