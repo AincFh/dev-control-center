@@ -13,7 +13,7 @@ import {normalizeGameReport,gameEvidenceFor} from './game-runtime-core.js';
 import {initGameRuntime} from './game-runtime-ui.js';
 const OWNER='AincFh', API='https://api.github.com';
 const CATALOG={
- 'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'web',featured:true,description:'多项目状态、开发任务与交付管理'},
+ 'dev-control-center':{label:'ATLAS · 开发中心',symbol:'◈',category:'platform',featured:true,description:'多项目状态、开发任务与交付管理'},
  'cozy-bistro-sim':{label:'COZY BISTRO · 日落餐馆',symbol:'✦',category:'game',featured:true,maturity:'可玩基础版',description:'单机餐馆经营：订单、食材、厨房升级与多日收益'},
  'azure-coast':{label:'AZURE COAST · 海滨都市',symbol:'⌘',category:'game',featured:true,maturity:'开发中 · 未发布',description:'海滨开放世界原型，正式发布门禁尚未满足'},
  'spacefortress':{label:'SPACEFORTRESS · 太空基地',symbol:'✧',category:'game',maturity:'Fork · 上游作品',upstream:'Jaredcastorena/spacefortress',description:'MIT Fork · 宇宙殖民地、氧气、能源与船员物流'},
@@ -30,9 +30,9 @@ const CATALOG={
  'wildlands-anglerfishing-world-3d':{label:'WILDLANDS · 山野钓行',symbol:'♒',category:'game',featured:true,maturity:'可玩原型',description:'第一人称 3D 钓鱼开发中；非完整游戏，质量与内容尚未全面验收'},
  'Saintlaurent':{label:'圣罗兰平台',symbol:'✦',category:'web'},
  'shengluolan-app':{label:'圣罗兰应用',symbol:'⬡',category:'tool'},
- 'my-anime-blog':{label:'动漫内容空间',symbol:'✳',category:'web'},
- 'AincFh':{label:'GitHub 主页',symbol:'◆',category:'web'},
- 'QingJi':{label:'QingJi 工具',symbol:'⌘',category:'tool'}
+ 'my-anime-blog':{label:'A.T. FIELD · 全栈内容平台',symbol:'✳',category:'web'},
+ 'AincFh':{label:'AincFh OS · 融合桌面',symbol:'◆',category:'system'},
+ 'QingJi':{label:'QingJi · Android 原生记账',symbol:'⌘',category:'mobile'}
 };
 let projects=[],selection={type:'all',query:'',sort:'latest'},snapshot={generatedAt:null,errors:[],publicOnly:true},syncing=false;
 let gameRunReport=normalizeGameReport(null);
