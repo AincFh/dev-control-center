@@ -1,6 +1,6 @@
 import{PAGE_SIZE,CATEGORY_COLORS,normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName,chooseHighlights}from'./universe-core.js';
 const $=id=>document.getElementById(id),STORE='atlas-universe-following-v1';
-const scene={items:[],categories:[],featured:[],featuredExpanded:false,queries:0,updated:null,query:'',genre:'all',family:'software',sort:'balanced',onlySaved:false,page:1,following:new Set(),ready:false};
+const scene={items:[],categories:[],featured:[],featuredExpanded:false,comparison:new Map(),queries:0,updated:null,query:'',genre:'all',family:'software',sort:'balanced',onlySaved:false,page:1,following:new Set(),ready:false};
 function node(tag,content,cls){const e=document.createElement(tag);if(content!=null)e.textContent=content;if(cls)e.className=cls;return e;}
 function markCount(n){return Number(n||0).toLocaleString('en-US')}
 function notify(message){const el=$('universeNotice');if(!el)return;el.textContent=message;el.classList.add('active');clearTimeout(notify.last);notify.last=setTimeout(()=>el.classList.remove('active'),2800);}
@@ -36,6 +36,51 @@ function categoryMenu(){
   holder.append(b);
  }
 }
+function renderCompare(){
+ const section=$('universeCompare'),grid=$('universeCompareGrid');section.hidden=!scene.comparison.size;grid.replaceChildren();
+ $('universeCompareCount').textContent=scene.comparison.size+' / 4';
+ for(const item of scene.comparison.values()){
+  const card=node('article',null,'universe-compare-card'),header=node('div',null,'universe-compare-item-head');
+  const title=node('strong',item.name),remove=node('button','移除');remove.type='button';remove.setAttribute('aria-label','移除比较 '+item.name);
+  remove.onclick=()=>toggleCompare(item.name);header.append(title,remove);card.append(header);
+  const state=item.state==='live'?'GitHub 实时核验':item.state==='loading'?'正在核验 GitHub…':item.state==='unavailable'?'实时数据暂不可用':'仅有来源快照';
+  card.append(node('div',state,'universe-compare-state'));
+  const facts=node('div',null,'universe-compare-facts');
+  const pushed=item.pushedAt&&!Number.isNaN(Date.parse(item.pushedAt))?new Date(item.pushedAt).toLocaleDateString('zh-CN'):'未知';
+  for(const [label,value] of [['领域',item.genreName],['语言',item.language||'未知'],['Stars',item.stars===null?'未知':markCount(item.stars)],['许可证',item.license||'待核验'],['最近推送',pushed]]){
+   const line=node('div',null,'universe-compare-fact');line.append(node('span',label),node('strong',String(value)));facts.append(line);
+  }
+  card.append(facts);
+  const actions=node('div',null,'universe-compare-actions'),link=node('a','查看原仓库');link.href='https://github.com/'+item.name;link.target='_blank';link.rel='noopener noreferrer';
+  const candidate=node('button','加入研发候选');candidate.type='button';candidate.onclick=()=>window.dispatchEvent(new CustomEvent('atlas:add-candidate',{detail:{name:item.name,genre:item.genreName}}));
+  actions.append(link,candidate);card.append(actions);grid.append(card);
+ }
+}
+async function validateComparison(name,entry){
+ const key=name.toLowerCase();
+ try{
+  const url='https://api.github.com/repos/'+name.split('/').map(encodeURIComponent).join('/');
+  const response=await fetch(url,{headers:{Accept:'application/vnd.github+json'},signal:AbortSignal.timeout(9500)});
+  if(!response.ok)throw Error('HTTP '+response.status);
+  const data=await response.json();if(data.full_name?.toLowerCase()!==key)throw Error('仓库名称不一致');
+  if(scene.comparison.get(key)!==entry)return;
+  Object.assign(entry,{state:'live',language:data.language||'',stars:Number.isSafeInteger(data.stargazers_count)?data.stargazers_count:null,license:data.license?.spdx_id&&data.license.spdx_id!=='NOASSERTION'?data.license.spdx_id:null,pushedAt:data.pushed_at||null});
+ }catch{if(scene.comparison.get(key)!==entry)return;entry.state='unavailable';}
+ renderCompare();
+}
+function toggleCompare(name){
+ if(!validRepoName(name))return;
+ const key=name.toLowerCase();
+ if(scene.comparison.has(key))scene.comparison.delete(key);
+ else{
+  if(scene.comparison.size>=4){notify('最多同时比较 4 个 GitHub 仓库');return;}
+  const known=scene.items.find(x=>x.name.toLowerCase()===key),featured=scene.featured.find(x=>x.name.toLowerCase()===key);
+  if(!known)return;
+  const entry={name:known.name,genreName:featured?.genreName||known.genreName,language:featured?.language||'',stars:featured?.stars??null,license:featured?.license||null,pushedAt:null,state:'loading'};
+  scene.comparison.set(key,entry);void validateComparison(known.name,entry);
+ }
+ renderCompare();render();
+}
 function renderFeatured(){
  const section=$('universeFeaturedShelf'),holder=$('universeFeaturedGrid');if(!section||!holder)return;
  const matched=chooseHighlights(scene.featured,{family:scene.family,genre:scene.genre,query:scene.query,limit:60});
@@ -55,8 +100,9 @@ function renderFeatured(){
   const actions=node('div',null,'external-highlight-actions');
   const detail=node('button','查看资料');detail.type='button';detail.onclick=()=>showDetail(item.name);
   const add=node('button','加入候选');add.type='button';add.onclick=()=>{window.dispatchEvent(new CustomEvent('atlas:add-candidate',{detail:{name:item.name,genre:item.genreName}}));notify('已向本地研发候选池发送 '+item.name)};
+  const compare=node('button',scene.comparison.has(item.name.toLowerCase())?'取消对比':'加入对比');compare.type='button';compare.setAttribute('aria-pressed',String(scene.comparison.has(item.name.toLowerCase())));compare.onclick=()=>toggleCompare(item.name);
   const link=node('a','原仓库');link.href='https://github.com/'+item.name;link.target='_blank';link.rel='noopener noreferrer';
-  actions.append(detail,add,link);card.append(actions);holder.append(card);
+  actions.append(detail,add,compare,link);card.append(actions);holder.append(card);
  }
 }
 function render(){
@@ -86,7 +132,8 @@ function render(){
   const incubate=node('button','加入候选池','universe-incubate');
   incubate.type='button';incubate.title='加入本地研发候选，不代表已经创建 GitHub Issue';
   incubate.onclick=()=>window.dispatchEvent(new CustomEvent('atlas:add-candidate',{detail:{name:p.name,genre:p.genreName}}));
-  actions.append(more,incubate,link);card.append(top,ident,description,actions);grid.append(card);
+  const compare=node('button',scene.comparison.has(p.name.toLowerCase())?'取消对比':'加入对比','universe-incubate');compare.type='button';compare.setAttribute('aria-pressed',String(scene.comparison.has(p.name.toLowerCase())));compare.onclick=()=>toggleCompare(p.name);
+  actions.append(more,incubate,compare,link);card.append(top,ident,description,actions);grid.append(card);
  }
  refreshMeta();
 }
@@ -183,6 +230,7 @@ export function initUniverse(){
  $('universePrev').onclick=()=>goPage(-1);$('universeNext').onclick=()=>goPage(1);
  $('universeRandom').onclick=()=>{const list=filterCatalog(scene.items,{genre:scene.genre,family:scene.family,sort:scene.sort,query:scene.query});if(list.length)showDetail(list[Math.floor(Math.random()*list.length)].name)};
  $('universeFeaturedToggle').onclick=()=>{scene.featuredExpanded=!scene.featuredExpanded;renderFeatured();};
+ $('universeCompareClear').onclick=()=>{scene.comparison.clear();renderCompare();render();};
  $('universeDetailClose').onclick=()=>$('universeDetail').close();
  $('universeDetail').addEventListener('click',e=>{if(e.target===$('universeDetail'))$('universeDetail').close()});
  initMap();
