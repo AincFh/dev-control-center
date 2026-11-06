@@ -1,6 +1,6 @@
-import{PAGE_SIZE,CATEGORY_COLORS,normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName}from'./universe-core.js';
+import{PAGE_SIZE,CATEGORY_COLORS,normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName,chooseHighlights}from'./universe-core.js';
 const $=id=>document.getElementById(id),STORE='atlas-universe-following-v1';
-const scene={items:[],categories:[],queries:0,updated:null,query:'',genre:'all',family:'software',sort:'balanced',onlySaved:false,page:1,following:new Set(),ready:false};
+const scene={items:[],categories:[],featured:[],featuredExpanded:false,queries:0,updated:null,query:'',genre:'all',family:'software',sort:'balanced',onlySaved:false,page:1,following:new Set(),ready:false};
 function node(tag,content,cls){const e=document.createElement(tag);if(content!=null)e.textContent=content;if(cls)e.className=cls;return e;}
 function markCount(n){return Number(n||0).toLocaleString('en-US')}
 function notify(message){const el=$('universeNotice');if(!el)return;el.textContent=message;el.classList.add('active');clearTimeout(notify.last);notify.last=setTimeout(()=>el.classList.remove('active'),2800);}
@@ -36,7 +36,31 @@ function categoryMenu(){
   holder.append(b);
  }
 }
+function renderFeatured(){
+ const section=$('universeFeaturedShelf'),holder=$('universeFeaturedGrid');if(!section||!holder)return;
+ const matched=chooseHighlights(scene.featured,{family:scene.family,genre:scene.genre,query:scene.query,limit:60});
+ section.hidden=!matched.length;holder.replaceChildren();if(!matched.length)return;
+ const show=scene.featuredExpanded?matched:matched.slice(0,6),expand=$('universeFeaturedToggle');
+ expand.hidden=matched.length<=6;expand.setAttribute('aria-expanded',String(scene.featuredExpanded));
+ expand.textContent=scene.featuredExpanded?'收起精选':'查看全部 '+markCount(matched.length)+' 个精选';
+ $('universeFeaturedCount').textContent='本条件下 '+markCount(matched.length)+' 个经 GitHub 来源核实的外部项目';
+ for(const item of show){
+  const card=node('article',null,'external-highlight-card');
+  const heading=node('div',null,'external-highlight-heading'),name=node('h3',item.name.split('/').pop()),tag=node('span',item.genreName,'external-highlight-tag');
+  heading.append(tag,name);card.append(heading);
+  card.append(node('p',item.summary||'GitHub 公开仓库；原作者未提供简介。','external-highlight-summary'));
+  const meta=node('div',null,'external-highlight-meta');
+  meta.append(node('span',item.language||'多语言'),node('span',item.stars===null?'Star 未提供':'★ '+markCount(item.stars)+' · 采集快照'));
+  card.append(meta);
+  const actions=node('div',null,'external-highlight-actions');
+  const detail=node('button','查看资料');detail.type='button';detail.onclick=()=>showDetail(item.name);
+  const add=node('button','加入候选');add.type='button';add.onclick=()=>{window.dispatchEvent(new CustomEvent('atlas:add-candidate',{detail:{name:item.name,genre:item.genreName}}));notify('已向本地研发候选池发送 '+item.name)};
+  const link=node('a','原仓库');link.href='https://github.com/'+item.name;link.target='_blank';link.rel='noopener noreferrer';
+  actions.append(detail,add,link);card.append(actions);holder.append(card);
+ }
+}
 function render(){
+ renderFeatured();
  const filtered=filterCatalog(scene.items,{query:scene.query,genre:scene.genre,family:scene.family,sort:scene.sort,savedOnly:scene.onlySaved,bookmarks:scene.following});
  const pg=pageOf(filtered,scene.page);
  scene.page=pg.page;
@@ -158,11 +182,12 @@ export function initUniverse(){
  $('universeOnlySaved').onclick=()=>{scene.onlySaved=!scene.onlySaved;scene.page=1;render()};
  $('universePrev').onclick=()=>goPage(-1);$('universeNext').onclick=()=>goPage(1);
  $('universeRandom').onclick=()=>{const list=filterCatalog(scene.items,{genre:scene.genre,family:scene.family,sort:scene.sort,query:scene.query});if(list.length)showDetail(list[Math.floor(Math.random()*list.length)].name)};
+ $('universeFeaturedToggle').onclick=()=>{scene.featuredExpanded=!scene.featuredExpanded;renderFeatured();};
  $('universeDetailClose').onclick=()=>$('universeDetail').close();
  $('universeDetail').addEventListener('click',e=>{if(e.target===$('universeDetail'))$('universeDetail').close()});
  initMap();
  fetch('./data/github-universe.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(json=>{
-  const catalog=normalizeCatalog(json);scene.items=catalog.items;scene.categories=catalog.categories;scene.queries=catalog.queries;scene.updated=catalog.updated;scene.ready=true;
+  const catalog=normalizeCatalog(json);scene.items=catalog.items;scene.categories=catalog.categories;scene.featured=catalog.featured;scene.queries=catalog.queries;scene.updated=catalog.updated;scene.ready=true;
   $('universeUpdated').textContent=catalog.updated?('索引采集：'+catalog.updated+' · 仓库元数据按需查询'):'GitHub 搜索索引';
   familyMenu();categoryMenu();refreshMeta();render();drawMap();
  }).catch(e=>{$('universeMatches').textContent='外部项目索引加载失败：'+e.message;$('universeGrid').textContent='请刷新页面重试。现有自有仓库功能仍然可以使用。'});
