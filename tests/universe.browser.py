@@ -58,7 +58,9 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   # Cross-domain family switch must be actual interactive filtering, not label-only navigation.
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeDomains button"))==3
   assert driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='software']").get_attribute('aria-pressed')=='true'
+  driver.find_element(By.CSS_SELECTOR,"#universeClusters button[data-group='intelligent']").click()
   assert any('AI' in x.text for x in driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))
+  driver.find_element(By.CSS_SELECTOR,"#universeClusters button[data-group='foundation']").click()
   driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='game']").click()
   until(lambda:driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='game']").get_attribute('aria-pressed')=='true')
   assert not driver.find_element(By.ID,"universeFeaturedShelf").is_displayed()
