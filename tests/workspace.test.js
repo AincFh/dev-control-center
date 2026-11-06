@@ -43,7 +43,7 @@ test('homepage prioritizes real non-game projects without removing the playable 
 });
 
 test('external open-source app library integrates provenance and functional exploration',()=>{
- for(const id of ['universeFeaturedShelf','universeFeaturedGrid','universeFeaturedToggle','universeFeaturedCount','universeCompare','universeCompareCount','universeCompareClear','universeCompareGrid'])
+ for(const id of ['universeFeaturedShelf','universeFeaturedGrid','universeFeaturedToggle','universeFeaturedCount','universeCompare','universeCompareCount','universeCompareClear','universeCompareExport','universeCompareGrid'])
   assert.ok(html.includes('id="'+id+'"'),id);
  assert.ok(css.includes('.external-shelf-grid{'));
  assert.match(css,/prefers-reduced-motion:reduce/);
@@ -57,4 +57,12 @@ test('comparison workbench is wired to live source lookups instead of fabricated
  assert.ok(universe.includes('api.github.com/repos/'));
  assert.ok(universe.includes('scene.comparison.size>=4'));
  assert.ok(html.includes('最近推送')||universe.includes('最近推送'));
+});
+
+test('external comparison persists safely and has offline Markdown export',()=>{
+ const universe=readFileSync('universe.js','utf8');
+ assert.ok(universe.includes('COMPARE_STORE'));
+ assert.ok(universe.includes('restoreCompare()'));
+ assert.ok(universe.includes('comparisonMarkdown'));
+ assert.ok(universe.includes('ATLAS-GitHub-Research-'));
 });

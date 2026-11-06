@@ -1,10 +1,22 @@
-import{PAGE_SIZE,CATEGORY_COLORS,normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName,chooseHighlights}from'./universe-core.js';
-const $=id=>document.getElementById(id),STORE='atlas-universe-following-v1';
+import{PAGE_SIZE,CATEGORY_COLORS,normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName,chooseHighlights,comparisonMarkdown}from'./universe-core.js';
+const $=id=>document.getElementById(id),STORE='atlas-universe-following-v1',COMPARE_STORE='atlas-external-compare-v1';
 const scene={items:[],categories:[],featured:[],featuredExpanded:false,comparison:new Map(),queries:0,updated:null,query:'',genre:'all',family:'software',sort:'balanced',onlySaved:false,page:1,following:new Set(),ready:false};
 function node(tag,content,cls){const e=document.createElement(tag);if(content!=null)e.textContent=content;if(cls)e.className=cls;return e;}
 function markCount(n){return Number(n||0).toLocaleString('en-US')}
 function notify(message){const el=$('universeNotice');if(!el)return;el.textContent=message;el.classList.add('active');clearTimeout(notify.last);notify.last=setTimeout(()=>el.classList.remove('active'),2800);}
 function persist(){try{localStorage.setItem(STORE,JSON.stringify([...scene.following]))}catch{}}
+function persistCompare(){try{localStorage.setItem(COMPARE_STORE,JSON.stringify([...scene.comparison.keys()]))}catch{}}
+function restoreCompare(){
+ let saved=[];try{saved=JSON.parse(localStorage.getItem(COMPARE_STORE)||'[]')}catch{}
+ if(!Array.isArray(saved))return;
+ for(const name of saved.slice(0,4)){
+  if(!validRepoName(name))continue;
+  const key=name.toLowerCase(),known=scene.items.find(x=>x.name.toLowerCase()===key),featured=scene.featured.find(x=>x.name.toLowerCase()===key);
+  if(!known||scene.comparison.has(key))continue;
+  scene.comparison.set(key,{name:known.name,genreName:featured?.genreName||known.genreName,language:featured?.language||'',stars:featured?.stars??null,license:featured?.license||null,pushedAt:null,state:'snapshot'});
+ }
+ renderCompare();
+}
 function refreshMeta(){
  const x=statsOf(scene.items,scene.following);
  $('universeTotal').textContent=markCount(x.total);
@@ -53,7 +65,8 @@ function renderCompare(){
   card.append(facts);
   const actions=node('div',null,'universe-compare-actions'),link=node('a','查看原仓库');link.href='https://github.com/'+item.name;link.target='_blank';link.rel='noopener noreferrer';
   const candidate=node('button','加入研发候选');candidate.type='button';candidate.onclick=()=>window.dispatchEvent(new CustomEvent('atlas:add-candidate',{detail:{name:item.name,genre:item.genreName}}));
-  actions.append(link,candidate);card.append(actions);grid.append(card);
+  const verify=node('button','重新核验');verify.type='button';verify.disabled=item.state==='loading';verify.onclick=()=>{item.state='loading';renderCompare();void validateComparison(item.name,item);};
+  actions.append(link,candidate,verify);card.append(actions);grid.append(card);
  }
 }
 async function validateComparison(name,entry){
@@ -79,7 +92,7 @@ function toggleCompare(name){
   const entry={name:known.name,genreName:featured?.genreName||known.genreName,language:featured?.language||'',stars:featured?.stars??null,license:featured?.license||null,pushedAt:null,state:'loading'};
   scene.comparison.set(key,entry);void validateComparison(known.name,entry);
  }
- renderCompare();render();
+ persistCompare();renderCompare();render();
 }
 function renderFeatured(){
  const section=$('universeFeaturedShelf'),holder=$('universeFeaturedGrid');if(!section||!holder)return;
@@ -230,13 +243,20 @@ export function initUniverse(){
  $('universePrev').onclick=()=>goPage(-1);$('universeNext').onclick=()=>goPage(1);
  $('universeRandom').onclick=()=>{const list=filterCatalog(scene.items,{genre:scene.genre,family:scene.family,sort:scene.sort,query:scene.query});if(list.length)showDetail(list[Math.floor(Math.random()*list.length)].name)};
  $('universeFeaturedToggle').onclick=()=>{scene.featuredExpanded=!scene.featuredExpanded;renderFeatured();};
- $('universeCompareClear').onclick=()=>{scene.comparison.clear();renderCompare();render();};
+ $('universeCompareClear').onclick=()=>{scene.comparison.clear();persistCompare();renderCompare();render();};
+ $('universeCompareExport').onclick=()=>{
+  if(!scene.comparison.size)return;
+  const report=comparisonMarkdown([...scene.comparison.values()]);
+  const file=new Blob([report],{type:'text/markdown;charset=utf-8'}),url=URL.createObjectURL(file);
+  const a=document.createElement('a');a.href=url;a.download='ATLAS-GitHub-Research-'+new Date().toISOString().slice(0,10)+'.md';document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
+ };
  $('universeDetailClose').onclick=()=>$('universeDetail').close();
  $('universeDetail').addEventListener('click',e=>{if(e.target===$('universeDetail'))$('universeDetail').close()});
  initMap();
  fetch('./data/github-universe.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(json=>{
   const catalog=normalizeCatalog(json);scene.items=catalog.items;scene.categories=catalog.categories;scene.featured=catalog.featured;scene.queries=catalog.queries;scene.updated=catalog.updated;scene.ready=true;
   $('universeUpdated').textContent=catalog.updated?('索引采集：'+catalog.updated+' · 仓库元数据按需查询'):'GitHub 搜索索引';
-  familyMenu();categoryMenu();refreshMeta();render();drawMap();
+  restoreCompare();familyMenu();categoryMenu();refreshMeta();render();drawMap();
  }).catch(e=>{$('universeMatches').textContent='外部项目索引加载失败：'+e.message;$('universeGrid').textContent='请刷新页面重试。现有自有仓库功能仍然可以使用。'});
 }

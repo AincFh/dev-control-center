@@ -1,5 +1,5 @@
 import test from'node:test';import assert from'node:assert/strict';import{readFileSync}from'node:fs';
-import{normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName,balanceGenres,chooseHighlights,PAGE_SIZE}from'../universe-core.js';
+import{normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName,balanceGenres,chooseHighlights,comparisonMarkdown,PAGE_SIZE}from'../universe-core.js';
 const file=JSON.parse(readFileSync('data/github-universe.json','utf8'));
 const catalog=normalizeCatalog(file);
 test('GitHub-based external index exceeds thousand REAL unique upstream repository names',()=>{
@@ -75,4 +75,13 @@ test('spotlight index rejects unknown, duplicate or malformed external records',
   {name:'A/B/C',genre:'ai',summary:'Invalid'},
   {name:'Missing/Repo',genre:'ai',summary:'Not indexed'}]};
  assert.equal(normalizeCatalog(input).featured.length,1);
+});
+
+test('comparison research export is portable, provenance-labelled and escapes repository text',()=>{
+ const result=comparisonMarkdown([{name:'A/Repo',genreName:'AI | systems',stars:42,language:'JS',license:null,state:'unavailable',pushedAt:'2026-11-06'},{name:'bad/repo/path',genreName:'invalid',stars:1}],{generatedAt:'2026-11-06T12:00:00Z'});
+ assert.ok(result.includes('https://github.com/A/Repo'));
+ assert.ok(result.includes('AI \\| systems'));
+ assert.ok(result.includes('待核验'));
+ assert.ok(result.includes('接口不可用；待复核'));
+ assert.ok(!result.includes('bad/repo/path'));
 });

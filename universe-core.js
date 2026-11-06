@@ -66,3 +66,16 @@ export function chooseHighlights(featured,{family='software',genre='all',query='
  }if(!advanced)break;}
  return out;
 }
+
+// Portable, read-only research handoff. GitHub metadata is evidence, never license clearance.
+export function comparisonMarkdown(items,{generatedAt=new Date().toISOString()}={}){
+ const safe=x=>String(x??'未知').replace(/\r?\n/g,' ').replace(/\|/g,'\\|').trim();
+ const rows=(Array.isArray(items)?items:[]).slice(0,4).filter(x=>x&&validRepoName(x.name));
+ const head=['# ATLAS · 第三方开源项目比较','','生成时间：'+safe(generatedAt),'','> 仅供技术研究。仓库元数据可能变化，许可证标识不代表可直接复用源码、素材或商标。','','| 公开 GitHub 仓库 | 类别 | 主要语言 | Stars | License | 最近推送 | 数据证据 |','| --- | --- | --- | ---: | --- | --- | --- |'];
+ for(const item of rows){
+  const evidence=item.state==='live'?'实时 GitHub API':item.state==='unavailable'?'接口不可用；待复核':'公开快照；待实时核验';
+  head.push('| '+[('https://github.com/'+item.name),safe(item.genreName),safe(item.language||'未知'),Number.isSafeInteger(item.stars)?String(item.stars):'未知',safe(item.license||'待核验'),safe(item.pushedAt||'未知'),evidence].join(' | ')+' |');
+ }
+ head.push('','## 下一步审核','','- 检查上游 LICENSE、贡献文件、素材/模型授权与商标约束。','- 验证部署条件、生产维护情况、已知漏洞与依赖。','- 进入 ATLAS 研发候选池不等于已有代码或已通过发布验收。','');
+ return head.join('\n');
+}
