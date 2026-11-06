@@ -5,6 +5,16 @@ import{DOMAIN_GROUPS,domainCoverage,domainPlan,domainPlanMarkdown}from'./domain-
 const $=id=>document.getElementById(id),REPO=/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const node=(tag,text,cls)=>{const element=document.createElement(tag);if(text!=null)element.textContent=String(text);if(cls)element.className=cls;return element};
 let categories=[],currentPlan=null,initialized=false;
+function syncWorkRepos(raw){
+ const select=$('sectorLabTarget');if(!select)return;
+ const previous=select.value;
+ const valid=x=>typeof x==='string'&&/^[A-Za-z0-9_.-]{1,120}$/.test(x)&&x!=='.'&&x!=='..';
+ const names=[...new Set(['dev-control-center',...(Array.isArray(raw)?raw:[]).filter(valid)])].sort((a,b)=>a.localeCompare(b));
+ select.replaceChildren();
+ for(const name of names){const option=node('option',name);option.value=name;select.append(option);}
+ select.value=names.includes(previous)?previous:'dev-control-center';
+}
+window.addEventListener('atlas:available-work-repos',event=>syncWorkRepos(event.detail?.repos));
 const sendFeedback=(value,bad=false)=>{const el=$('sectorLabFeedback');el.textContent=value;el.dataset.state=bad?'error':'info'};
 function issueUrl(plan){
  const lines=[
@@ -35,10 +45,12 @@ function renderPlan(plan){
  }
  root.append(list);
  $('sectorLabCandidate').disabled=!plan.source;
+ $('sectorLabSchedule').disabled=false;
  $('sectorLabWorkboard').disabled=!plan.source;
  $('sectorLabIssue').href=issueUrl(plan);
 }
 function generate(){
+ currentPlan=null;$('sectorLabSchedule').disabled=true;
  const category=$('sectorLabCategory').value,raw=$('sectorLabRepo').value.trim();
  if(raw&&(!REPO.test(raw)||raw.length>240||raw.split('/').some(part=>part==='.'||part==='..'))){sendFeedback('仓库路径应为 owner/repo；请输入 GitHub 仓库路径或留空。',true);return;}
  if(!categories.some(c=>c.id===category)){sendFeedback('请选择已收录的技术领域。',true);return;}
@@ -85,6 +97,21 @@ export function initSectorLab(catalogCategories){
  $('sectorLabGenerate').onclick=generate;
  $('sectorLabExport').onclick=download;
  $('sectorLabCategory').onchange=generate;
+ $('sectorLabSchedule').onclick=()=>{
+  generate();
+  if(!currentPlan)return;
+  const sourceRepo=currentPlan.source?currentPlan.source.slice('https://github.com/'.length):null;
+  const repo=$('sectorLabTarget').value;
+  if(!repo){sendFeedback('请选择承接工程任务的自有仓库。',true);return;}
+  window.dispatchEvent(new CustomEvent('atlas:import-blueprint',{
+   detail:{category:currentPlan.category,label:currentPlan.label,sourceRepo,repo}
+  }));
+ };
+ window.addEventListener('atlas:blueprint-import-result',event=>{
+  const result=event.detail||{};
+  if(typeof result.message==='string')sendFeedback(result.message,!result.ok);
+ });
+ window.dispatchEvent(new Event('atlas:request-work-repos'));
  $('sectorLabWorkboard').onclick=()=>{
   if(!currentPlan?.source)return;
   const detail={category:currentPlan.category,repository:currentPlan.source.slice('https://github.com/'.length),label:currentPlan.label,result:null};

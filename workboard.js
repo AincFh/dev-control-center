@@ -7,6 +7,7 @@ import {
  issueDraft,createWorkBackup,restoreWorkBackup,workSuggestions
 } from './workboard-core.js';
 import {capacityPlan,capacityMarkdown,normalizeCapacity} from './capacity-core.js';
+import {prepareBlueprintExecution} from './blueprint-execution-core.js';
 import {importExternalWorkPackages} from './external-workplan-core.js';
 
 const STORE='atlas-workboard-v1',CAPACITY_STORE='atlas-manual-work-capacity-v1';
@@ -51,6 +52,38 @@ function selectOptions(select,options,chosen){
 function repoNames(){
  return [...new Set([...projects.map(p=>p.name),...items.map(x=>x.repo)])]
   .sort((a,b)=>a.localeCompare(b,'en'));
+}
+/** Only repos from this account's public API, never third-party research or local imports. */
+function ownedRepoNames(){
+ return [...new Set(['dev-control-center',...projects.map(p=>p.name).filter(x=>
+  typeof x==='string'&&/^[A-Za-z0-9_.-]{1,120}$/.test(x)&&x!=='.'&&x!=='..')])]
+  .sort((a,b)=>a.localeCompare(b,'en'));
+}
+function publishOwnedRepos(){
+ window.dispatchEvent(new CustomEvent('atlas:available-work-repos',{detail:{repos:ownedRepoNames()}}));
+}
+function importBlueprint(event){
+ const spec=event.detail||{};
+ const finish=(ok,message)=>window.dispatchEvent(new CustomEvent('atlas:blueprint-import-result',
+  {detail:{ok,message}}));
+ if(!ownedRepoNames().includes(spec.repo)){
+  finish(false,'目标仓库未列在当前账户的公开仓库清单中，未导入。');
+  return;
+ }
+ try{
+  const result=prepareBlueprintExecution(items,{
+   category:spec.category,repo:spec.repo,sourceRepo:spec.sourceRepo||null,
+   label:spec.label
+  },new Date().toISOString());
+  activeRepo=spec.repo;activeStage='all';activeCategory='all';activePriority='all';
+  if(result.added)commit(result.items,'蓝图已转换：新增 '+result.added+' 个工作包，'+result.skipped+' 个沿用已有记录');
+  else render();
+  location.hash='#workboard';
+  const message=result.added
+   ?'已为 '+spec.repo+' 添加 '+result.added+' 个五阶段研发工作包；自动关联依赖，人工进度尚未开始。'
+   :'该蓝图的五个工作包均已存在；原负责人、任务进度和工作量保持不变。';
+  announce(message);finish(true,message);
+ }catch(error){finish(false,'工作包导入失败：'+error.message);}
 }
 function refreshFilters(){
  const choices=[['all','全部仓库'],...repoNames().map(name=>[name,name])];
@@ -316,6 +349,8 @@ export function initWorkboard(){
  $('workDelete').onclick=remove;
  $('workEditor').addEventListener('click',event=>{if(event.target===$('workEditor'))closeDialog()});
  $('workCreate').disabled=false;
+ window.addEventListener('atlas:import-blueprint',importBlueprint);
+ window.addEventListener('atlas:request-work-repos',publishOwnedRepos);
  window.addEventListener('atlas:import-domain-plan',event=>{
   const detail=event.detail;
   if(!detail||typeof detail!=='object')return;
@@ -333,5 +368,5 @@ export function initWorkboard(){
   edit(null,{repo,category:event.detail?.category});
  });
  render();
- return function updateWorkboard(p){projects=Array.isArray(p)?p:[];render()};
+ return function updateWorkboard(p){projects=Array.isArray(p)?p:[];render();publishOwnedRepos()};
 }

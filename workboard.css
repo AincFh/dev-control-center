@@ -1,4 +1,26 @@
 /* ATLAS cross-project execution desk: original responsive, keyboard-first system. */
+.sector-lab-execution{display:grid;grid-template-columns:minmax(0,1fr) minmax(160px,220px) auto;
+ gap:18px;align-items:center;padding:22px 24px;margin:19px 0 12px;
+ border:1px solid var(--line);border-radius:20px;
+ background:linear-gradient(115deg,var(--surface),var(--surface-soft));}
+.sector-lab-execution-copy{display:grid;gap:6px;min-width:0}
+.sector-lab-execution-copy strong{font-size:clamp(17px,2vw,21px);font-weight:750;letter-spacing:-.4px;color:var(--ink)}
+.sector-lab-execution-copy p{font-size:12px;line-height:1.75;color:var(--muted);max-width:720px}
+.sector-lab-execution label{display:grid;gap:7px;font-size:11px;font-weight:720;color:var(--muted)}
+.sector-lab-execution select{width:100%;min-height:44px;border:1px solid var(--line-dark);border-radius:11px;
+ background:var(--surface);color:var(--ink);padding:10px 12px;font-size:12px;min-width:0}
+.sector-lab-execution button{min-height:44px;border:none;border-radius:11px;padding:10px 16px;
+ background:var(--accent);color:white;font-size:12px;font-weight:730;cursor:pointer;
+ transition:transform .18s ease,filter .18s ease}
+.sector-lab-execution button:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.06)}
+.sector-lab-execution button:disabled{opacity:.46;cursor:not-allowed}
+.sector-lab-execution :is(select,button):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(max-width:1050px){.sector-lab-execution{grid-template-columns:minmax(0,1fr) minmax(160px,230px)}
+.sector-lab-execution button{grid-column:2}}
+@media(max-width:650px){.sector-lab-execution{grid-template-columns:1fr;padding:18px;gap:14px}
+.sector-lab-execution button{grid-column:auto;width:100%}}
+@media(prefers-reduced-motion:reduce){.sector-lab-execution button{transition:none}}
+
 .work-intro{display:flex;align-items:center;justify-content:space-between;gap:24px;
  padding:28px 32px;border:1px solid var(--line);border-radius:22px;
  background:linear-gradient(110deg,var(--surface),var(--surface-soft));margin:24px 0 19px}

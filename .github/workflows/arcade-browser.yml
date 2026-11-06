@@ -31,6 +31,8 @@ jobs:
         run: python tests/mission.browser.py
       - name: Test real multi-domain delivery evidence, filters and workboard interaction
         run: python tests/release-review.browser.py
+      - name: Test actual blueprint execution, dependency blocking, re-import and mobile recovery
+        run: python tests/blueprint-execution.browser.py
       - name: Preserve arcade screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -42,4 +44,5 @@ jobs:
             test-artifacts/mission/
             test-artifacts/utilities/
             test-artifacts/release-review/
+            test-artifacts/blueprint-execution/
           if-no-files-found: ignore
