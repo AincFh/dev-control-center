@@ -40,6 +40,14 @@ export async function fingerprintDist(dist,copied,version){
   if(!html.includes(before))throw new Error('Site entry HTML missing: '+before);
   html=html.replace(before,after);
  }
+ // Every linked stylesheet must share the deployment fingerprint; otherwise a
+ // cached rail stylesheet can lag behind updated HTML/JS after Pages deploys.
+ for(const asset of ['workboard.css','release-review.css']){
+  const before='href="./'+asset+'"';
+  if(!html.includes(before))continue;
+  if(!copied.includes(asset))throw new Error('Missing linked stylesheet: '+asset);
+  html=html.replace(before,'href="./'+asset+'?v='+version+'"');
+ }
  await writeFile(index,html);
  for(const name of copied.filter(x=>x.endsWith('.js'))){
   if(name.includes('..')||path.isAbsolute(name))throw new Error('Invalid copied module path');
