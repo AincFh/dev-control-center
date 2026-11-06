@@ -52,7 +52,7 @@ test('cross-domain index contains source-backed software and game families',()=>
 });
 
 test('third-party software spotlights are verified GitHub-sourced but never owned or pre-cleared',()=>{
- assert.equal(catalog.featured.length,36);
+ assert.equal(catalog.featured.length,52);
  const indexed=new Set(catalog.items.map(x=>x.name.toLowerCase()));
  for(const item of catalog.featured){assert.ok(indexed.has(item.name.toLowerCase()));assert.equal(item.family,'software');assert.ok(validRepoName(item.name));assert.ok(item.summary.length<=210);}
  const first=chooseHighlights(catalog.featured,{limit:6});assert.equal(first.length,6);
@@ -62,8 +62,8 @@ test('third-party software spotlights are verified GitHub-sourced but never owne
  assert.equal(chooseHighlights(catalog.featured,{query:'a-query-with-no-repo-match'}).length,0);
 });
 test('broader discovery covers productivity, security, science, finance and accessibility',()=>{
- assert.ok(catalog.items.length>=4100);
- assert.ok(catalog.categories.length>=26);
+ assert.ok(catalog.items.length>=5100);
+ assert.ok(catalog.categories.length>=42);
  for(const genre of ['productivity','communication','security','science','business','accessibility']){
   assert.ok(filterCatalog(catalog.items,{family:'software',genre}).length>=70,genre);
  }
@@ -84,4 +84,22 @@ test('comparison research export is portable, provenance-labelled and escapes re
  assert.ok(result.includes('待核验'));
  assert.ok(result.includes('接口不可用；待复核'));
  assert.ok(!result.includes('bad/repo/path'));
+});
+
+test('all 42 categories are classified into navigable groups and have repositories',()=>{
+ const names=catalog.categories.map(x=>x.id);
+ assert.equal(names.length,42);
+ assert.equal(new Set(names).size,42);
+ assert.ok(catalog.categories.every(x=>['foundation','intelligent','creative','games'].includes(x.group)));
+ for(const category of catalog.categories){
+  assert.ok(catalog.items.some(x=>x.genre===category.id),'empty '+category.id);
+  assert.ok(filterCatalog(catalog.items,{group:category.group,genre:category.id}).length>0);
+ }
+ assert.equal(filterCatalog(catalog.items,{family:'game',group:'games'}).length,filterCatalog(catalog.items,{family:'game'}).length);
+ assert.equal(filterCatalog(catalog.items,{family:'software',group:'foundation'}).every(x=>x.group==='foundation'),true);
+});
+test('verified external highlights span all new engineering categories',()=>{
+ for(const cat of ['database','cloud','iot','robotics','gis','hardware','networking','browsers','cli','commerce','testing','documentation','office','healthtech','energy','mlops']){
+  assert.ok(catalog.featured.some(x=>x.genre===cat),'no GitHub profile for '+cat);
+ }
 });
