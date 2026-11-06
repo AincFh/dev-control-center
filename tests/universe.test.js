@@ -5,7 +5,7 @@ const catalog=normalizeCatalog(file);
 test('GitHub-based external index exceeds thousand REAL unique upstream repository names',()=>{
  assert.ok(catalog.items.length>=1000,'Expected at least 1,000 real GitHub source names');
  assert.equal(new Set(catalog.items.map(x=>x.name.toLowerCase())).size,catalog.items.length);
- assert.ok(catalog.queries>=24);assert.ok(catalog.categories.length>=8);
+ assert.ok(catalog.queries>=36);assert.ok(catalog.categories.length>=20);
 });
 test('all names are safe and no source is presented as owned or verified',()=>{
  for(const item of catalog.items){assert.ok(validRepoName(item.name));assert.equal(item.external,true);assert.equal(item.license,'unreviewed')}
@@ -33,4 +33,20 @@ test('balanced discovery shows distinct genres rather than the first 24 results 
 test('malformed, duplicated, and non-GitHub source values are removed',()=>{
  const result=normalizeCatalog({schemaVersion:1,kind:'external-discovery',categories:[['life','生活']],rows:[['A/Repo','life'],['a/repo','life'],['github.com/owner/repo','life'],['A/Thing','fake']]});
  assert.equal(result.items.length,1);
+});
+
+test('cross-domain index contains source-backed software and game families',()=>{
+ const software=catalog.items.filter(x=>x.family==='software');
+ const games=catalog.items.filter(x=>x.family==='game');
+ assert.ok(software.length>=300,'Non-game project sources missing');
+ assert.ok(games.length>=1000,'Existing game sources must remain intact');
+ for(const id of ['system','ai','desktop','mobile','web','devtools','automation','data','media','education','infra','design']){
+  const matches=filterCatalog(catalog.items,{family:'software',genre:id});
+  assert.ok(matches.length>=10,'Missing category '+id);assert.ok(matches.every(x=>x.family==='software'&&x.genre===id));
+ }
+ assert.equal(filterCatalog(catalog.items,{family:'game'}).length,games.length);
+ assert.equal(filterCatalog(catalog.items,{family:'software'}).length,software.length);
+ assert.equal(statsOf(catalog.items).byFamily.software,software.length);
+ assert.equal(statsOf(catalog.items).byFamily.game,games.length);
+ assert.ok(catalog.categories.every(x=>['software','game'].includes(x.family)));
 });
