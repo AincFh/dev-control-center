@@ -299,7 +299,7 @@ const VIEWS={
  incubator:['项目孵化','外部项目研究、人工核验与立项计划'],
  mission:['研发总控','跨项目 CI、问题、审查和产品人工核验'],
  trace:['开发链路','真实 Issue、PR、CI 和部署证据追踪'],
- universe:['GitHub 星图','数千条外部游戏与模拟项目索引'],
+ universe:['GitHub 星图','AI、系统软件、开发工具、应用与游戏的跨领域开源参考索引'],
  delivery:['交付健康','CI、PR 和发布状态'],
  pipeline:['构建流程','从开发到验收发布'],
  activity:['开发动态','来自 GitHub 的公开活动']
