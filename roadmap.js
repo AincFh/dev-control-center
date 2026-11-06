@@ -1,6 +1,10 @@
 // Curated ATLAS development tracks. A green CI status never implies product completion.
 export const TRACKS=[
  {repo:'dev-control-center',short:'ATLAS',category:'platform',title:'多项目开发控制中心',stage:'持续运营',maturity:'platform',priority:1,goal:'聊天需求、Issue、PR、发布和交接统一管理',next:'跨项目任务与验收闭环',symbol:'◈'},
+ {repo:'AincFh',short:'AincFh OS',category:'system',title:'融合式 Web OS 与交互作品集',stage:'公开开发 · 迭代中',maturity:'active-development',priority:1,goal:'多语言桌面、文件管理器、应用窗口和跨平台交互体验',next:'按真实用户流程验收桌面管理、导航、文件系统与主题',symbol:'⌘'},
+ {repo:'my-anime-blog',short:'A.T. FIELD',category:'web',title:'全栈内容与社区平台',stage:'已有公开部署记录 · 持续维护',maturity:'product-existing',priority:1,goal:'Cloudflare Workers、D1、R2 驱动内容、社区及安全的完整产品',next:'复核最新生产门禁、关键业务回归和可观测性',symbol:'◆'},
+ {repo:'QingJi',short:'QINGJI',category:'mobile',title:'轻记 · 原生 Android 记账',stage:'本地应用原型 · 待验收',maturity:'prototype',priority:1,goal:'Kotlin / Jetpack Compose 原生记账、离线数据、分类统计与主题',next:'对照 README 与验收记录验证 APK、真机、数据完整性和交互',symbol:'▣'},
+ {repo:'squiffy',short:'SQUIFFY',category:'tool',title:'互动剧情与文本创作工具',stage:'开源 Fork · 待验收',maturity:'fork-reference',priority:2,goal:'可编辑分支剧情与多结局叙事工具链',next:'核对上游许可和本仓库功能/部署差异，避免将 Fork 当作原创',symbol:'✎'},
  {repo:'wildlands-anglerfishing-world-3d',short:'WILDLANDS',category:'game',title:'第一人称 3D 钓鱼探索',stage:'深度开发',maturity:'prototype',priority:1,goal:'鱼类生态与探索玩法深度',next:'性能基线、鱼群生态与连续试玩',symbol:'♒'},
  {repo:'cozy-bistro-sim',short:'COZY BISTRO',category:'game',title:'餐馆经营模拟',stage:'可玩基础版',maturity:'playable-foundation',priority:1,goal:'多日营业、订单、食材、升级、账本与存档',next:'经济平衡与移动端连续游玩验证',symbol:'✦'},
  {repo:'paradise-isle',short:'PARADISE ISLE',category:'game',title:'岛屿生活与农场模拟',stage:'Fork · 可游玩',maturity:'fork-playable',priority:1,goal:'种田、养殖、邻里互动、每日集市与岛屿扩建',next:'日常任务、经济长期平衡和移动端连续游玩',symbol:'✿'},
@@ -19,8 +23,9 @@ export function trackedWorkstreams(projects=[]){
 export function trackMetrics(projects=[]){
  const x=trackedWorkstreams(projects);
  return{total:x.length,visible:x.filter(p=>p.known).length,games:x.filter(p=>p.category==='game').length,
+  nonGames:x.filter(p=>p.category!=='game').length,
   prototypes:x.filter(p=>p.known&&p.maturity==='prototype').length,blocked:x.filter(p=>p.known&&p.maturity==='blocked').length};
 }
 export function readiness(stage){
- return ({platform:'运营平台',prototype:'原型期','playable-foundation':'可玩基础版','fork-playable':'Fork · 可游玩',unverified:'部署待核验',blocked:'发布门禁未满足'})[stage]||'状态未确认';
+ return ({platform:'运营平台','active-development':'公开开发中','product-existing':'已有产品 · 持续维护','fork-reference':'Fork · 验收待核对',prototype:'原型期','playable-foundation':'可玩基础版','fork-playable':'Fork · 可游玩',unverified:'部署待核验',blocked:'发布门禁未满足'})[stage]||'状态未确认';
 }
