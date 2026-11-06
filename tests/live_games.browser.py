@@ -97,6 +97,44 @@ def run_bistro(driver,check):
   assert phase=="open",phase
   return phase
  check("save","浏览器刷新后餐馆营业状态恢复",persist)
+ def staff_career():
+  # Every transition remains inside the real restaurant's own interface and
+  # engine: finish day one, go to day two, pay for skill training then hire.
+  driver.execute_script("window.COZY_BISTRO.test.step(240)")
+  assert driver.execute_script("return window.COZY_BISTRO.test.getRaw().phase")=="summary"
+  driver.find_element(By.ID,"primaryAction").click()
+  initial=driver.execute_script("""return (()=>{const s=window.COZY_BISTRO.test.getRaw();
+    return {day:s.day,phase:s.phase,money:s.money,xp:s.assistantXp};})()""")
+  assert initial=={"day":2,"phase":"planning","money":270,"xp":0},initial
+  driver.find_element(By.CSS_SELECTOR,'[data-tab="staff"]').click()
+  driver.find_element(By.CSS_SELECTOR,'[data-cmd="train-assistant"]').click()
+  trained=driver.execute_script("""return (()=>{const s=window.COZY_BISTRO.test.getRaw();
+    return {money:s.money,xp:s.assistantXp,training:s.today.staffTraining,level:s.assistantXp>=5?2:1};})()""")
+  assert trained=={"money":130,"xp":8,"training":140,"level":2},trained
+  assert not driver.find_element(By.CSS_SELECTOR,'[data-cmd="train-assistant"]').is_enabled()
+  driver.find_element(By.CSS_SELECTOR,'[data-cmd="hire-assistant"]').click()
+  hired=driver.execute_script("""return (()=>{const s=window.COZY_BISTRO.test.getRaw();
+    return {hired:s.assistantHired,paid:s.assistantShiftWage,remaining:s.money,spent:s.today.spent};})()""")
+  assert hired=={"hired":True,"paid":110,"remaining":20,"spent":250},hired
+  driver.find_element(By.ID,"closeSheet").click()
+  driver.find_element(By.ID,"primaryAction").click()
+  driver.execute_script("window.COZY_BISTRO.test.step(23)")
+  growth=driver.execute_script("return window.COZY_BISTRO.test.getRaw().assistantXp")
+  assert growth>8,"Assistant must earn XP from actual kitchen actions: "+str(growth)
+  return growth
+ check("staff","实际经营第二天、付费培训、支付等级工资并通过制作获得技能经验",staff_career)
+ def staff_save():
+  # Staff training and hiring use the normal UI save(); no debug writes.
+  driver.refresh()
+  wait_for(driver,"return !!window.COZY_BISTRO")
+  driver.find_element(By.ID,"enterBtn").click()
+  old=driver.execute_script("""return (()=>{const s=window.COZY_BISTRO.test.getRaw();
+    return {day:s.day,trained:s.assistantTrainedDay,xp:s.assistantXp,wage:s.assistantShiftWage,
+      hired:s.assistantHired,spent:s.today.staffTraining};})()""")
+  assert old["day"]==2 and old["trained"]==2 and old["xp"]>=8,old
+  assert old["wage"]==110 and old["hired"] and old["spent"]==140,old
+  return old["xp"]
+ check("staff-save","浏览器刷新后等级、培训支出和真实工资保持一致",staff_save)
  check("mobile",LABELS["mobile"],lambda:assert_mobile(driver))
 def run_paradise(driver,check):
  def new_slot():
@@ -134,17 +172,31 @@ def run_wildlands(driver,check):
   assert state["fishSchools"]["population"]>0 and state["treeCount"]>100,state
   return state["treeCount"]
  check("webgl","真实 Three.js WebGL 湖泊与鱼群启动",boot)
- def enter_and_cast():
+ def league_registration():
   driver.find_element(By.ID,"play").click()
   wait_for(driver,"return window.__wildlandsNext.getState().started===true",15)
+  driver.find_element(By.ID,"league").click()
+  cups=driver.find_elements(By.CSS_SELECTOR,'[data-league-start]')
+  assert len(cups)==3,len(cups)
+  driver.find_element(By.CSS_SELECTOR,'[data-league-start="morning"]').click()
+  state=driver.execute_script("return window.__wildlandsNext.getState().league")
+  assert state["active"]["id"]=="morning" and state["active"]["attempts"]==0,state
+  assert driver.find_element(By.ID,"leagueHud").is_displayed()
+  driver.find_element(By.ID,"close").click()
+  return True
+ check("league","实机进入湖泊并点击锦标赛报名，真实赛况 HUD 开始计分",league_registration)
+ def enter_and_cast():
   cast=driver.find_element(By.ID,"cast")
   ActionChains(driver).move_to_element(cast).click_and_hold().pause(.85).release().perform()
   state=driver.execute_script("return window.__wildlandsNext.getState().phase")
   if state=="flying":driver.execute_script("window.__wildlandsNext.angler.update(1.0)")
   state=driver.execute_script("return window.__wildlandsNext.getState().phase")
   assert state in ("flying","waiting","bite","fighting"),"Cast failed: "+str(state)
+  if state=="flying":driver.execute_script("window.__wildlandsNext.angler.update(1.0)")
+  standing=driver.execute_script("return window.__wildlandsNext.getState().league.active")
+  assert standing and standing["attempts"]==1 and standing["pending"],standing
   return state
- check("interaction","真实按住并松开钓竿按钮完成抛投",enter_and_cast)
+ check("interaction","真实长按投竿使鱼漂落水并消耗锦标赛一次有效抛投",enter_and_cast)
  check("mobile",LABELS["mobile"],lambda:assert_mobile(driver))
 def run_fishing(driver,check):
  def boot():
