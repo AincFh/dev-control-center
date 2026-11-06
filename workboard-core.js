@@ -23,6 +23,13 @@ export const WORK_CATEGORIES=Object.freeze([
  {id:'other',label:'其他'}
 ]);
 export const WORK_PRIORITIES=Object.freeze(['P0','P1','P2','P3']);
+/** Translate portfolio taxonomy to the workboard's explicit, validated taxonomy.
+ * Never rely on the browser's implicit first option for an unrecognized value.
+ */
+export function projectWorkCategory(category){
+ if(WORK_CATEGORIES.some(x=>x.id===category))return category;
+ return ({platform:'infra',software:'tool',desktop:'tool'})[category]||'other';
+}
 const STAGES=new Set(WORK_STAGES.map(x=>x.id));
 const CATEGORIES=new Set(WORK_CATEGORIES.map(x=>x.id));
 const ID=/^[A-Za-z0-9_-]{6,64}$/;

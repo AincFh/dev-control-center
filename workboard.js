@@ -2,7 +2,7 @@
  * GitHub statuses are read-only and opening an Issue is a user action.
  */
 import {
- WORK_STAGES,WORK_CATEGORIES,WORK_PRIORITIES,MAX_WORK_ITEMS,normalizeWorkboard,
+ WORK_STAGES,WORK_CATEGORIES,WORK_PRIORITIES,MAX_WORK_ITEMS,projectWorkCategory,normalizeWorkboard,
  upsertWorkItem,deleteWorkItem,workBlockers,workMetrics,filterWorkItems,
  issueDraft,createWorkBackup,restoreWorkBackup,workSuggestions
 } from './workboard-core.js';
@@ -221,7 +221,7 @@ function edit(id=null,defaults={}){
  $('workEditDescription').value=item?.description||'';
  $('workEditOwner').value=item?.owner||'';
  $('workEditEffort').value=String(item?.effortUnits??3);
- selectOptions($('workEditCategory'),WORK_CATEGORIES.map(x=>[x.id,x.label]),item?.category||defaults.category||'web');
+ selectOptions($('workEditCategory'),WORK_CATEGORIES.map(x=>[x.id,x.label]),item?.category||projectWorkCategory(defaults.category??'web'));
  selectOptions($('workEditPriority'),WORK_PRIORITIES.map(x=>[x,x]),item?.priority||'P2');
  selectOptions($('workEditStage'),WORK_STAGES.map(x=>[x.id,x.label]),item?.stage||'backlog');
  $('workEditDate').value=item?.dueDate||'';
