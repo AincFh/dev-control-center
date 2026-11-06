@@ -159,7 +159,12 @@
     <button type="button" id="sectorLabCandidate" disabled>加入本地研发候选</button>
     <a id="sectorLabIssue" href="https://github.com/AincFh/dev-control-center/issues/new" target="_blank" rel="noopener noreferrer">在 GitHub 创建 Issue 草稿</a>
    </div>
-   <p class="sector-lab-note">所有方案均为开发计划。使用第三方源代码前需核实 LICENSE、素材、模型、商标和依赖条款；GitHub 链接不是复用授权。</p>
+   <div class="sector-lab-execution" aria-label="将工程蓝图转为可执行工作包">
+    <div class="sector-lab-execution-copy"><span class="eyebrow">FROM BLUEPRINT TO BUILD</span><strong>将研究方案落到真实工程任务。</strong><p>自动建立许可审查 → 构建验证 → 功能开发 → 质量验收 → 发布维护，共 5 个前后依赖的工作包。只保存至本机执行工作台，不自动写入 GitHub。</p></div>
+    <label for="sectorLabTarget">目标自有仓库<select id="sectorLabTarget" aria-label="选择承接工程任务的 AincFh 仓库"><option value="dev-control-center">dev-control-center</option></select></label>
+    <button id="sectorLabSchedule" type="button" disabled>加入执行工作台 · 5 阶段</button>
+   </div>
+   <p class="sector-lab-note">所有方案均为开发计划。使用第三方源代码前需核实 LICENSE、素材、模型、商标和依赖条款；GitHub 链接不是复用授权。导入工作包不会擅自改变现有阶段、人工估算或任务进度。</p>
   </section>
  <section class="universe-compare" id="universeCompare" aria-label="公开 GitHub 仓库横向比较" hidden>
   <div class="universe-compare-head"><div><span class="eyebrow">RESEARCH / SIDE BY SIDE</span><h2>开源项目比较<span>.</span></h2><p>最多选择四个外部仓库。GitHub 在线核验失败时保留“未知”，绝不将缓存快照冒充实时数据。</p></div><div class="universe-compare-controls"><strong id="universeCompareCount">0 / 4</strong><button type="button" id="universeCompareExport">导出报告</button><button type="button" id="universeCompareClear">清空比较</button></div></div>
