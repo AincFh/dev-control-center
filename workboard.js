@@ -7,6 +7,7 @@ import {
  issueDraft,createWorkBackup,restoreWorkBackup,workSuggestions
 } from './workboard-core.js';
 import {capacityPlan,capacityMarkdown,normalizeCapacity} from './capacity-core.js';
+import {importExternalWorkPackages} from './external-workplan-core.js';
 
 const STORE='atlas-workboard-v1',CAPACITY_STORE='atlas-manual-work-capacity-v1';
 const $=id=>document.getElementById(id);
@@ -315,6 +316,16 @@ export function initWorkboard(){
  $('workDelete').onclick=remove;
  $('workEditor').addEventListener('click',event=>{if(event.target===$('workEditor'))closeDialog()});
  $('workCreate').disabled=false;
+ window.addEventListener('atlas:import-domain-plan',event=>{
+  const detail=event.detail;
+  if(!detail||typeof detail!=='object')return;
+  const result=importExternalWorkPackages(items,detail);
+  detail.result={added:result.added,reason:result.reason};
+  if(result.reason){announce('外部研究计划未导入：'+result.reason);return;}
+  if(result.added>0)commit(result.items,'已导入 '+result.added+' 条含前置依赖的外部研究工作包');
+  else announce('当前外部研究计划已存在，本地进度与备注未被覆盖。');
+  location.hash='#workboard';
+ });
  window.addEventListener('atlas:create-work',event=>{
   const repo=event.detail?.repo;
   if(typeof repo!=='string'||!repoNames().includes(repo))return;
