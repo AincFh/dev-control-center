@@ -106,6 +106,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .mini-bistro{background:radial-gradient(circle at 70% 22%,#efd5a8,transparent 45%),linear-gradient(150deg,#b68067,#603d3c)}
 .mini-city{background:linear-gradient(170deg,#b9c6ad,#79958a 43%,#345c69 44%,#304955)}
 .mini-island{background:radial-gradient(circle at 78% 25%,#f8e2ad,transparent 36%),linear-gradient(160deg,#a3b698,#5c8976 58%,#31596a)}
+.mini-os{font:750 29px/1 system-ui,sans-serif;letter-spacing:-2px;background:radial-gradient(circle at 28% 22%,#a8c3eb88,transparent 48%),linear-gradient(145deg,#2d5276,#151f38)}
+.mini-platform{font:700 28px/1 system-ui,sans-serif;letter-spacing:-1px;background:radial-gradient(circle at 74% 20%,#e3afe8a3,transparent 48%),linear-gradient(145deg,#75518e,#2b2143)}
+.mini-mobile{font:720 34px/1 system-ui,sans-serif;background:radial-gradient(circle at 24% 20%,#e8d4a99c,transparent 43%),linear-gradient(140deg,#5a7661,#233e39)}
+
 .home-mini>span:nth-child(2){min-width:0;display:block}.home-mini small{font-size:8px;letter-spacing:1.1px;color:var(--accent);font-weight:800;display:block}
 .home-mini strong{display:block;font-size:16px;font-weight:740;margin:5px 0 4px}.home-mini>span:nth-child(2)>span{font-size:10px;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .home-lower{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}.home-info-panel{display:flex;flex-direction:column;min-height:226px;padding:26px 28px;border:1px solid var(--line);border-radius:17px;background:var(--surface)}
