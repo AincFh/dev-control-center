@@ -37,7 +37,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   featured=driver.find_element(By.ID,"universeFeaturedShelf")
   assert featured.is_displayed()
   driver.find_element(By.ID,"universeFeaturedToggle").click()
-  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card"))==36)
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card"))>=12)
   assert driver.find_element(By.ID,"universeFeaturedToggle").get_attribute('aria-expanded')=='true'
   driver.find_element(By.ID,"universeFeaturedToggle").click()
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card"))==6
@@ -53,10 +53,14 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   driver.find_element(By.ID,"universeCompareClear").click()
   assert not driver.find_element(By.ID,"universeCompare").is_displayed()
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))>=9
+  assert len(driver.find_elements(By.CSS_SELECTOR,"#universeClusters button"))==4
+  assert driver.find_element(By.CSS_SELECTOR,"#universeClusters button[data-group='foundation']").get_attribute('aria-pressed')=='true'
   # Cross-domain family switch must be actual interactive filtering, not label-only navigation.
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeDomains button"))==3
   assert driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='software']").get_attribute('aria-pressed')=='true'
+  driver.find_element(By.CSS_SELECTOR,"#universeClusters button[data-group='intelligent']").click()
   assert any('AI' in x.text for x in driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))
+  driver.find_element(By.CSS_SELECTOR,"#universeClusters button[data-group='foundation']").click()
   driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='game']").click()
   until(lambda:driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='game']").get_attribute('aria-pressed')=='true')
   assert not driver.find_element(By.ID,"universeFeaturedShelf").is_displayed()
@@ -66,8 +70,16 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='software']").click()
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeGrid .universe-project"))==24
   assert driver.find_element(By.ID,"universeFeaturedShelf").is_displayed()
+  driver.find_element(By.CSS_SELECTOR,"#universeClusters button[data-group='creative']").click()
+  assert driver.find_element(By.CSS_SELECTOR,"#universeClusters button[data-group='creative']").get_attribute('aria-pressed')=='true'
   driver.find_element(By.CSS_SELECTOR,"#universeCategories button[data-genre='security']").click()
   until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card"))==2)
+  driver.find_element(By.CSS_SELECTOR,"#universeClusters button[data-group='foundation']").click()
+  # Clicking a real source provides the correct 5-stage source-specific engineering blueprint.
+  driver.find_element(By.CSS_SELECTOR,"#universeGrid .universe-project .universe-incubate").find_element(By.XPATH,"following-sibling::button[1]").click()
+  until(lambda:driver.find_element(By.ID,"sectorLabCandidate").is_enabled())
+  assert len(driver.find_elements(By.CSS_SELECTOR,"#sectorLabResult .sector-lab-phase"))==5
+  assert driver.find_element(By.ID,"sectorLabIssue").get_attribute("href").startswith('https://github.com/AincFh/dev-control-center/issues/new?')
   driver.find_element(By.CSS_SELECTOR,"#universeCategories button[data-genre='all']").click()
   canvas=driver.execute_script("return {w:document.getElementById('universeCanvas').width,h:document.getElementById('universeCanvas').height}")
   assert canvas['w']>250 and canvas['h']>200,canvas

@@ -66,3 +66,13 @@ test('external comparison persists safely and has offline Markdown export',()=>{
  assert.ok(universe.includes('comparisonMarkdown'));
  assert.ok(universe.includes('ATLAS-GitHub-Research-'));
 });
+
+test('all-domain studio has grouped constellation and real blueprint controls',()=>{
+ const source=readFileSync('sector-lab.js','utf8');
+ for(const id of ['universeClusters','universeSectorLab','sectorLabCoverage','sectorLabCategory','sectorLabRepo','sectorLabGenerate','sectorLabFeedback','sectorLabResult','sectorLabExport','sectorLabCandidate','sectorLabIssue'])
+  assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(css.includes('.sector-lab-phases{'));
+ assert.ok(source.includes('function generate()'));
+ assert.ok(source.includes('domainPlanMarkdown'));
+ assert.ok(source.includes('atlas:add-candidate'));
+});

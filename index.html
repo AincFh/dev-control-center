@@ -137,9 +137,30 @@
  </section>
  <section class="universe-controls" aria-label="千项仓库筛选">
   <div class="universe-control-top"><label class="universe-search"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><input type="search" id="universeSearch" autocomplete="off" placeholder="搜索仓库名称、作者或项目类型…" aria-label="搜索外部 GitHub 项目"></label><select id="universeSort" aria-label="排序外部项目"><option value="balanced">多类别交替展示</option><option value="name">仓库名称 A–Z</option><option value="owner">作者名称 A–Z</option></select><button id="universeOnlySaved" type="button" aria-pressed="false" class="universe-filter-save">☆　我的关注</button><button id="universeRandom" type="button" class="universe-random">发现一个项目 ↗</button></div>
-  <div class="universe-genres universe-domain-switch" id="universeDomains" aria-label="项目领域分组"></div>
+  <div class="universe-genres universe-domain-switch" id="universeDomains" aria-label="软件与游戏项目家族"></div>
+  <div class="universe-clusters" id="universeClusters" aria-label="按系统工程、智能科技、创意应用及游戏分组"></div>
   <div class="universe-genres" id="universeCategories" aria-label="按技术领域及类型筛选"></div>
  </section>
+ <section class="sector-lab" id="universeSectorLab" aria-label="全领域工程产品化蓝图">
+   <div class="sector-lab-header">
+    <div><span class="eyebrow">42-DOMAIN / ENGINEERING PLAYBOOK</span><h2>从开源研究到真实产品<span>.</span></h2>
+     <p>每个研究方向都配有不同的功能目标、可运行验证、质量门禁和风险说明。蓝图可针对原仓库生成技术交接文档，不等于软件已经开发完成。</p></div>
+    <span id="sectorLabCoverage" class="sector-lab-coverage">正在载入领域覆盖情况…</span>
+   </div>
+   <div class="sector-lab-toolbar">
+    <label>研发领域<select id="sectorLabCategory" aria-label="选择技术领域的研发蓝图"></select></label>
+    <label>公开上游仓库路径<input id="sectorLabRepo" type="text" placeholder="可留空，或从下方仓库选择" aria-label="原始 GitHub 仓库 owner/repo" spellcheck="false" autocomplete="off" maxlength="240"/></label>
+    <button id="sectorLabGenerate" type="button">生成具体方案</button>
+   </div>
+   <p id="sectorLabFeedback" class="sector-lab-feedback" aria-live="polite"></p>
+   <div id="sectorLabResult" class="sector-lab-result"></div>
+   <div class="sector-lab-actions">
+    <button type="button" id="sectorLabExport">导出研发蓝图 · Markdown</button>
+    <button type="button" id="sectorLabCandidate" disabled>加入本地研发候选</button>
+    <a id="sectorLabIssue" href="https://github.com/AincFh/dev-control-center/issues/new" target="_blank" rel="noopener noreferrer">在 GitHub 创建 Issue 草稿</a>
+   </div>
+   <p class="sector-lab-note">所有方案均为开发计划。使用第三方源代码前需核实 LICENSE、素材、模型、商标和依赖条款；GitHub 链接不是复用授权。</p>
+  </section>
  <section class="universe-compare" id="universeCompare" aria-label="公开 GitHub 仓库横向比较" hidden>
   <div class="universe-compare-head"><div><span class="eyebrow">RESEARCH / SIDE BY SIDE</span><h2>开源项目比较<span>.</span></h2><p>最多选择四个外部仓库。GitHub 在线核验失败时保留“未知”，绝不将缓存快照冒充实时数据。</p></div><div class="universe-compare-controls"><strong id="universeCompareCount">0 / 4</strong><button type="button" id="universeCompareExport">导出报告</button><button type="button" id="universeCompareClear">清空比较</button></div></div>
   <div class="universe-compare-grid" id="universeCompareGrid"></div>
