@@ -121,6 +121,8 @@ def run_bistro(driver,check):
   driver.execute_script("window.COZY_BISTRO.test.step(23)")
   growth=driver.execute_script("return window.COZY_BISTRO.test.getRaw().assistantXp")
   assert growth>8,"Assistant must earn XP from actual kitchen actions: "+str(growth)
+  # Wait for the normal restaurant frame autosave, no direct localStorage mutation.
+  time.sleep(4.2)
   return growth
  check("staff","实际经营第二天、付费培训、支付等级工资并通过制作获得技能经验",staff_career)
  def staff_save():
@@ -131,7 +133,7 @@ def run_bistro(driver,check):
   old=driver.execute_script("""return (()=>{const s=window.COZY_BISTRO.test.getRaw();
     return {day:s.day,trained:s.assistantTrainedDay,xp:s.assistantXp,wage:s.assistantShiftWage,
       hired:s.assistantHired,spent:s.today.staffTraining};})()""")
-  assert old["day"]==2 and old["trained"]==2 and old["xp"]>=8,old
+  assert old["day"]==2 and old["trained"]==2 and old["xp"]>8,old
   assert old["wage"]==110 and old["hired"] and old["spent"]==140,old
   return old["xp"]
  check("staff-save","浏览器刷新后等级、培训支出和真实工资保持一致",staff_save)
