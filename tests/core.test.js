@@ -5,3 +5,13 @@ test('search & category',()=>{assert.equal(filtered(data,'fishing','game').lengt
 test('sort is immutable',()=>{assert.equal(sorted(data,'stars')[0].name,'web');assert.equal(data[0].name,'fish')});
 test('summarize live / active',()=>assert.deepEqual(summary(data,Date.parse('2026-11-05T12:00:00Z')),{total:2,live:1,active:1}));
 test('last-updated text',()=>{assert.equal(ago(null),'未知');assert.equal(ago('2026-11-05',Date.parse('2026-11-05T12:00:00Z')),'今天')});
+test('public GitHub project filters distinguish software, system, mobile, platform and games',()=>{
+ const input=[
+  normalize({name:'os'},{category:'system'}),normalize({name:'phone'},{category:'mobile'}),
+  normalize({name:'atlas'},{category:'platform'}),normalize({name:'fishing'},{category:'game'})
+ ];
+ assert.equal(filtered(input,'','software').length,3);
+ assert.equal(filtered(input,'','game').length,1);
+ assert.equal(filtered(input,'','mobile')[0].name,'phone');
+ assert.equal(filtered(input,'','platform')[0].name,'atlas');
+});
