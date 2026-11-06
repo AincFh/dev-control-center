@@ -1,13 +1,16 @@
 import{PAGE_SIZE,CATEGORY_COLORS,normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName}from'./universe-core.js';
 const $=id=>document.getElementById(id),STORE='atlas-universe-following-v1';
-const scene={items:[],categories:[],queries:0,updated:null,query:'',genre:'all',sort:'balanced',onlySaved:false,page:1,following:new Set(),ready:false};
+const scene={items:[],categories:[],queries:0,updated:null,query:'',genre:'all',domain:'software',sort:'balanced',onlySaved:false,page:1,following:new Set(),ready:false};
 function node(tag,content,cls){const e=document.createElement(tag);if(content!=null)e.textContent=content;if(cls)e.className=cls;return e;}
 function markCount(n){return Number(n||0).toLocaleString('en-US')}
 function notify(message){const el=$('universeNotice');if(!el)return;el.textContent=message;el.classList.add('active');clearTimeout(notify.last);notify.last=setTimeout(()=>el.classList.remove('active'),2800);}
 function persist(){try{localStorage.setItem(STORE,JSON.stringify([...scene.following]))}catch{}}
+function scopedItems(){return scene.domain==='all'?scene.items:scene.items.filter(x=>x.domain===scene.domain)}
+function visibleCategories(){return scene.categories.filter(x=>scene.domain==='all'||x.domain===scene.domain)}
 function refreshMeta(){
  const x=statsOf(scene.items,scene.following);
  $('universeTotal').textContent=markCount(x.total);
+ const totals=$('universeDomainTotals');if(totals)totals.textContent='软件与工具 '+markCount(x.domains.software)+' · 游戏与模拟 '+markCount(x.domains.game);
  $('universeGenresCount').textContent=String(x.genreCount);
  $('universeSaved').textContent=markCount(x.saved);
  $('universeQueryCount').textContent=String(scene.queries);
@@ -16,9 +19,9 @@ function refreshMeta(){
  if($('universeIntroCount'))$('universeIntroCount').textContent=markCount(x.total);
 }
 function categoryMenu(){
- const holder=$('universeCategories'),s=statsOf(scene.items,scene.following);
+ const holder=$('universeCategories'),scope=scopedItems(),s=statsOf(scope,scene.following);
  holder.replaceChildren();
- const opts=[{id:'all',name:'全部',count:scene.items.length},...scene.categories.map(c=>({...c,count:s.byGenre[c.id]||0}))];
+ const opts=[{id:'all',name:'该领域全部',count:scope.length},...visibleCategories().map(c=>({...c,count:s.byGenre[c.id]||0}))];
  for(const genre of opts){
   const b=node('button',genre.name+' · '+markCount(genre.count),genre.id===scene.genre?'active':'');
   b.type='button';b.dataset.genre=genre.id;b.setAttribute('aria-pressed',String(genre.id===scene.genre));
@@ -27,7 +30,7 @@ function categoryMenu(){
  }
 }
 function render(){
- const filtered=filterCatalog(scene.items,{query:scene.query,genre:scene.genre,sort:scene.sort,savedOnly:scene.onlySaved,bookmarks:scene.following});
+ const filtered=filterCatalog(scene.items,{query:scene.query,genre:scene.genre,domain:scene.domain,sort:scene.sort,savedOnly:scene.onlySaved,bookmarks:scene.following});
  const pg=pageOf(filtered,scene.page);
  scene.page=pg.page;
  $('universeMatches').textContent=markCount(pg.total)+' 个符合条件的 GitHub 项目';
@@ -45,7 +48,7 @@ function render(){
   star.setAttribute('aria-pressed',String(scene.following.has(p.name.toLowerCase())));star.title='本地关注列表';
   star.addEventListener('click',()=>toggleSave(p.name));top.append(tag,star);
   const ident=node('div',null,'universe-name');ident.append(node('span',p.owner+'/','universe-owner'),node('strong',p.repo));
-  const description=node('p','GitHub 外部项目 · '+p.genreName+'；许可证、可玩性及项目质量尚未逐项核验。','universe-caption');
+  const description=node('p','GitHub 外部参考 · '+p.genreName+'；许可证、维护状态和可运行性尚未逐项核验，亦非 ATLAS 原创。','universe-caption');
   const actions=node('div',null,'universe-card-actions'),more=node('button','查看资料 ↗','universe-details-button');
   more.type='button';more.onclick=()=>showDetail(p.name);
   const link=node('a','打开 GitHub ↗','universe-external');link.href='https://github.com/'+p.name;link.target='_blank';link.rel='noopener noreferrer';
@@ -105,8 +108,10 @@ function drawMap(){
   const ang=star(j+19)*Math.PI*2+(scene.motion?time*.10:0),rr=Math.sqrt(star(j+381))*Math.min(width*.49,height*.7),x=center[0]+Math.cos(ang)*rr*1.6,y=center[1]+Math.sin(ang)*rr*.84;
   ctx.fillStyle='rgba(212,238,222,'+(0.05+star(j+831)*.20)+')';ctx.beginPath();ctx.arc(x,y,.45+star(j+180)*1.05,0,Math.PI*2);ctx.fill();
  }
- const by=statsOf(scene.items).byGenre;scene.points=[];
- const cats=scene.categories;
+ const by=statsOf(scopedItems()).byGenre;scene.points=[];
+ // Keep the constellation legible: the all-domains view shows software nodes;
+ // game categories remain available via category chips or the domain selector.
+ const cats=scene.domain==='all'?scene.categories.filter(x=>x.domain==='software'):visibleCategories();
  cats.forEach((genre,i)=>{
   const angle=(i/cats.length)*Math.PI*2-Math.PI/2+ (scene.motion?Math.sin(time+i)*.014:0);
   const x=center[0]+Math.cos(angle)*radius*1.45,y=center[1]+Math.sin(angle)*radius*.85;
@@ -123,7 +128,7 @@ function drawMap(){
  const core=ctx.createRadialGradient(center[0],center[1],4,center[0],center[1],48);core.addColorStop(0,'#bce1c6');core.addColorStop(.35,'#386e5d');core.addColorStop(1,'rgba(23,51,48,0)');
  ctx.fillStyle=core;ctx.beginPath();ctx.arc(...center,49,0,Math.PI*2);ctx.fill();
  ctx.fillStyle='#f3fcf6';ctx.textAlign='center';ctx.font='700 13px system-ui';ctx.fillText('ATLAS',center[0],center[1]-2);
- ctx.font='9px system-ui';ctx.fillStyle='#c1ddcd';ctx.fillText(markCount(scene.items.length)+' REPOS',center[0],center[1]+14);
+ ctx.font='9px system-ui';ctx.fillStyle='#c1ddcd';ctx.fillText(markCount(scopedItems().length)+' REPOS',center[0],center[1]+14);
 }
 let animationId=0;let lastDraw=0;
 function animate(t){
@@ -144,9 +149,10 @@ export function initUniverse(){
  try{scene.following=new Set(JSON.parse(localStorage.getItem(STORE)||'[]').filter(x=>typeof x==='string'&&validRepoName(x)).map(x=>x.toLowerCase()))}catch{}
  $('universeSearch').addEventListener('input',e=>{scene.query=e.target.value;scene.page=1;render()});
  $('universeSort').addEventListener('change',e=>{scene.sort=e.target.value;scene.page=1;render()});
+ $('universeDomain').addEventListener('change',e=>{scene.domain=['software','game','all'].includes(e.target.value)?e.target.value:'software';scene.genre='all';scene.page=1;categoryMenu();render();drawMap();notify(scene.domain==='software'?'已显示软件与工具':scene.domain==='game'?'已显示游戏与模拟':'已显示所有领域')});
  $('universeOnlySaved').onclick=()=>{scene.onlySaved=!scene.onlySaved;scene.page=1;render()};
  $('universePrev').onclick=()=>goPage(-1);$('universeNext').onclick=()=>goPage(1);
- $('universeRandom').onclick=()=>{const list=filterCatalog(scene.items,{genre:scene.genre,sort:scene.sort,query:scene.query});if(list.length)showDetail(list[Math.floor(Math.random()*list.length)].name)};
+ $('universeRandom').onclick=()=>{const list=filterCatalog(scene.items,{genre:scene.genre,domain:scene.domain,sort:scene.sort,query:scene.query});if(list.length)showDetail(list[Math.floor(Math.random()*list.length)].name)};
  $('universeDetailClose').onclick=()=>$('universeDetail').close();
  $('universeDetail').addEventListener('click',e=>{if(e.target===$('universeDetail'))$('universeDetail').close()});
  initMap();
