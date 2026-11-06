@@ -34,3 +34,26 @@ test('malformed, duplicated, and non-GitHub source values are removed',()=>{
  const result=normalizeCatalog({schemaVersion:1,kind:'external-discovery',categories:[['life','生活']],rows:[['A/Repo','life'],['a/repo','life'],['github.com/owner/repo','life'],['A/Thing','fake']]});
  assert.equal(result.items.length,1);
 });
+
+test('GitHub Universe V2 contains independent software and game catalogs from actual public searches',()=>{
+ const domains=statsOf(catalog.items).domains;
+ assert.ok(domains.software>=1000,'Expected at least 1,000 additional non-game source names');
+ assert.ok(domains.game>=1700,'The original gaming corpus must be preserved');
+ assert.ok(catalog.categories.length>=20);
+ assert.ok(catalog.queries>=55);
+ for(const id of ['ai','agents','devtools','desktop','mobile','webapp','automation','data','creative','education','infra','productivity'])
+  assert.ok(catalog.categories.some(c=>c.id===id&&c.domain==='software'),id);
+ assert.ok(dataSourceIsBacked());
+ function dataSourceIsBacked(){return file.lastCrossDomainSourceRun?.successful>=20&&file.lastCrossDomainSourceRun?.added>=1000}
+});
+test('domain switch and category filtering never mix gaming and software projects',()=>{
+ const software=filterCatalog(catalog.items,{domain:'software'});
+ const games=filterCatalog(catalog.items,{domain:'game'});
+ assert.ok(software.length>=1000&&games.length>=1700);
+ assert.ok(software.every(x=>x.domain==='software'));
+ assert.ok(games.every(x=>x.domain==='game'));
+ assert.equal(software.length+games.length,catalog.items.length);
+ assert.ok(filterCatalog(catalog.items,{domain:'software',genre:'game'}).length===0);
+ assert.ok(filterCatalog(catalog.items,{domain:'software',genre:'ai'}).every(x=>x.genre==='ai'));
+ assert.ok(new Set(balanceGenres(software).slice(0,24).map(x=>x.genre)).size>=8);
+});
