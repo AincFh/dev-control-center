@@ -29,10 +29,14 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   driver.get(f"http://127.0.0.1:{server.server_address[1]}/#universe")
   until(lambda:driver.execute_script("return document.getElementById('universeTotal')?.textContent?.replace(/,/g,'')*1>=1000"))
   count=int(driver.find_element(By.ID,"universeTotal").text.replace(",",""))
-  assert count>=1000,count
+  assert count>=3000,count
+  assert driver.find_element(By.ID,'universeDomain').get_attribute('value')=='software'
+  totals=driver.find_element(By.ID,'universeDomainTotals').text
+  assert '软件与工具' in totals and '游戏与模拟' in totals,totals
   cards=driver.find_elements(By.CSS_SELECTOR,"#universeGrid .universe-project")
   assert len(cards)==24,len(cards)
-  assert len(driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))>=9
+  assert len(driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))>=13
+  assert all('AI' in b.text or '系统' in b.text or '工具' in b.text or 'Web' in b.text or '效率' in b.text or '移动' in b.text or '工作流' in b.text or '创意' in b.text or '教育' in b.text or '基础设施' in b.text or '数据' in b.text or '该领域全部' in b.text or '智能' in b.text for b in driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))
   canvas=driver.execute_script("return {w:document.getElementById('universeCanvas').width,h:document.getElementById('universeCanvas').height}")
   assert canvas['w']>250 and canvas['h']>200,canvas
   # Real DOM events are cancelled for copy, paste, context menus, and text selection.
@@ -41,6 +45,15 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   })""")
   assert all(v for _,v in blocked),blocked
   driver.save_screenshot(str(OUT/"01-universe-desktop.png"))
+  # Domain selection must change actual cards, categories and map without dropping game content.
+  Select(driver.find_element(By.ID,'universeDomain')).select_by_value('game')
+  until(lambda:driver.find_element(By.ID,'universeMatches').text.startswith('1,770'))
+  assert len(driver.find_elements(By.CSS_SELECTOR,'#universeCategories button'))>=9
+  assert driver.find_element(By.CSS_SELECTOR,'#universeGrid .universe-tag').text in ('人生与生活','城市与建造','沙盒与生存','经营与管理','工厂与科技','剧情与冒险','休闲与策略','Web 3D')
+  Select(driver.find_element(By.ID,'universeDomain')).select_by_value('all')
+  until(lambda:driver.find_element(By.ID,'universeMatches').text.replace(',','').startswith(str(count)))
+  Select(driver.find_element(By.ID,'universeDomain')).select_by_value('software')
+  until(lambda:driver.find_element(By.ID,'universeMatches').text.startswith('1,428'))
   driver.find_element(By.ID,"universeNext").click()
   until(lambda:driver.find_element(By.ID,"universePage").text.startswith("2 /"))
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeGrid .universe-project"))==24
