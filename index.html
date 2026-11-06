@@ -126,6 +126,15 @@
   <div class="universe-intro"><div class="universe-kicker">AN OPEN SOURCE UNIVERSE · INDEX 001</div><h2><strong id="universeTotal">—</strong><small>条真实 GitHub 仓库索引</small></h2><p>收录的每一个名称都来自 GitHub 搜索。它们是第三方参考项目，<b>不是 ATLAS 已开发或已授权复用的作品</b>。</p><div class="universe-facts"><div><b id="universeGenresCount">—</b><span>项目方向</span></div><div><b id="universeSaved">0</b><span>本地关注</span></div><div><b id="universeQueryCount">—</b><span>GitHub 搜索主题</span></div></div><span id="universeUpdated" class="universe-updated">正在读取 GitHub 参考索引…</span></div>
   <div class="universe-map-wrap"><canvas id="universeCanvas" role="img" aria-label="交互式 GitHub 项目星图：可在软件、游戏与全部领域之间切换，并点击不同方向查看公开仓库来源。" width="640" height="330"></canvas><div class="universe-map-label">INTERACTIVE CONSTELLATION <span>移动鼠标或点击星系筛选类别</span></div></div>
  </section>
+ <section class="external-shelf" id="universeFeaturedShelf" aria-label="经过 GitHub 来源核实的外部软件项目" hidden>
+  <div class="external-shelf-head">
+   <div><span class="eyebrow">OPEN SOURCE / NOT ATLAS-OWNED</span><h2>外部开源软件精选<span>.</span></h2><p>从真实 GitHub 仓库选择不同领域的可研究产品、工具与框架。不是 ATLAS 自有产品，也未获默认复用授权。</p></div>
+   <button id="universeFeaturedToggle" type="button" aria-expanded="false">查看更多项目</button>
+  </div>
+  <div class="external-shelf-meta"><span id="universeFeaturedCount">正在读取公开来源…</span><span>仓库元数据快照：2026-11-06 · 实时详情可单独核验</span></div>
+  <div class="external-shelf-grid" id="universeFeaturedGrid"></div>
+  <p class="external-shelf-note">Star 数与仓库简介仅反映采集时的 GitHub 信息；许可证标识不等于代码、素材、商标或商业用途已获授权。立项前应在原仓库逐项审查。</p>
+ </section>
  <section class="universe-controls" aria-label="千项仓库筛选">
   <div class="universe-control-top"><label class="universe-search"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><input type="search" id="universeSearch" autocomplete="off" placeholder="搜索仓库名称、作者或项目类型…" aria-label="搜索外部 GitHub 项目"></label><select id="universeSort" aria-label="排序外部项目"><option value="balanced">多类别交替展示</option><option value="name">仓库名称 A–Z</option><option value="owner">作者名称 A–Z</option></select><button id="universeOnlySaved" type="button" aria-pressed="false" class="universe-filter-save">☆　我的关注</button><button id="universeRandom" type="button" class="universe-random">发现一个项目 ↗</button></div>
   <div class="universe-genres universe-domain-switch" id="universeDomains" aria-label="项目领域分组"></div>
