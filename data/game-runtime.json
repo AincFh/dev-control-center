@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": "2026-11-05T11:29:48Z",
-  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42018982353",
+  "generatedAt": "2026-11-06T11:20:52Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42209059521",
   "source": "real_chromium_public_games",
   "browser": "Chromium / Selenium / fresh profile per game",
   "results": [
@@ -10,7 +10,7 @@
       "id": "bistro",
       "repo": "cozy-bistro-sim",
       "status": "pass",
-      "elapsedMs": 7082,
+      "elapsedMs": 28455,
       "checks": [
         {
           "id": "interaction",
@@ -49,8 +49,8 @@
         "bistro-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 44,
-        "loadEventMs": 45,
+        "domContentLoadedMs": 63,
+        "loadEventMs": 64,
         "resourceCount": 6
       }
     },
@@ -58,7 +58,7 @@
       "id": "paradise",
       "repo": "paradise-isle",
       "status": "pass",
-      "elapsedMs": 3558,
+      "elapsedMs": 3994,
       "checks": [
         {
           "id": "bootstrap",
@@ -97,8 +97,8 @@
         "paradise-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 46,
-        "loadEventMs": 47,
+        "domContentLoadedMs": 84,
+        "loadEventMs": 88,
         "resourceCount": 2
       }
     },
@@ -106,7 +106,7 @@
       "id": "wildlands",
       "repo": "wildlands-anglerfishing-world-3d",
       "status": "pass",
-      "elapsedMs": 15703,
+      "elapsedMs": 17244,
       "checks": [
         {
           "id": "webgl",
@@ -139,8 +139,8 @@
         "wildlands-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 1033,
-        "loadEventMs": 4586,
+        "domContentLoadedMs": 1141,
+        "loadEventMs": 3638,
         "resourceCount": 43
       }
     },
@@ -148,7 +148,7 @@
       "id": "fishing",
       "repo": "fishing-world-3d",
       "status": "pass",
-      "elapsedMs": 16943,
+      "elapsedMs": 17974,
       "checks": [
         {
           "id": "webgl",
@@ -181,8 +181,8 @@
         "fishing-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 9249,
-        "loadEventMs": 9250,
+        "domContentLoadedMs": 8897,
+        "loadEventMs": 8898,
         "resourceCount": 8
       }
     },
@@ -190,7 +190,7 @@
       "id": "factory",
       "repo": "Midnight-Factory",
       "status": "pass",
-      "elapsedMs": 4207,
+      "elapsedMs": 4801,
       "checks": [
         {
           "id": "interaction",
@@ -235,8 +235,8 @@
         "factory-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 502,
-        "loadEventMs": 683,
+        "domContentLoadedMs": 814,
+        "loadEventMs": 815,
         "resourceCount": 6
       }
     },
@@ -244,7 +244,7 @@
       "id": "citylife",
       "repo": "City-of-Small-Chances",
       "status": "pass",
-      "elapsedMs": 51946,
+      "elapsedMs": 57986,
       "checks": [
         {
           "id": "webgl",
@@ -277,8 +277,8 @@
         "citylife-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 1061,
-        "loadEventMs": 4074,
+        "domContentLoadedMs": 1197,
+        "loadEventMs": 4458,
         "resourceCount": 127
       }
     },
@@ -286,7 +286,7 @@
       "id": "mori",
       "repo": "Tamagochi---Open-Source-Game",
       "status": "pass",
-      "elapsedMs": 7767,
+      "elapsedMs": 9347,
       "checks": [
         {
           "id": "bootstrap",
@@ -331,8 +331,8 @@
         "mori-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 90,
-        "loadEventMs": 90,
+        "domContentLoadedMs": 66,
+        "loadEventMs": 67,
         "resourceCount": 9
       }
     },
@@ -340,7 +340,7 @@
       "id": "qube",
       "repo": "qubecraft",
       "status": "pass",
-      "elapsedMs": 36034,
+      "elapsedMs": 37920,
       "checks": [
         {
           "id": "bootstrap",
@@ -385,8 +385,8 @@
         "qube-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 703,
-        "loadEventMs": 985,
+        "domContentLoadedMs": 865,
+        "loadEventMs": 1202,
         "resourceCount": 19
       }
     },
@@ -394,7 +394,7 @@
       "id": "cimulity",
       "repo": "cimulity",
       "status": "pass",
-      "elapsedMs": 5096,
+      "elapsedMs": 6314,
       "checks": [
         {
           "id": "bootstrap",
@@ -433,8 +433,8 @@
         "cimulity-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 352,
-        "loadEventMs": 647,
+        "domContentLoadedMs": 432,
+        "loadEventMs": 675,
         "resourceCount": 20
       }
     },
@@ -442,7 +442,7 @@
       "id": "spacefortress",
       "repo": "spacefortress",
       "status": "pass",
-      "elapsedMs": 39363,
+      "elapsedMs": 49241,
       "checks": [
         {
           "id": "bootstrap",
@@ -481,8 +481,8 @@
         "spacefortress-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 1195,
-        "loadEventMs": 1195,
+        "domContentLoadedMs": 946,
+        "loadEventMs": 946,
         "resourceCount": 138
       }
     }
