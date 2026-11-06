@@ -20,6 +20,18 @@ ATLAS 是多项目 **Developer Studio**，覆盖系统软件 / Web OS、全栈 W
 
 在 [GitHub 全领域研发实验室](https://aincfh.github.io/dev-control-center/#universe) 从真实来源生成领域蓝图后，可以点击 **「转为五阶段执行工作包」**。ATLAS 会在本地执行工作台创建来源/许可证、运行验证、产品开发、质量验收、交付维护五项具备依赖关系的工作包，保留源仓库链接和具体任务。重复导入不会覆盖此前已经修改的状态、负责人和备注。所有操作只处理浏览器本地数据，不代表 GitHub Issue 已提交，也不意味着已获得上游复用许可。
 
+
+## 新增：本地数据分析工作台（真实可用）
+
+[打开 Data Studio](https://aincfh.github.io/dev-control-center/#data-studio)。支持在浏览器内导入本地 **CSV 或 JSON 对象数组**（粘贴或本地文件），自动识别数值、日期、文本与布尔字段，筛选/数值比较、列排序、分页、分组计数/求和/平均值、条形统计图、数值列概览与**筛选结果 CSV/JSON 导出**。
+
+- 数据仅在当前浏览器内存中处理；不上传、不自动保存，刷新后需重新导入。样例数据明确是虚构演示。
+- 硬上限：2,000 行、48 列、250,000 字符。超过限制给出明确错误，避免浏览器长时间冻结。
+- CSV 导出防止常见电子表格公式注入。分析结果以真实导入记录计算，拒绝冒充 GitHub 实时运行数据。
+- Node 单元测试验证解析、类型推断、筛选、求和、均值、日期排序、异常输入及公式防护；Selenium Chromium 验证实际文件导入、结果 CSV/JSON 下载、桌面和 390px 移动端。
+
+实现：`data-studio-core.js`、`data-studio.js`、`tests/data-studio.test.js`、`tests/data-studio.browser.py`。这是 ATLAS 内可独立使用的非游戏数据工具，不代表已经完成单独的桌面 EXE 或云端分析服务。
+
 ## 新增：可运行的非游戏开发工具工坊
 
 [直接打开开发工具工坊](https://aincfh.github.io/dev-control-center/#utilities)：包含 **7 项真正可操作的本地工具**：JSON 校验/格式化、CSV→JSON、逐行文本差异比较、Unicode Base64 编解码、URL 编解码、SHA-256 字符串摘要与文本统计。这些能力使用浏览器内置 API 和确定性的纯函数实现，输入与结果不会上传后端、不保存至 localStorage；支持输出下载。大文本、异常 CSV、无效 Base64 和 SHA-256 安全上下文都有明确的错误/容量门禁。
