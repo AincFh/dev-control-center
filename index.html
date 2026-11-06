@@ -43,6 +43,7 @@
 <a class="nav" href="#api-lab" data-view-link="api-lab"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg><span>API 接口实验室</span><small class="nav-counter">GET</small></a>
 <a class="nav" href="#utilities" data-view-link="utilities"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg><span>开发工具工坊</span><small class="nav-counter">LOCAL</small></a>
 <a class="nav" href="#data-studio" data-view-link="data-studio"><svg class="i" aria-hidden="true"><use href="#i-activity"></use></svg><span>数据分析工作台</span><small class="nav-counter">DATA</small></a>
+<a class="nav" href="#image-studio" data-view-link="image-studio"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>图片处理工作台</span><small class="nav-counter">MEDIA</small></a>
 <a class="nav" href="#mission" data-view-link="mission"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>研发总控</span><small class="nav-counter" id="missionNavCount" hidden>0</small></a>
 <a class="nav" href="#trace" data-view-link="trace"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>开发链路</span></a>
 <a class="nav" href="#delivery" data-view-link="delivery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>交付健康</span></a>
@@ -122,6 +123,47 @@
  <p class="discovery-intro">收藏、研究与 Fork 是不同阶段。所有原始作品保留作者及许可证信息；未完成许可核验的作品只作调研。</p>
  <div class="discovery-filters"><label class="discovery-search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input id="discoverySearch" type="search" placeholder="寻找生活养成、建造、沙盒、工厂…" aria-label="搜索 GitHub 游戏实验室" autocomplete="off"></label><div id="discoveryGenres" class="discovery-genres" aria-label="游戏类型筛选"></div></div>
  <div class="results-count" id="discoveryCount">正在整理游戏项目…</div><div id="discoveryGrid" class="discovery-grid" aria-live="polite"></div><p class="footnote">上游试玩链接不等于我们已经发布；Fork 不代表原创。未核验许可的源码或资产不会直接复制到本平台。</p>
+</section>
+<section class="view" id="image-studio" aria-label="ATLAS 本地图片处理工作台">
+ <header class="view-header"><span class="eyebrow">ATLAS / PRIVATE IMAGE STUDIO</span><div class="view-heading-row"><div><h1>图片处理工作台<span>.</span></h1><p>将 PNG、JPEG、WebP 图片在浏览器内缩放、适配、旋转、水平翻转或转为灰度，再导出为实际图片文件。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg></div></div></header>
+ <section class="image-intro">
+  <div><span class="eyebrow">REAL PIXELS / PRIVATE BY DESIGN</span><h2>处理真正的图片，<em>不是展示一个设计占位。</em></h2><p>源文件只会在当前浏览器内解码，不上传至 GitHub 或第三方服务。输出使用原生 Canvas 编码，保留原文件不变；刷新页面不保存图片。</p></div>
+  <strong>IMAGE<br>STUDIO</strong>
+ </section>
+ <div class="image-workspace">
+  <section class="image-panel" aria-label="导入与设置">
+   <div class="image-panel-title"><span class="eyebrow">01 / INPUT</span><h2>源图片与变换设置</h2></div>
+   <label class="image-file-select" for="imageFile">选择本地 PNG / JPEG / WebP<input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" hidden></label>
+   <p id="imageSourceInfo" class="image-meta">尚未选择本地图片</p>
+   <div class="image-preview-wrap"><img id="imageOriginalPreview" alt="用户本地导入图片的原始预览" hidden><p class="image-placeholder">原图预览将在这里显示</p></div>
+   <div class="image-controls">
+    <div class="image-control-pair">
+     <label>导出宽度（px）<input type="number" id="imageWidth" value="1024" min="1" max="4096" step="1" inputmode="numeric"></label>
+     <label>导出高度（px）<input type="number" id="imageHeight" value="768" min="1" max="4096" step="1" inputmode="numeric"></label>
+    </div>
+    <label class="image-check"><input type="checkbox" id="imageAspectLock" checked>保持原始宽高比例</label>
+    <div class="image-control-pair">
+     <label>适配方式<select id="imageFit"><option value="contain">完整适配（留白/透明）</option><option value="cover">填满画面（裁剪边缘）</option><option value="stretch">强制拉伸</option></select></label>
+     <label>旋转角度<select id="imageRotation"><option value="0">0°</option><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select></label>
+    </div>
+    <div class="image-control-pair">
+     <label>输出格式<select id="imageFormat"><option value="png">PNG · 无损</option><option value="jpeg">JPEG · 高兼容</option><option value="webp">WebP · 高效压缩</option></select></label>
+     <label>JPEG 背景色<input id="imageBackground" type="color" value="#ffffff"></label>
+    </div>
+    <label>图片质量 <strong id="imageQualityValue">90%</strong><input id="imageQuality" type="range" min="1" max="100" value="90" step="1" disabled></label>
+    <div class="image-inline-checks"><label class="image-check"><input type="checkbox" id="imageFlip">水平翻转</label><label class="image-check"><input type="checkbox" id="imageGray">灰度处理</label></div>
+   </div>
+   <div class="image-actions"><button type="button" id="imageProcess" disabled>处理图片</button><button type="button" id="imageReset">清空原图</button></div>
+  </section>
+  <section class="image-panel image-output" aria-label="生成的实际图片">
+   <div class="image-panel-title"><span class="eyebrow">02 / OUTPUT</span><h2>处理结果与导出</h2></div>
+   <p id="imageOutputInfo" class="image-meta">尚未生成处理结果</p>
+   <div class="image-preview-wrap image-output-frame"><canvas id="imageProcessedCanvas" width="1" height="1" aria-label="已经使用本地 Canvas 渲染的图片" hidden></canvas><p class="image-placeholder">点击「处理图片」后显示实际像素结果</p></div>
+   <div class="image-actions"><button type="button" id="imageDownload" disabled>下载处理后的图片</button></div>
+   <p id="imageFeedback" class="image-feedback" role="status" aria-live="polite">请导入一张本地图片。</p>
+   <p class="image-privacy">本机计算 · 无 API Key · 无云端上传。最大源文件 25 MB，最长边 4,096 像素，最多 1,200 万输出像素。Animated GIF、RAW 和 PSD 未支持；透明底导出 JPEG 时填充指定背景色。</p>
+  </section>
+ </div>
 </section>
 <section class="view" id="data-studio" aria-label="ATLAS 本地数据分析工作台">
  <header class="view-header"><span class="eyebrow">ATLAS / LOCAL DATA STUDIO</span><div class="view-heading-row"><div><h1>数据分析工作台<span>.</span></h1><p>直接分析 CSV / JSON：类型识别、搜索筛选、排序分页、分组聚合、可视化和安全导出。所有数据仅在浏览器本地处理。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-activity"></use></svg></div></div></header>
