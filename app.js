@@ -10,6 +10,7 @@ import {initMission} from './mission.js';
 import {initWorkboard} from './workboard.js';
 import {initCommandPalette} from './command.js';
 import {initTrace} from './trace.js';
+import {initReleaseReview} from './release-review.js';
 import {normalizeGameReport,gameEvidenceFor} from './game-runtime-core.js';
 import {initGameRuntime} from './game-runtime-ui.js';
 const OWNER='AincFh', API='https://api.github.com';
@@ -99,7 +100,7 @@ function render(){
    n('span','开放任务 '+h.openIssues+' 项','status-token'),
    n('span','等待 PR '+h.openPRs+' 项','status-token')
  );
- renderWorkstreams();renderArcade();renderDelivery(h);renderQueue();renderDiscovery();updateMission(projects,snapshot);updateTrace(projects,snapshot);updateWorkboard(projects);
+ renderWorkstreams();renderArcade();renderDelivery(h);updateReleaseReview(projects,snapshot);renderQueue();renderDiscovery();updateMission(projects,snapshot);updateTrace(projects,snapshot);updateWorkboard(projects);
 }
 function renderWorkstreams(){
  const holder=$('workstreamGrid');if(!holder)return;holder.replaceChildren();
@@ -392,4 +393,4 @@ $('query').addEventListener('input',e=>{selection.query=e.target.value;render()}
 $('sort').addEventListener('change',e=>{selection.sort=e.target.value;render()});
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-type]');if(!b)return;selection.type=b.dataset.type;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x===b));render();});
 $('reset').onclick=()=>{selection.query='';selection.type='all';$('query').value='';document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.type==='all'));render();};
-$('refresh').onclick=load;initDiscovery();initArcade();initIncubator();initUniverse();const updateMission=initMission();const updateTrace=initTrace();const updateWorkboard=initWorkboard();const updateGameRuntime=initGameRuntime();initStudioExperience();load();
+$('refresh').onclick=load;initDiscovery();initArcade();initIncubator();initUniverse();const updateMission=initMission();const updateTrace=initTrace();const updateReleaseReview=initReleaseReview();const updateWorkboard=initWorkboard();const updateGameRuntime=initGameRuntime();initStudioExperience();load();
