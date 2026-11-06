@@ -37,13 +37,16 @@ export function workload(searches,{secondPages=9,day=Math.floor(Date.now()/86400
   }
   if(!progressed)break;
  }
- const second=[],picked=new Set();
- // Page 2 rotates across distinct categories, not just game queries.
- for(let i=0;i<base.length&&second.length<secondPages;i++){
-  const task=base[(day+i+base.length)%base.length];
-  if(picked.has(task.genre))continue;picked.add(task.genre);
-  second.push({...task,page:2});
+ const second=[],picked=new Set(),extras=[];
+ // Page 2 first samples distinct disciplines; remaining budget is rotated
+ // across other topics when fewer categories than page-two slots exist.
+ for(let i=0;i<base.length;i++){
+  const task=base[((day%base.length+base.length)%base.length+i)%base.length];
+  if(picked.has(task.genre))extras.push(task);
+  else {picked.add(task.genre);second.push({...task,page:2});}
+  if(second.length>=secondPages)break;
  }
+ for(const task of extras){if(second.length>=secondPages)break;second.push({...task,page:2});}
  return [...base,...second];
 }
 export async function searchPublic({q,page},token,fetcher=fetch){
