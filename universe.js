@@ -162,7 +162,7 @@ function render(){
   incubate.onclick=()=>window.dispatchEvent(new CustomEvent('atlas:add-candidate',{detail:{name:p.name,genre:p.genreName}}));
   const blueprint=node('button','制定蓝图','universe-incubate');blueprint.type='button';blueprint.onclick=()=>setSectorLabSource(p.genre,p.name);
   const compare=node('button',scene.comparison.has(p.name.toLowerCase())?'取消对比':'加入对比','universe-incubate');compare.type='button';compare.setAttribute('aria-pressed',String(scene.comparison.has(p.name.toLowerCase())));compare.onclick=()=>toggleCompare(p.name);
-  actions.append(more,blueprint,incubate,compare,link);card.append(top,ident,description,actions);grid.append(card);
+  actions.append(more,incubate,blueprint,compare,link);card.append(top,ident,description,actions);grid.append(card);
  }
  refreshMeta();
 }
