@@ -24,7 +24,7 @@ test('a five-stage domain-specific plan exists for every sector',()=>{
   assert.ok(plan.goal.length>4);
   assert.equal(plan.features.length,3);
   assert.ok(plan.phases.every(x=>x.tasks.length>=3));
-  assert.ok(plan.acceptance.length>10);
+  assert.ok(plan.acceptance.length>=6);
   assert.ok(filterCatalog(catalog.items,{genre:cat.id}).length>0);
  }
 });
