@@ -124,7 +124,7 @@ async function main(){
  const copied=await copyFrontendModules(ROOT,path.join(ROOT,'dist'));
  if(!copied.includes('arcade.js'))throw Error('Game arcade module missing from generated Pages artifact');
  if(!copied.includes('atlas-v3.css'))throw Error('V3 workspace stylesheet missing from generated Pages artifact');
- if(!copied.includes('workboard.css')||!copied.includes('workboard.js')||!copied.includes('workboard-core.js'))throw Error('Cross-domain workboard asset missing from published import graph');
+ if(!copied.includes('workboard.css')||!copied.includes('workboard.js')||!copied.includes('workboard-core.js')||!copied.includes('capacity-core.js'))throw Error('Cross-domain workboard asset missing from published import graph');
  if(!copied.includes('universe.js')||!copied.includes('universe-core.js')||!copied.includes('studio-motion.js'))throw Error('Galaxy discovery or motion module missing');
  await copyFile(path.join(ROOT,'data','github-universe.json'),path.join(ROOT,'dist','data','github-universe.json'));
  await copyFile(path.join(ROOT,'data','game-runtime.json'),path.join(ROOT,'dist','data','game-runtime.json'));
