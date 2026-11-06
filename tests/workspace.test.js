@@ -37,6 +37,7 @@ test('homepage prioritizes real non-game projects without removing the playable 
  assert.match(css,/\.mini-os\{/);
  assert.match(css,/\.mini-platform\{/);
  assert.match(css,/\.mini-mobile\{/);
- assert.ok(html.includes('当前外部星图聚焦游戏与模拟项目'));
+ assert.ok(html.includes('GitHub 星图现已覆盖系统、AI、桌面应用'));
+ assert.ok(html.includes('id="universeDomains"'));
  assert.ok(html.includes('id="arcade"'));
 });

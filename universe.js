@@ -1,6 +1,6 @@
 import{PAGE_SIZE,CATEGORY_COLORS,normalizeCatalog,filterCatalog,pageOf,statsOf,validRepoName}from'./universe-core.js';
 const $=id=>document.getElementById(id),STORE='atlas-universe-following-v1';
-const scene={items:[],categories:[],queries:0,updated:null,query:'',genre:'all',sort:'balanced',onlySaved:false,page:1,following:new Set(),ready:false};
+const scene={items:[],categories:[],queries:0,updated:null,query:'',genre:'all',family:'software',sort:'balanced',onlySaved:false,page:1,following:new Set(),ready:false};
 function node(tag,content,cls){const e=document.createElement(tag);if(content!=null)e.textContent=content;if(cls)e.className=cls;return e;}
 function markCount(n){return Number(n||0).toLocaleString('en-US')}
 function notify(message){const el=$('universeNotice');if(!el)return;el.textContent=message;el.classList.add('active');clearTimeout(notify.last);notify.last=setTimeout(()=>el.classList.remove('active'),2800);}
@@ -15,10 +15,20 @@ function refreshMeta(){
  if($('universeBannerCount'))$('universeBannerCount').textContent=markCount(x.total);
  if($('universeIntroCount'))$('universeIntroCount').textContent=markCount(x.total);
 }
+function familyMenu(){
+ const holder=$('universeDomains'),stats=statsOf(scene.items);holder.replaceChildren();
+ for(const family of [{id:'software',name:'软件 · AI · 工具',count:stats.byFamily.software},{id:'game',name:'游戏与仿真',count:stats.byFamily.game},{id:'all',name:'全部领域',count:scene.items.length}]){
+  const button=node('button',family.name+' · '+markCount(family.count),family.id===scene.family?'active':'');
+  button.type='button';button.dataset.family=family.id;button.setAttribute('aria-pressed',String(family.id===scene.family));
+  button.onclick=()=>{scene.family=family.id;scene.genre='all';scene.page=1;familyMenu();categoryMenu();render();drawMap();};holder.append(button);
+ }
+}
 function categoryMenu(){
  const holder=$('universeCategories'),s=statsOf(scene.items,scene.following);
  holder.replaceChildren();
- const opts=[{id:'all',name:'全部',count:scene.items.length},...scene.categories.map(c=>({...c,count:s.byGenre[c.id]||0}))];
+ const active=scene.categories.filter(c=>scene.family==='all'||c.family===scene.family);
+ const groupCount=scene.family==='all'?scene.items.length:s.byFamily[scene.family];
+ const opts=[{id:'all',name:'全部分类',count:groupCount},...active.map(c=>({...c,count:s.byGenre[c.id]||0}))];
  for(const genre of opts){
   const b=node('button',genre.name+' · '+markCount(genre.count),genre.id===scene.genre?'active':'');
   b.type='button';b.dataset.genre=genre.id;b.setAttribute('aria-pressed',String(genre.id===scene.genre));
@@ -27,7 +37,7 @@ function categoryMenu(){
  }
 }
 function render(){
- const filtered=filterCatalog(scene.items,{query:scene.query,genre:scene.genre,sort:scene.sort,savedOnly:scene.onlySaved,bookmarks:scene.following});
+ const filtered=filterCatalog(scene.items,{query:scene.query,genre:scene.genre,family:scene.family,sort:scene.sort,savedOnly:scene.onlySaved,bookmarks:scene.following});
  const pg=pageOf(filtered,scene.page);
  scene.page=pg.page;
  $('universeMatches').textContent=markCount(pg.total)+' 个符合条件的 GitHub 项目';
@@ -45,7 +55,7 @@ function render(){
   star.setAttribute('aria-pressed',String(scene.following.has(p.name.toLowerCase())));star.title='本地关注列表';
   star.addEventListener('click',()=>toggleSave(p.name));top.append(tag,star);
   const ident=node('div',null,'universe-name');ident.append(node('span',p.owner+'/','universe-owner'),node('strong',p.repo));
-  const description=node('p','GitHub 外部项目 · '+p.genreName+'；许可证、可玩性及项目质量尚未逐项核验。','universe-caption');
+  const description=node('p','GitHub 第三方参考 · '+p.genreName+'；许可证、运行条件及项目质量尚未逐项核验。','universe-caption');
   const actions=node('div',null,'universe-card-actions'),more=node('button','查看资料 ↗','universe-details-button');
   more.type='button';more.onclick=()=>showDetail(p.name);
   const link=node('a','打开 GitHub ↗','universe-external');link.href='https://github.com/'+p.name;link.target='_blank';link.rel='noopener noreferrer';
@@ -106,11 +116,12 @@ function drawMap(){
   ctx.fillStyle='rgba(212,238,222,'+(0.05+star(j+831)*.20)+')';ctx.beginPath();ctx.arc(x,y,.45+star(j+180)*1.05,0,Math.PI*2);ctx.fill();
  }
  const by=statsOf(scene.items).byGenre;scene.points=[];
- const cats=scene.categories;
+ const cats=scene.categories.filter(g=>scene.family==='all'||g.family===scene.family);
  cats.forEach((genre,i)=>{
-  const angle=(i/cats.length)*Math.PI*2-Math.PI/2+ (scene.motion?Math.sin(time+i)*.014:0);
-  const x=center[0]+Math.cos(angle)*radius*1.45,y=center[1]+Math.sin(angle)*radius*.85;
-  const size=20+Math.sqrt(by[genre.id]||0)*1.05;
+  const multipleRings=cats.length>14,ring=multipleRings?(i%2?0.62:1):1;
+  const angle=(multipleRings?Math.floor(i/2)/Math.ceil(cats.length/2):i)/ (multipleRings?Math.ceil(cats.length/2):cats.length)*Math.PI*2-Math.PI/2+(scene.motion?Math.sin(time+i)*.014:0);
+  const x=center[0]+Math.cos(angle)*radius*1.45*ring,y=center[1]+Math.sin(angle)*radius*.85*ring;
+  const size=Math.min(29,16+Math.sqrt(by[genre.id]||0)*.75);
   const on=scene.genre===genre.id;
   ctx.beginPath();ctx.strokeStyle=on?'rgba(228,247,217,.74)':'rgba(177,220,196,.21)';ctx.lineWidth=1.1;
   ctx.moveTo(center[0],center[1]);ctx.lineTo(x,y);ctx.stroke();
@@ -146,13 +157,13 @@ export function initUniverse(){
  $('universeSort').addEventListener('change',e=>{scene.sort=e.target.value;scene.page=1;render()});
  $('universeOnlySaved').onclick=()=>{scene.onlySaved=!scene.onlySaved;scene.page=1;render()};
  $('universePrev').onclick=()=>goPage(-1);$('universeNext').onclick=()=>goPage(1);
- $('universeRandom').onclick=()=>{const list=filterCatalog(scene.items,{genre:scene.genre,sort:scene.sort,query:scene.query});if(list.length)showDetail(list[Math.floor(Math.random()*list.length)].name)};
+ $('universeRandom').onclick=()=>{const list=filterCatalog(scene.items,{genre:scene.genre,family:scene.family,sort:scene.sort,query:scene.query});if(list.length)showDetail(list[Math.floor(Math.random()*list.length)].name)};
  $('universeDetailClose').onclick=()=>$('universeDetail').close();
  $('universeDetail').addEventListener('click',e=>{if(e.target===$('universeDetail'))$('universeDetail').close()});
  initMap();
  fetch('./data/github-universe.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(json=>{
   const catalog=normalizeCatalog(json);scene.items=catalog.items;scene.categories=catalog.categories;scene.queries=catalog.queries;scene.updated=catalog.updated;scene.ready=true;
   $('universeUpdated').textContent=catalog.updated?('索引采集：'+catalog.updated+' · 仓库元数据按需查询'):'GitHub 搜索索引';
-  categoryMenu();refreshMeta();render();drawMap();
+  familyMenu();categoryMenu();refreshMeta();render();drawMap();
  }).catch(e=>{$('universeMatches').textContent='外部项目索引加载失败：'+e.message;$('universeGrid').textContent='请刷新页面重试。现有自有仓库功能仍然可以使用。'});
 }

@@ -8,7 +8,7 @@ export const COMMAND_ROUTES=[
  {id:'projects',title:'全部仓库',description:'搜索本账户所有公开 GitHub 仓库',keywords:'repo repositories Github 项目 仓库'},
  {id:'incubator',title:'项目孵化',description:'外部项目候选、研发评估和 Issue 草稿',keywords:'候选 想法 立项 孵化'},
  {id:'discovery',title:'发现实验室',description:'人工筛选的参考游戏源代码',keywords:'开源 研究 inspiration'},
- {id:'universe',title:'GitHub 星图',description:'千项外部游戏与模拟项目索引',keywords:'星图 大型 索引 源码 thousand'},
+ {id:'universe',title:'GitHub 星图',description:'跨领域 GitHub 开源项目研究与孵化',keywords:'星图 大型 索引 源码 software ai 系统 自动化 工具 游戏 thousand'},
  {id:'delivery',title:'交付健康',description:'仓库构建状态、开放 Issues 与 PR',keywords:'actions 发布 CI'},
  {id:'pipeline',title:'构建流程',description:'从 Issue 到测试与发布的开发规范',keywords:'workflow 自动化'},
  {id:'activity',title:'开发动态',description:'查看近期 GitHub 活动',keywords:'动态 活动 近期 commits'}

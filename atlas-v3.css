@@ -822,3 +822,9 @@ html.atlas-restricted-selection textarea{
 .game-qa-telemetry{font-size:10px;line-height:1.7;color:var(--muted);font-variant-numeric:tabular-nums;margin:0 0 7px}
 .game-qa-evidence-link{display:inline-flex;font-size:10px;line-height:1.6;font-weight:735;color:var(--accent-dark);text-decoration:underline;text-underline-offset:3px;margin:0 0 12px}
 .game-qa-evidence-link:hover{opacity:.74}
+
+/* Cross-domain discovery: software, games and complete GitHub research library. */
+.universe-domain-switch{margin-top:16px;padding:8px;border:1px solid var(--line-dark);border-radius:12px;background:var(--surface);gap:7px}
+.universe-domain-switch button{font-size:11px;padding:11px 16px;border-radius:9px;font-weight:720}
+.universe-domain-switch button.active{box-shadow:inset 0 0 0 1px #87aa9a38}
+@media(max-width:560px){.universe-domain-switch{display:grid;grid-template-columns:1fr;gap:5px}.universe-domain-switch button{width:100%;text-align:left;min-height:40px}}
