@@ -75,7 +75,8 @@ with socketserver.TCPServer(("127.0.0.1", 0), Server) as server:
         until(lambda: driver.find_element(By.ID, "universeSectorLab").is_displayed())
         driver.find_element(By.ID, "sectorLabSchedule").click()
         until(lambda: driver.current_url.endswith("#workboard"))
-        assert driver.find_element(By.ID, "workTotal").text == "5", "duplicate import occurred"
+        until(lambda: driver.find_element(By.ID, "workTotal").text == "5")
+        assert len(driver.find_elements(By.CSS_SELECTOR, "#workBoard .work-card")) == 5, "duplicate import occurred"
         same = driver.find_element(By.CSS_SELECTOR, '[data-work-id="' + task_id + '"]')
         same.find_element(By.CSS_SELECTOR, ".work-card-actions button").click()
         until(lambda: driver.find_element(By.ID, "workEditor").get_attribute("open") is not None)

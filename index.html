@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f6f4">
 <meta name="description" content="ATLAS — 面向系统软件、Web 应用、移动端、开发工具与游戏的跨领域开发工作空间，追踪真实 GitHub 交付状态。">
 <title>ATLAS · 创造者工作台</title>
-<link rel="icon" type="image/svg+xml" href="./favicon.svg"><link rel="stylesheet" href="./atlas-v3.css"><link rel="stylesheet" href="./workboard.css"><link rel="stylesheet" href="./release-review.css">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg"><link rel="stylesheet" href="./atlas-v3.css"><link rel="stylesheet" href="./workboard.css"><link rel="stylesheet" href="./release-review.css"><link rel="stylesheet" href="./api-lab.css">
 </head><body><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="svg-defs">
 <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.7"/><rect x="14" y="3" width="7" height="7" rx="1.7"/><rect x="3" y="14" width="7" height="7" rx="1.7"/><rect x="14" y="14" width="7" height="7" rx="1.7"/></symbol>
 <symbol id="i-game" viewBox="0 0 24 24"><path d="M7 8h10a4 4 0 0 1 3.9 3.1l1 5.4a2.5 2.5 0 0 1-3.9 2.5l-3.4-2.6H9.4L6 19a2.5 2.5 0 0 1-3.9-2.5l1-5.4A4 4 0 0 1 7 8Z"/><path d="M7 12v5M4.5 14.5h5M16 12.5h.01M19 15h.01"/></symbol>
@@ -40,6 +40,7 @@
 <a class="nav" href="#universe" data-view-link="universe"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>GitHub 星图</span><small class="nav-counter">5K+</small></a>
 <a class="nav" href="#incubator" data-view-link="incubator"><svg class="i" aria-hidden="true"><use href="#i-layers"></use></svg><span>项目孵化</span><small class="nav-counter" id="candidateCount" hidden>0</small></a>
 <a class="nav" href="#workboard" data-view-link="workboard"><svg class="i" aria-hidden="true"><use href="#i-grid"></use></svg><span>执行工作台</span><small class="nav-counter" id="workNavCount" hidden>0</small></a>
+<a class="nav" href="#api-lab" data-view-link="api-lab"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg><span>API 接口实验室</span><small class="nav-counter">GET</small></a>
 <a class="nav" href="#utilities" data-view-link="utilities"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg><span>开发工具工坊</span><small class="nav-counter">LOCAL</small></a>
 <a class="nav" href="#mission" data-view-link="mission"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>研发总控</span><small class="nav-counter" id="missionNavCount" hidden>0</small></a>
 <a class="nav" href="#trace" data-view-link="trace"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>开发链路</span></a>
@@ -141,6 +142,26 @@
   </div>
  </div>
  <p class="utils-disclaimer">**隐私与限制：** 本工作台不会向 ATLAS 服务端上传输入或保留历史。SHA-256 摘要需要浏览器安全上下文的 Web Crypto；浏览器本地工具不等同于完整 IDE、编译器、专业 CSV ETL 或文件加密服务。大数据量会被限制以避免冻结页面。</p>
+</section>
+<section class="view" id="api-lab" aria-label="公开 GitHub REST API 接口实验室">
+ <header class="view-header"><span class="eyebrow">ATLAS / PUBLIC API ENGINEERING</span><div class="view-heading-row"><div><h1>API 接口实验室<span>.</span></h1><p>直接向 GitHub REST API 发出真实只读请求。比较两个公开仓库，检查响应结构、状态、限流与原始数据。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg></div></div></header>
+ <div class="api-lab">
+  <div class="api-lab-hero"><div><span class="eyebrow">READ ONLY / PUBLIC DATA</span><h2>让每次接口调用，都有可验证的结果。</h2><p>固定的 GET 端点、明确的 HTTP 状态、可展开 JSON 字段树和双仓库指标对比。不需要登录、不收集 Token、不支持任意 URL 或更改 GitHub 数据。</p></div><div class="api-lab-hero-mark" aria-hidden="true">{ GET }</div></div>
+  <form id="apiLabForm" class="api-lab-form" aria-label="设置 GitHub 公共 API 查询">
+   <div class="api-lab-form-grid">
+    <label>仓库 A · owner/repo<input id="apiLabRepoA" value="AincFh/dev-control-center" required maxlength="210" autocomplete="off" spellcheck="false" placeholder="owner/repo"></label>
+    <label>公共 API 端点<select id="apiLabEndpoint" aria-label="选择 GitHub REST API 固定端点"></select></label>
+   </div>
+   <label id="apiLabSecond" class="api-lab-second" hidden>仓库 B · 对比对象<input id="apiLabRepoB" value="AincFh/QingJi" maxlength="210" autocomplete="off" spellcheck="false" placeholder="owner/repo"></label>
+   <div class="api-lab-form-foot"><label class="api-lab-checkbox"><input id="apiLabCompareEnabled" type="checkbox">启用双仓库对照查询</label><div class="api-lab-actions"><button id="apiLabRun" type="submit">执行公开 GET</button><button id="apiLabCancel" type="button" disabled>取消请求</button><button id="apiLabClear" type="button">清空结果</button></div></div>
+   <p class="api-lab-note">仅访问 https://api.github.com/repos/... 的固定公开端点；不接受请求体、用户令牌或自定义 Headers。列表最多取 20 项，超出 1 MB 的响应拒绝处理。匿名请求可能遇到 GitHub API 限流。</p>
+  </form>
+  <p id="apiLabStatus" class="api-lab-status" data-kind="neutral" role="status" aria-live="polite">选择公开端点并点击执行；原始 JSON 不会自动保存。</p>
+  <div class="api-lab-result-toolbar"><label>字段树搜索<input id="apiLabFilter" class="api-lab-filter" type="search" aria-label="筛选响应字段路径" placeholder="搜索路径或字段值（仅展开字段树后有效）" autocomplete="off"></label><div class="api-lab-export"><button id="apiLabExport" type="button" disabled>导出检查报告 .md</button><button id="apiLabJson" type="button" disabled>导出响应 JSON</button></div><span id="apiLabResultCount" class="api-lab-note">0 项记录</span></div>
+  <div class="api-lab-result-grid"><article id="apiLabResult1" class="api-lab-result" aria-label="仓库 A 的请求结果"><p class="api-empty">尚未执行请求。</p></article><article id="apiLabResult2" class="api-lab-result" aria-label="仓库 B 的请求结果" hidden><p class="api-empty">尚未执行请求。</p></article></div>
+  <section id="apiLabCompare" class="api-lab-compare" aria-label="双仓库公开 API 指标对比"><p class="api-empty">执行两个相同端点的请求后可进行对比。</p></section>
+  <p class="api-lab-footnote">重要：HTTP 200、公开记录和少量指标不能证明产品已完成、安全合规或发布成功。401 / 403 / 429 需结合权限和限流判断；数据仅来自本次浏览器网络请求，不会自动写入 GitHub Issue。</p>
+ </div>
 </section>
 <section class="view" id="universe" aria-label="GitHub 千项探索星图">
  <header class="view-header"><span class="eyebrow">ATLAS / EXTERNAL GITHUB UNIVERSE</span><div class="view-heading-row"><div><h1>GitHub 星图<span>.</span></h1><p>探索系统、AI、Windows 软件、移动应用、开发工具、内容创作与游戏等真实 GitHub 仓库，筛选并推进产品研发。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg></div></div></header>
