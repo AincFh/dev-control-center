@@ -29,6 +29,8 @@ jobs:
         run: python tests/utilities.browser.py
       - name: Test real public GitHub REST API requests, comparisons and mobile inspector
         run: python tests/api-lab.browser.py
+      - name: Test real local OpenAPI JSON contract analysis, import, errors and mobile UI
+        run: python tests/openapi.browser.py
       - name: Test real portfolio mission control, release evidence, and responsive operations
         run: python tests/mission.browser.py
       - name: Test real multi-domain delivery evidence, filters and workboard interaction
@@ -46,6 +48,7 @@ jobs:
             test-artifacts/mission/
             test-artifacts/utilities/
             test-artifacts/api-lab/
+            test-artifacts/openapi/
             test-artifacts/release-review/
             test-artifacts/blueprint-execution/
           if-no-files-found: ignore
