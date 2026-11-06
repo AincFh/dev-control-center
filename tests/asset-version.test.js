@@ -55,6 +55,7 @@ test('fingerprints additional linked stylesheets and refuses missing bundled CSS
   const html=await readFile(path.join(dir,'index.html'),'utf8');
   assert.ok(html.includes('href="./release-review.css?v=sha-456"'));
   assert.ok(html.includes('href="./workboard.css?v=sha-456"'));
+  await writeFile(path.join(dir,'index.html'),'<link href="./atlas-v3.css" rel="stylesheet"><link href="./release-review.css" rel="stylesheet"><script type="module" src="./app.js"></script>');
   await assert.rejects(()=>fingerprintDist(dir,files.filter(x=>x!=='release-review.css'),'next'),/Missing linked stylesheet/);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
