@@ -42,6 +42,7 @@
 <a class="nav" href="#workboard" data-view-link="workboard"><svg class="i" aria-hidden="true"><use href="#i-grid"></use></svg><span>执行工作台</span><small class="nav-counter" id="workNavCount" hidden>0</small></a>
 <a class="nav" href="#api-lab" data-view-link="api-lab"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg><span>API 接口实验室</span><small class="nav-counter">GET</small></a>
 <a class="nav" href="#utilities" data-view-link="utilities"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg><span>开发工具工坊</span><small class="nav-counter">LOCAL</small></a>
+<a class="nav" href="#data-studio" data-view-link="data-studio"><svg class="i" aria-hidden="true"><use href="#i-activity"></use></svg><span>数据分析工作台</span><small class="nav-counter">DATA</small></a>
 <a class="nav" href="#mission" data-view-link="mission"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>研发总控</span><small class="nav-counter" id="missionNavCount" hidden>0</small></a>
 <a class="nav" href="#trace" data-view-link="trace"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>开发链路</span></a>
 <a class="nav" href="#delivery" data-view-link="delivery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>交付健康</span></a>
@@ -121,6 +122,49 @@
  <p class="discovery-intro">收藏、研究与 Fork 是不同阶段。所有原始作品保留作者及许可证信息；未完成许可核验的作品只作调研。</p>
  <div class="discovery-filters"><label class="discovery-search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input id="discoverySearch" type="search" placeholder="寻找生活养成、建造、沙盒、工厂…" aria-label="搜索 GitHub 游戏实验室" autocomplete="off"></label><div id="discoveryGenres" class="discovery-genres" aria-label="游戏类型筛选"></div></div>
  <div class="results-count" id="discoveryCount">正在整理游戏项目…</div><div id="discoveryGrid" class="discovery-grid" aria-live="polite"></div><p class="footnote">上游试玩链接不等于我们已经发布；Fork 不代表原创。未核验许可的源码或资产不会直接复制到本平台。</p>
+</section>
+<section class="view" id="data-studio" aria-label="ATLAS 本地数据分析工作台">
+ <header class="view-header"><span class="eyebrow">ATLAS / LOCAL DATA STUDIO</span><div class="view-heading-row"><div><h1>数据分析工作台<span>.</span></h1><p>直接分析 CSV / JSON：类型识别、搜索筛选、排序分页、分组聚合、可视化和安全导出。所有数据仅在浏览器本地处理。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-activity"></use></svg></div></div></header>
+ <div class="data-intro"><div><span class="eyebrow">REAL ANALYTICS / PRIVACY BY DEFAULT</span><h2>导入数据。发现问题。<em>得到可核验的答案。</em></h2><p>不是展示虚构实时数字的仪表盘。只有导入的 CSV / JSON 才会生成统计与图表；演示数据单独标注。无账号、无外部接口、无自动上传。</p></div><strong>DATA<br>STUDIO</strong></div>
+ <section class="data-import" aria-label="数据导入">
+  <div class="data-section-head"><div><span class="eyebrow">01 / SOURCE</span><h2>载入数据源</h2></div><span id="dataDataSource" class="data-source-state">尚未导入数据</span></div>
+  <textarea id="dataInput" rows="6" spellcheck="false" placeholder="粘贴 CSV 表格，或 JSON 对象数组。也可以选择本地文件或使用虚构示例数据。" aria-label="要分析的原始 CSV 或 JSON 数据"></textarea>
+  <div class="data-import-actions">
+   <button id="dataImport" type="button" class="data-primary">分析输入内容</button>
+   <label class="data-file-label" for="dataFile">选择本地 CSV / JSON 文件<input type="file" id="dataFile" accept=".csv,.json,text/csv,application/json" hidden></label>
+   <button type="button" id="dataSample">加载虚构演示数据</button>
+   <button type="button" id="dataClear">清空工作区</button>
+  </div>
+  <p class="data-privacy">文件不会上传到 ATLAS、GitHub 或其他服务。最多 2,000 行、48 列、250,000 字符；超出范围会明确报错而非静默裁剪。示例记录及指标完全虚构。</p>
+ </section>
+ <section class="data-stats-wrap" aria-label="数据质量与概览">
+  <div id="dataStats" class="data-stats"></div>
+  <div id="dataNumericSummary" class="data-numeric-summary"></div>
+ </section>
+ <section class="data-operations" aria-label="数据筛选和分析">
+  <div class="data-section-head"><div><span class="eyebrow">02 / FILTER & AGGREGATE</span><h2>筛选与分析</h2></div><span>所有计算基于当前筛选结果</span></div>
+  <div class="data-control-grid">
+   <label>字段<select id="dataFilterColumn" aria-label="选择筛选字段"><option value="all">全部字段</option></select></label>
+   <label>比较方式<select id="dataFilterOperator" aria-label="筛选比较方式"><option value="contains">包含文本</option><option value="equals">完全等于</option><option value="gte">数值 ≥</option><option value="lte">数值 ≤</option></select></label>
+   <label class="data-query">筛选内容<input type="search" id="dataFilterQuery" aria-label="筛选内容" placeholder="搜索关键词或比较数值" autocomplete="off"></label>
+   <label>分组字段<select id="dataGroup" aria-label="选择图表分组字段"></select></label>
+   <label>聚合方式<select id="dataOperation" aria-label="选择聚合方式"><option value="count">计数</option><option value="sum">求和</option><option value="avg">平均值</option></select></label>
+   <label>数值列<select id="dataMetric" aria-label="选择聚合数值列" disabled></select></label>
+  </div>
+  <p id="dataFeedback" class="data-feedback" role="status" aria-live="polite">加载数据后开始分析。</p>
+ </section>
+ <section class="data-chart-section" aria-label="按字段分组的聚合图表">
+  <div class="data-section-head"><div><span class="eyebrow">03 / AGGREGATION</span><h2>数据分组图表</h2></div><span id="dataChartCaption">等待数据</span></div>
+  <div id="dataChart" class="data-chart" aria-label="数据分组聚合条形图"></div>
+ </section>
+ <section class="data-table-section" aria-label="数据表格、分页和导出">
+  <div class="data-section-head"><div><span class="eyebrow">04 / TABLE & EXPORT</span><h2>可验证的数据明细</h2></div>
+   <div class="data-export-actions"><button id="dataExportCsv" type="button" disabled>导出筛选 CSV</button><button id="dataExportJson" type="button" disabled>导出筛选 JSON</button></div>
+  </div>
+  <div id="dataTable" class="data-table-scroll" role="region" tabindex="0" aria-label="可横向滚动的数据明细表"></div>
+  <div class="data-pagination"><button id="dataPrevious" type="button" disabled>上一页</button><span id="dataPage">—</span><button id="dataNext" type="button" disabled>下一页</button></div>
+ </section>
+ <p class="data-legal">CSV 导出会对潜在电子表格公式进行前缀防护；日期与数值类型采用可解释的规则推断，不代替财务审计、数据库 ETL 或安全合规判断。结果不会因刷新而保留，请主动导出。</p>
 </section>
 <section class="view" id="utilities" aria-label="浏览器本地开发工具工坊">
  <header class="view-header"><span class="eyebrow">ATLAS / LOCAL DEVELOPER WORKSHOP</span><div class="view-heading-row"><div><h1>开发工具工坊<span>.</span></h1><p>七个实际可运行的开发辅助工具。输入和计算仅在当前浏览器完成，不依赖外部 API，也不保存文本内容。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg></div></div></header>
