@@ -80,6 +80,12 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   until(lambda:driver.find_element(By.ID,"sectorLabCandidate").is_enabled())
   assert len(driver.find_elements(By.CSS_SELECTOR,"#sectorLabResult .sector-lab-phase"))==5
   assert driver.find_element(By.ID,"sectorLabIssue").get_attribute("href").startswith('https://github.com/AincFh/dev-control-center/issues/new?')
+  driver.find_element(By.ID,"sectorLabWorkboard").click()
+  until(lambda:driver.execute_script("return location.hash==='#workboard'"))
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#workBoard .work-card"))==5)
+  assert driver.find_element(By.ID,"workTotal").text=='5'
+  driver.execute_script("location.hash='#universe'")
+  until(lambda:driver.execute_script("return document.querySelector('#universe')?.classList.contains('is-active')"))
   driver.find_element(By.CSS_SELECTOR,"#universeCategories button[data-genre='all']").click()
   canvas=driver.execute_script("return {w:document.getElementById('universeCanvas').width,h:document.getElementById('universeCanvas').height}")
   assert canvas['w']>250 and canvas['h']>200,canvas
