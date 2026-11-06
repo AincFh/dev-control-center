@@ -33,6 +33,17 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   cards=driver.find_elements(By.CSS_SELECTOR,"#universeGrid .universe-project")
   assert len(cards)==24,len(cards)
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))>=9
+  # Cross-domain family switch must be actual interactive filtering, not label-only navigation.
+  assert len(driver.find_elements(By.CSS_SELECTOR,"#universeDomains button"))==3
+  assert driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='software']").get_attribute('aria-pressed')=='true'
+  assert any('AI' in x.text for x in driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))
+  driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='game']").click()
+  until(lambda:driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='game']").get_attribute('aria-pressed')=='true')
+  assert len(driver.find_elements(By.CSS_SELECTOR,"#universeGrid .universe-project"))==24
+  driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='all']").click()
+  assert len(driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))>=21
+  driver.find_element(By.CSS_SELECTOR,"#universeDomains button[data-family='software']").click()
+  assert len(driver.find_elements(By.CSS_SELECTOR,"#universeGrid .universe-project"))==24
   canvas=driver.execute_script("return {w:document.getElementById('universeCanvas').width,h:document.getElementById('universeCanvas').height}")
   assert canvas['w']>250 and canvas['h']>200,canvas
   # Real DOM events are cancelled for copy, paste, context menus, and text selection.
