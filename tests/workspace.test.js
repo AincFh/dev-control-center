@@ -23,3 +23,18 @@ test('game routes remain real and blocked previews never appear by default',()=>
  assert.match(html,/href="https:\/\/aincfh\.github\.io\/City-of-Small-Chances\/"/);
  assert.doesNotMatch(html,/href="https:\/\/aincfh\.github\.io\/qubecraft\/"/);
 });
+
+test('homepage prioritizes real non-game projects without removing the playable game collection',()=>{
+ for(const href of ['https://aincfh.github.io/AincFh/','https://aincfh.dpdns.org','https://github.com/AincFh/QingJi'])
+  assert.ok(html.includes('href="'+href+'"'),href);
+ assert.match(html,/href="#workstreams">探索研发项目/);
+ assert.match(html,/href="#arcade">体验游戏作品/);
+ assert.match(html,/class="mini-art mini-os"/);
+ assert.match(html,/class="mini-art mini-platform"/);
+ assert.match(html,/class="mini-art mini-mobile"/);
+ assert.match(css,/\.mini-os\{/);
+ assert.match(css,/\.mini-platform\{/);
+ assert.match(css,/\.mini-mobile\{/);
+ assert.ok(html.includes('当前外部星图聚焦游戏与模拟项目'));
+ assert.ok(html.includes('id="arcade"'));
+});
