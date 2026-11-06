@@ -142,3 +142,43 @@
  .work-card-actions select{min-width:112px}
 }
 @media(prefers-reduced-motion:reduce){.work-card,.work-main-actions button{transition:none!important}}
+
+
+/* Offline work-capacity planning: estimates are never presented as official Codex credits. */
+.work-capacity-section{border:1px solid var(--line);border-radius:19px;
+ margin:4px 0 19px;padding:24px;background:var(--surface)}
+.work-capacity-head{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.work-capacity-head>div:first-child{flex:1 1 400px}
+.work-capacity-head h2{font-size:clamp(19px,2.7vw,27px);font-weight:740;margin:6px 0}
+.work-capacity-head h2 span{color:var(--accent)}
+.work-capacity-head p{font-size:12px;line-height:1.7;color:var(--muted);max-width:690px}
+.work-capacity-actions{display:flex;align-items:end;gap:10px;flex-wrap:wrap}
+.work-capacity-actions label{display:grid;gap:7px;font-size:11px;color:var(--muted);font-weight:710}
+.work-capacity-actions input{width:140px;padding:9px 11px;color:var(--ink);background:var(--surface-soft);
+ border:1px solid var(--line-dark);border-radius:10px;min-height:43px}
+.work-capacity-actions button{padding:10px 13px;min-height:43px;
+ color:var(--surface);border:1px solid var(--accent);border-radius:10px;
+ background:var(--accent);font-size:12px;font-weight:710}
+.work-capacity-summary{padding:16px 0}
+.work-capacity-summary strong{font-size:13px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.work-capacity-track{height:9px;background:var(--surface-soft);border:1px solid var(--line);
+ border-radius:10px;margin-top:12px;overflow:hidden}
+#workCapacityFill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#99ccad);
+ border-radius:10px;transition:width .22s}
+.work-capacity-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.work-capacity-grid article{min-width:0;background:var(--surface-soft);
+ border:1px solid var(--line);border-radius:12px;padding:12px 15px}
+.work-capacity-grid h3{font-size:13px;font-weight:760;padding-bottom:9px;margin:0 0 5px;border-bottom:1px solid var(--line)}
+.work-capacity-line{display:flex;justify-content:space-between;gap:9px;align-items:start;
+ font-size:11px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.work-capacity-line span{color:var(--ink);line-height:1.5;min-width:0;overflow-wrap:anywhere}
+.work-capacity-line strong{font-size:11px;color:var(--accent);white-space:nowrap;font-weight:700}
+.work-capacity-blocked strong{color:#bb7655}
+.work-capacity-empty,.work-capacity-caption{font-size:11px;padding:10px 0;color:var(--muted);line-height:1.6}
+.work-capacity-disclaimer{border-top:1px solid var(--line);margin-top:16px;
+ padding-top:12px;font-size:11px;line-height:1.7;color:var(--muted)}
+.work-card-meta .work-effort{color:var(--accent);border-color:var(--line-dark)}
+@media(max-width:750px){.work-capacity-section{padding:17px}.work-capacity-grid{grid-template-columns:1fr}
+ .work-capacity-actions{width:100%}.work-capacity-actions button{flex:1}}
+@media(max-width:480px){.work-capacity-actions label{flex:1}.work-capacity-actions input{width:100%}}
+@media(prefers-reduced-motion:reduce){#workCapacityFill{transition:none}}
