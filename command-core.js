@@ -6,6 +6,7 @@ export const COMMAND_ROUTES=[
  {id:'trace',title:'开发链路',description:'真实 Issue、PR、CI 与发布证据追踪',keywords:'trace lifecycle delivery pipeline 链路 关联'},
  {id:'workstreams',title:'项目路线',description:'查看独立项目的下一开发目标',keywords:'roadmap 产品 计划'},
  {id:'projects',title:'全部仓库',description:'搜索本账户所有公开 GitHub 仓库',keywords:'repo repositories Github 项目 仓库'},
+ {id:'workboard',title:'执行工作台',description:'多仓库任务依赖、计划排期与交付管理',keywords:'工作包 项目管理 多项目 workboard capacity'},
  {id:'incubator',title:'项目孵化',description:'外部项目候选、研发评估和 Issue 草稿',keywords:'候选 想法 立项 孵化'},
  {id:'discovery',title:'发现实验室',description:'人工筛选的参考游戏源代码',keywords:'开源 研究 inspiration'},
  {id:'utilities',title:'开发工具工坊',description:'JSON CSV Diff Base64 URL SHA-256 纯本地工具',keywords:'utils developer tools formatter csv json diff base64 hash SHA256 工具 格式化 数据'},
