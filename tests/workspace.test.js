@@ -3,7 +3,7 @@ const html=readFileSync('index.html','utf8'),css=readFileSync('atlas-v3.css','ut
 const arcade=readFileSync('arcade.js','utf8');
 const pages=['home','arcade','workstreams','projects','discovery','universe','incubator','workboard','utilities','data-studio','mission','trace','delivery','pipeline','activity'];
 test('information architecture has fourteen navigable views, including workboard and developer utilities',()=>{
- for(const id of pages){assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,new RegExp('data-view-link="'+id+'"'));assert.match(app,new RegExp('(?:^|\\n) '+id+":\\['"));}
+ for(const id of pages){assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,new RegExp('data-view-link="'+id+'"'));assert.match(app,new RegExp('(?:^|\\n) '+(id.includes('-')?"'"+id+"'":id)+":\\['"));}
  assert.match(css,/\.view\.is-active\s*\{display:block\}/);
  assert.match(app,/window\.addEventListener\('hashchange',route\)/);
 });
