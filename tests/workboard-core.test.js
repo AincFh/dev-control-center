@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
- WORK_STAGES,WORK_CATEGORIES,WORK_PRIORITIES,MAX_WORK_ITEMS,
+ WORK_STAGES,WORK_CATEGORIES,WORK_PRIORITIES,MAX_WORK_ITEMS,projectWorkCategory,
  normalizeWorkItem,normalizeWorkboard,checkWorkGraph,upsertWorkItem,deleteWorkItem,
  workBlockers,workMetrics,filterWorkItems,issueDraft,createWorkBackup,
  restoreWorkBackup,workSuggestions
@@ -24,6 +24,16 @@ test('all stages, cross-domain categories, and priorities are distinct',()=>{
  assert.equal(WORK_CATEGORIES.some(x=>x.id==='ai'),true);
  assert.equal(WORK_CATEGORIES.some(x=>x.id==='game'),true);
  assert.deepEqual(WORK_PRIORITIES,['P0','P1','P2','P3']);
+});
+test('portfolio category bridge never maps developer platforms to operating systems',()=>{
+ assert.equal(projectWorkCategory('platform'),'infra');
+ assert.equal(projectWorkCategory('software'),'tool');
+ assert.equal(projectWorkCategory('system'),'system');
+ assert.equal(projectWorkCategory('mobile'),'mobile');
+ assert.equal(projectWorkCategory('game'),'game');
+ assert.equal(projectWorkCategory('web'),'web');
+ assert.equal(projectWorkCategory('unknown'),'other');
+ assert.equal(projectWorkCategory(''),'other');
 });
 test('work item validates repo/name/date and sanitizes freeform text',()=>{
  assert.equal(normalizeWorkItem(task('req_001')).title,'开发 req_001');

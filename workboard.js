@@ -2,12 +2,13 @@
  * GitHub statuses are read-only and opening an Issue is a user action.
  */
 import {
- WORK_STAGES,WORK_CATEGORIES,WORK_PRIORITIES,MAX_WORK_ITEMS,normalizeWorkboard,
+ WORK_STAGES,WORK_CATEGORIES,WORK_PRIORITIES,MAX_WORK_ITEMS,projectWorkCategory,normalizeWorkboard,
  upsertWorkItem,deleteWorkItem,workBlockers,workMetrics,filterWorkItems,
  issueDraft,createWorkBackup,restoreWorkBackup,workSuggestions
 } from './workboard-core.js';
 import {capacityPlan,capacityMarkdown,normalizeCapacity} from './capacity-core.js';
 import {prepareBlueprintExecution} from './blueprint-execution-core.js';
+import {importExternalWorkPackages} from './external-workplan-core.js';
 
 const STORE='atlas-workboard-v1',CAPACITY_STORE='atlas-manual-work-capacity-v1';
 const $=id=>document.getElementById(id);
@@ -254,7 +255,7 @@ function edit(id=null,defaults={}){
  $('workEditDescription').value=item?.description||'';
  $('workEditOwner').value=item?.owner||'';
  $('workEditEffort').value=String(item?.effortUnits??3);
- selectOptions($('workEditCategory'),WORK_CATEGORIES.map(x=>[x.id,x.label]),item?.category||defaults.category||'web');
+ selectOptions($('workEditCategory'),WORK_CATEGORIES.map(x=>[x.id,x.label]),item?.category||projectWorkCategory(defaults.category??'web'));
  selectOptions($('workEditPriority'),WORK_PRIORITIES.map(x=>[x,x]),item?.priority||'P2');
  selectOptions($('workEditStage'),WORK_STAGES.map(x=>[x.id,x.label]),item?.stage||'backlog');
  $('workEditDate').value=item?.dueDate||'';
@@ -350,6 +351,16 @@ export function initWorkboard(){
  $('workCreate').disabled=false;
  window.addEventListener('atlas:import-blueprint',importBlueprint);
  window.addEventListener('atlas:request-work-repos',publishOwnedRepos);
+ window.addEventListener('atlas:import-domain-plan',event=>{
+  const detail=event.detail;
+  if(!detail||typeof detail!=='object')return;
+  const result=importExternalWorkPackages(items,detail);
+  detail.result={added:result.added,reason:result.reason};
+  if(result.reason){announce('外部研究计划未导入：'+result.reason);return;}
+  if(result.added>0)commit(result.items,'已导入 '+result.added+' 条含前置依赖的外部研究工作包');
+  else announce('当前外部研究计划已存在，本地进度与备注未被覆盖。');
+  location.hash='#workboard';
+ });
  window.addEventListener('atlas:create-work',event=>{
   const repo=event.detail?.repo;
   if(typeof repo!=='string'||!repoNames().includes(repo))return;

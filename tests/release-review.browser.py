@@ -20,7 +20,8 @@ data=[
  project("my-anime-blog","success","published",{"state":"reachable"}),
  project("QingJi","success","unknown"),
  project("cozy-bistro-sim","success","published"),
- project("AincFh","unknown","unknown")
+ project("AincFh","unknown","unknown"),
+ project("dev-control-center","unknown","unknown")
 ]
 data[1]["release"]={"state":"artifact","tag":"v1.3.0","publishedAt":STAMP,
  "assetTypes":["apk"],"assetCount":1,
@@ -67,9 +68,9 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
  try:
   driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument",{"source":script})
   driver.get(f"http://127.0.0.1:{server.server_address[1]}/#delivery")
-  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#releaseGrid .release-card"))==4)
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#releaseGrid .release-card"))==5)
   assert driver.find_element(By.CSS_SELECTOR,"#releaseGrid .release-card:first-child").get_attribute("data-repo")=="cozy-bistro-sim"
-  assert [v.text for v in driver.find_elements(By.CSS_SELECTOR,"#releaseOverview .release-metric strong")]==["4","1","1","2"]
+  assert [v.text for v in driver.find_elements(By.CSS_SELECTOR,"#releaseOverview .release-metric strong")]==["5","1","1","3"]
   assert driver.find_element(By.ID,"releaseFreshness").get_attribute("data-state")=="fresh"
   driver.save_screenshot(str(OUT/"desktop.png"))
   Select(driver.find_element(By.ID,"releaseDomain")).select_by_value("mobile")
@@ -96,10 +97,20 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   driver.find_element(By.ID,"workEditorClose").click()
   driver.get(f"http://127.0.0.1:{server.server_address[1]}/#delivery")
   until(lambda:driver.find_element(By.ID,"releaseGrid").is_displayed())
+  driver.execute_script("const s=document.getElementById('releaseSearch');s.value='dev-control-center';s.dispatchEvent(new Event('input',{bubbles:true}));")
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#releaseGrid .release-card"))==1)
+  assert driver.find_element(By.CSS_SELECTOR,"#releaseGrid .release-card").get_attribute("data-repo")=="dev-control-center"
+  driver.find_element(By.CSS_SELECTOR,"#releaseGrid .release-card .release-card-controls button").click()
+  until(lambda:driver.find_element(By.ID,"workEditor").get_attribute("open") is not None)
+  assert Select(driver.find_element(By.ID,"workEditRepo")).first_selected_option.get_attribute("value")=="dev-control-center"
+  assert Select(driver.find_element(By.ID,"workEditCategory")).first_selected_option.get_attribute("value")=="infra"
+  driver.find_element(By.ID,"workEditorClose").click()
+  driver.get(f"http://127.0.0.1:{server.server_address[1]}/#delivery")
+  until(lambda:driver.find_element(By.ID,"releaseGrid").is_displayed())
   # View navigation intentionally retains local filters. Reset the query before
   # asserting the full matrix; this is not a fresh-browser app startup.
   driver.execute_script("const s=document.getElementById('releaseSearch');s.value='';s.dispatchEvent(new Event('input',{bubbles:true}));")
-  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#releaseGrid .release-card"))==4)
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#releaseGrid .release-card"))==5)
   driver.set_window_size(390,844)
   time.sleep(.4)
   viewport=driver.execute_script("return {card:document.querySelector('.release-card').getBoundingClientRect().width,grid:document.querySelector('.release-grid').getBoundingClientRect().width}")
@@ -107,7 +118,7 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   driver.save_screenshot(str(OUT/"mobile.png"))
   errors=[x["message"] for x in driver.get_log("browser") if x["level"]=="SEVERE" and "favicon" not in x["message"]]
   assert not errors,errors
-  print("PASS cross-domain release review: live Chromium sorting, source-specific gates, filters, details, workboard handoff and mobile layout")
+  print("PASS cross-domain release review: live Chromium sorting, source-specific gates, filters, details, native/platform workboard category handoff and mobile layout")
  finally:
   driver.quit()
   server.shutdown()

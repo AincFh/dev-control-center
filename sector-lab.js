@@ -46,6 +46,7 @@ function renderPlan(plan){
  root.append(list);
  $('sectorLabCandidate').disabled=!plan.source;
  $('sectorLabSchedule').disabled=false;
+ $('sectorLabWorkboard').disabled=!plan.source;
  $('sectorLabIssue').href=issueUrl(plan);
 }
 function generate(){
@@ -101,7 +102,7 @@ export function initSectorLab(catalogCategories){
   if(!currentPlan)return;
   const sourceRepo=currentPlan.source?currentPlan.source.slice('https://github.com/'.length):null;
   const repo=$('sectorLabTarget').value;
-  if(!repo){sendFeedback('请先选择承接开发工作的自有仓库。',true);return;}
+  if(!repo){sendFeedback('请选择承接工程任务的自有仓库。',true);return;}
   window.dispatchEvent(new CustomEvent('atlas:import-blueprint',{
    detail:{category:currentPlan.category,label:currentPlan.label,sourceRepo,repo}
   }));
@@ -111,6 +112,14 @@ export function initSectorLab(catalogCategories){
   if(typeof result.message==='string')sendFeedback(result.message,!result.ok);
  });
  window.dispatchEvent(new Event('atlas:request-work-repos'));
+ $('sectorLabWorkboard').onclick=()=>{
+  if(!currentPlan?.source)return;
+  const detail={category:currentPlan.category,repository:currentPlan.source.slice('https://github.com/'.length),label:currentPlan.label,result:null};
+  window.dispatchEvent(new CustomEvent('atlas:import-domain-plan',{detail}));
+  if(detail.result?.reason)sendFeedback('导入执行工作台失败：'+detail.result.reason,true);
+  else if(detail.result)sendFeedback('已新增 '+detail.result.added+' 个本地执行工作包；已有任务不覆盖。');
+  else sendFeedback('执行工作台尚未提供导入处理器。',true);
+ };
  $('sectorLabCandidate').onclick=()=>{
   if(!currentPlan?.source)return;
   const name=currentPlan.source.slice('https://github.com/'.length);

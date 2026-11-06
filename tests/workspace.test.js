@@ -1,8 +1,8 @@
 import test from 'node:test';import assert from 'node:assert/strict';import{readFileSync}from'node:fs';
 const html=readFileSync('index.html','utf8'),css=readFileSync('atlas-v3.css','utf8'),app=readFileSync('app.js','utf8'),build=readFileSync('scripts/build-status.mjs','utf8');
 const arcade=readFileSync('arcade.js','utf8');
-const pages=['home','arcade','workstreams','projects','discovery','universe','incubator','mission','trace','delivery','pipeline','activity'];
-test('information architecture has twelve separate navigable views',()=>{
+const pages=['home','arcade','workstreams','projects','discovery','universe','incubator','workboard','utilities','mission','trace','delivery','pipeline','activity'];
+test('information architecture has fourteen navigable views, including workboard and developer utilities',()=>{
  for(const id of pages){assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,new RegExp('data-view-link="'+id+'"'));assert.match(app,new RegExp('(?:^|\\n) '+id+":\\['"));}
  assert.match(css,/\.view\.is-active\s*\{display:block\}/);
  assert.match(app,/window\.addEventListener\('hashchange',route\)/);
@@ -75,4 +75,20 @@ test('all-domain studio has grouped constellation and real blueprint controls',(
  assert.ok(source.includes('function generate()'));
  assert.ok(source.includes('domainPlanMarkdown'));
  assert.ok(source.includes('atlas:add-candidate'));
+});
+
+test('local developer utilities are navigable and genuinely interactive',()=>{
+ for(const id of ['utilsTabs','utilsCurrentTitle','utilsCurrentDescription','utilsInputA','utilsInputB','utilsMode','utilsRun','utilsClear','utilsOutput','utilsStatus','utilsDownload'])
+  assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(app.includes('initDeveloperUtils()'));
+ assert.ok(css.includes('.utils-workspace{'));
+ assert.ok(html.includes('data-view-link="utilities"'));
+});
+
+test('source-to-execution path connects a real third-party plan to dependency-aware local workboard',()=>{
+ const sector=readFileSync('sector-lab.js','utf8'),board=readFileSync('workboard.js','utf8'),bridge=readFileSync('external-workplan-core.js','utf8');
+ assert.ok(html.includes('id="sectorLabWorkboard"'));
+ assert.ok(sector.includes('atlas:import-domain-plan'));
+ assert.ok(board.includes('importExternalWorkPackages'));
+ assert.ok(bridge.includes('upsertWorkItem'));
 });
