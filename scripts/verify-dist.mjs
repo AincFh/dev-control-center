@@ -38,6 +38,7 @@ assert(seen.has('trace.js')&&seen.has('trace-core.js'),'Delivery trace modules m
 assert(seen.has('site-probe-core.js'),'Public static asset probe module must be bundled');
 assert(seen.has('blueprint-execution-core.js'),'Research-to-execution bridge must be bundled');
 assert(seen.has('api-lab.js')&&seen.has('api-lab-core.js'),'Public API inspector modules must be bundled');
+assert(html.includes('href="./api-lab.css?v='+version+'"'),'API lab CSS must be fingerprinted');
 assert(seen.has('game-runtime-core.js')&&seen.has('game-runtime-ui.js'),'Real Chromium gameplay evidence modules must be bundled');
 const universe=JSON.parse(readFileSync(path.join(root,'data/github-universe.json'),'utf8'));
 assert.equal(universe.kind,'external-discovery');assert(universe.rows.length>=1000,'External reference catalog must contain at least 1000 real repo names');
