@@ -91,6 +91,10 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   assert Select(driver.find_element(By.ID,"workEditRepo")).first_selected_option.get_attribute("value")=="QingJi"
   driver.find_element(By.ID,"workEditorClose").click()
   driver.get(f"http://127.0.0.1:{server.server_address[1]}/#delivery")
+  until(lambda:driver.find_element(By.ID,"releaseGrid").is_displayed())
+  # View navigation intentionally retains local filters. Reset the query before
+  # asserting the full matrix; this is not a fresh-browser app startup.
+  driver.execute_script("const s=document.getElementById('releaseSearch');s.value='';s.dispatchEvent(new Event('input',{bubbles:true}));")
   until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#releaseGrid .release-card"))==4)
   driver.set_window_size(390,844)
   time.sleep(.4)
