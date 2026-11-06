@@ -1,7 +1,7 @@
 import test from'node:test';import assert from'node:assert/strict';
 import{COMMAND_ROUTES,commandCollection,searchCommands,rememberCommand}from'../command-core.js';
 const fixtures=commandCollection({projects:[{name:'wildlands-anglerfishing-world-3d',label:'山野钓行',description:'真实 3D 生态',ci:{state:'success'}}],games:[{id:'wild',repo:'wildlands-anglerfishing-world-3d',title:'山野钓行 NEXT',english:'WILDLANDS NEXT',tag:'3D 钓鱼',status:'prototype',play:'https://aincfh.github.io/wildlands-anglerfishing-world-3d/next/'},{id:'bad',repo:'azure-coast',title:'海滨城市',status:'blocked',play:'https://aincfh.github.io/azure-coast/'}],external:[{name:'owner/lifegame',owner:'owner',repo:'lifegame',genreName:'生活模拟'}]});
-test('routes include mission, incubator, API lab and 15 real workspaces',()=>{assert.equal(COMMAND_ROUTES.length,16);assert.equal(fixtures.filter(x=>x.kind==='route').length,16);assert.equal(searchCommands(fixtures,'API 接口')[0].id,'route:api-lab');});
+test('routes include mission, incubator, API lab and 15 real workspaces',()=>{assert.equal(COMMAND_ROUTES.length,17);assert.equal(fixtures.filter(x=>x.kind==='route').length,17);assert.equal(searchCommands(fixtures,'API 接口')[0].id,'route:api-lab');});
 test('game commands only launch explicitly verified playable or prototype titles',()=>{
  assert.match(fixtures.find(x=>x.id==='game:wild').url,/github\.io/);
  assert.equal(fixtures.find(x=>x.id==='game:bad').url,'https://github.com/AincFh/azure-coast');
