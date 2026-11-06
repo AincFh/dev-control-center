@@ -6,8 +6,9 @@ import {
  upsertWorkItem,deleteWorkItem,workBlockers,workMetrics,filterWorkItems,
  issueDraft,createWorkBackup,restoreWorkBackup,workSuggestions
 } from './workboard-core.js';
+import {capacityPlan,capacityMarkdown,normalizeCapacity} from './capacity-core.js';
 
-const STORE='atlas-workboard-v1';
+const STORE='atlas-workboard-v1',CAPACITY_STORE='atlas-manual-work-capacity-v1';
 const $=id=>document.getElementById(id);
 const el=(tag,text,cls)=>{
  const node=document.createElement(tag);
@@ -20,7 +21,7 @@ const button=(label,fn,cls='')=>{
 };
 const labelFor=(options,value)=>options.find(x=>x.id===value)?.label||value;
 let items=[],projects=[],query='',activeRepo='all',activeCategory='all',activeStage='all',activePriority='all',editing=null;
-let feedbackTimer;
+let feedbackTimer,manualCapacity=24;
 function announce(message){
  const node=$('workFeedback');node.textContent=message;node.hidden=false;
  clearTimeout(feedbackTimer);feedbackTimer=setTimeout(()=>node.hidden=true,4600);
@@ -71,6 +72,7 @@ function statusMini(item){
  const meta=el('div',null,'work-card-meta');
  meta.append(el('span',item.priority,'work-priority '+item.priority.toLowerCase()),
   el('span',labelFor(WORK_CATEGORIES,item.category)));
+ meta.append(el('span','估算 '+item.effortUnits+' 单位','work-effort'));
  if(item.dueDate)meta.append(el('span','期限 '+item.dueDate,'work-date'));
  if(unresolved.length)meta.append(el('span','受依赖阻塞 '+unresolved.length,'work-dep-blocked'));
  return meta;
@@ -144,6 +146,43 @@ function render(){
   lane.append(body);board.append(lane);
  }
  renderSuggestions();
+ renderCapacity();
+}
+function renderCapacity(){
+ const plan=capacityPlan(items,manualCapacity);
+ $('workCapacity').value=String(manualCapacity);
+ $('workCapacitySummary').textContent='计划 '+plan.used+' / '+plan.capacity+
+  ' 单位 · 余 '+plan.remaining+' · 入选 '+plan.scheduled.length+
+  ' 项 · 待排 '+plan.waiting.length+' 项 · 阻塞 '+plan.blocked.length+' 项';
+ $('workCapacityFill').style.width=plan.utilization+'%';
+ $('workCapacityTrack').setAttribute('aria-valuenow',String(plan.utilization));
+ const allocated=$('workCapacityAllocation'),pending=$('workCapacityWaiting');
+ allocated.replaceChildren();pending.replaceChildren();
+ if(!plan.scheduled.length)allocated.append(el('p','本轮没有可安排的工作包。','work-capacity-empty'));
+ for(const task of plan.scheduled){
+  const row=el('div',null,'work-capacity-line');
+  row.append(el('span',task.repo+' · '+task.title),el('strong',task.cost+' 单位'));
+  allocated.append(row);
+ }
+ allocated.append(el('p','已分配到 '+plan.repos.length+' 个仓库','work-capacity-caption'));
+ if(!plan.waiting.length&&!plan.blocked.length)
+  pending.append(el('p','没有未安排或被依赖阻塞的工作包。','work-capacity-empty'));
+ for(const task of plan.waiting){
+  const row=el('div',null,'work-capacity-line');
+  row.append(el('span',task.repo+' · '+task.title),el('strong','待排 · '+task.cost));
+  pending.append(row);
+ }
+ for(const task of plan.blocked){
+  const row=el('div',null,'work-capacity-line work-capacity-blocked');
+  row.append(el('span',task.repo+' · '+task.title),el('strong','依赖/人工阻塞'));
+  pending.append(row);
+ }
+}
+function exportCapacityReport(){
+ const plan=capacityPlan(items,manualCapacity);
+ download('atlas-development-capacity-'+new Date().toISOString().slice(0,10)+'.md',
+  capacityMarkdown(plan,{generatedAt:new Date().toISOString()}),'text/markdown;charset=utf-8');
+ announce('已导出 '+plan.capacity+' 单位手工规划报表；没有访问任何 Codex 实时额度');
 }
 function renderSuggestions(){
  const candidates=workSuggestions(projects)
@@ -181,6 +220,7 @@ function edit(id=null,defaults={}){
  $('workEditTitle').value=item?.title||'';
  $('workEditDescription').value=item?.description||'';
  $('workEditOwner').value=item?.owner||'';
+ $('workEditEffort').value=String(item?.effortUnits??3);
  selectOptions($('workEditCategory'),WORK_CATEGORIES.map(x=>[x.id,x.label]),item?.category||defaults.category||'web');
  selectOptions($('workEditPriority'),WORK_PRIORITIES.map(x=>[x,x]),item?.priority||'P2');
  selectOptions($('workEditStage'),WORK_STAGES.map(x=>[x.id,x.label]),item?.stage||'backlog');
@@ -203,7 +243,7 @@ function saveEdit(event){
  const input={
   id:editing||makeId(),repo:$('workEditRepo').value,
   title:$('workEditTitle').value,description:$('workEditDescription').value,
-  owner:$('workEditOwner').value,category:$('workEditCategory').value,
+  owner:$('workEditOwner').value,effortUnits:Number($('workEditEffort').value),category:$('workEditCategory').value,
   priority:$('workEditPriority').value,stage:$('workEditStage').value,
   dueDate:$('workEditDate').value||null,
   dependsOn:[...$('workEditDependencies').querySelectorAll('input:checked')].map(x=>x.value)
@@ -244,10 +284,19 @@ async function importBoard(file){
  finally{$('workImport').value=''}
 }
 export function initWorkboard(){
+ try{manualCapacity=normalizeCapacity(localStorage.getItem(CAPACITY_STORE))}catch{manualCapacity=24}
  try{items=normalizeWorkboard(JSON.parse(localStorage.getItem(STORE)||'[]'))}
  catch{items=[]}
  $('workCreate').onclick=()=>edit();
  $('workExport').onclick=exportBoard;
+ $('workCapacityReport').onclick=exportCapacityReport;
+ $('workCapacity').addEventListener('change',event=>{
+  const capacity=normalizeCapacity(event.target.value);
+  if(String(capacity)!==String(event.target.value))announce('请输入 1–1000 的整数工作量，已恢复到默认/有效数值');
+  manualCapacity=capacity;
+  try{localStorage.setItem(CAPACITY_STORE,String(manualCapacity))}catch{}
+  renderCapacity();
+ });
  $('workImport').addEventListener('change',ev=>importBoard(ev.target.files?.[0]));
  $('workSearch').addEventListener('input',ev=>{query=ev.target.value;render()});
  for(const [id,key]of [['workRepoFilter','activeRepo'],['workCategoryFilter','activeCategory'],

@@ -29,7 +29,7 @@ jobs:
       - name: Real game QA evidence module syntax
         run: node --check game-runtime-core.js && node --check game-runtime-ui.js
       - name: Module syntax
-        run: node --check app.js && node --check workboard.js && node --check workboard-core.js && node --check status.js && node --check deploy-core.js && node --check site-probe-core.js && node --check scripts/build-status.mjs && node --check scripts/asset-version.mjs
+        run: node --check app.js && node --check workboard.js && node --check workboard-core.js && node --check capacity-core.js && node --check status.js && node --check deploy-core.js && node --check site-probe-core.js && node --check scripts/build-status.mjs && node --check scripts/asset-version.mjs
       - name: Build public status snapshot
         run: npm run build
         env:

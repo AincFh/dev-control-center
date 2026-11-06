@@ -157,6 +157,12 @@
  <div class="work-metrics" aria-label="工作包统计"><div><small>工作包总量</small><strong id="workTotal">0</strong></div><div><small>开发进行中</small><strong id="workActive">0</strong></div><div><small>依赖或执行受阻</small><strong id="workBlocked">0</strong></div><div><small>已完成</small><strong id="workDone">0</strong></div><div><small>超出计划日期</small><strong id="workOverdue">0</strong></div></div>
  <div class="work-toolbar"><label><span>搜索工作包</span><input id="workSearch" type="search" placeholder="标题、说明或仓库" autocomplete="off"></label><label><span>仓库</span><select id="workRepoFilter"><option value="all">全部仓库</option></select></label><label><span>项目类别</span><select id="workCategoryFilter"><option value="all">全部类型</option></select></label><label><span>阶段</span><select id="workStageFilter"><option value="all">全部阶段</option></select></label><label><span>优先级</span><select id="workPriorityFilter"><option value="all">全部优先级</option></select></label></div>
  <div class="work-meta"><strong id="workVisible">0 个工作包</strong><span>任务和人工验收只保存于本机浏览器；导入会保留已有同 ID 记录。GitHub Issue 草稿需人工提交。</span></div>
+ <section class="work-capacity-section" aria-label="跨项目工作量计划">
+ <div class="work-capacity-head"><div><span class="eyebrow">CAPACITY / CODING EFFORT</span><h2>本轮开发容量分配<span>.</span></h2><p>通过每个工作包的估算投入和优先级，规划多个仓库的实施顺序；会自动排除已完成和依赖未满足的工作包。</p></div><div class="work-capacity-actions"><label for="workCapacity">本轮可投入工作量单位<input id="workCapacity" type="number" min="1" max="1000" step="1" value="24" inputmode="numeric"></label><button type="button" id="workCapacityReport">导出开发投入计划 .md</button></div></div>
+ <div class="work-capacity-summary"><strong id="workCapacitySummary">计算中…</strong><div class="work-capacity-track" role="progressbar" aria-label="已分配工作量比例" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="workCapacityTrack"><div id="workCapacityFill"></div></div></div>
+ <div class="work-capacity-grid"><article><h3>本轮入选</h3><div id="workCapacityAllocation"></div></article><article><h3>未安排或被阻塞</h3><div id="workCapacityWaiting"></div></article></div>
+ <p class="work-capacity-disclaimer">单位仅是手动估算的研发工作量，不是 Codex / ChatGPT 官方剩余 Token、Credits、额度或计费信息。页面不连接使用量接口、不自动调用模型，也不会修改 GitHub 项目。</p>
+ </section>
  <div id="workBoard" class="work-board" aria-label="六阶段项目执行看板"></div>
  <section class="work-suggestions-section" aria-label="公开项目状态建议"><div class="work-suggestions-header"><div><span class="eyebrow">RESEARCH TO ACTION</span><h2>从真实状态，识别下一项工作。</h2><p>根据最近公开 CI、PR、浏览器 QA 与已部署站点探针生成可选建议，不等同于后台自动任务或真实完成证据。</p></div><span id="workSuggestionCount">读取中…</span></div><div id="workSuggestions" class="work-suggestions"></div></section>
  <p class="footnote">注：只有 GitHub 公开数据与本机工作计划。离线刷新、API 失败或数据过期可能造成建议不完整，不能据此认定项目没有待办。</p>
@@ -271,6 +277,7 @@
  <label>优先级<select id="workEditPriority"></select></label>
  <label>执行阶段<select id="workEditStage"></select></label>
  <label>目标日期<input id="workEditDate" type="date"></label>
+ <label>预计投入（工作量单位）<input id="workEditEffort" type="number" required min="1" max="40" step="1" value="3" inputmode="numeric"></label>
  <label class="wide">任务目标与验收标准<textarea id="workEditDescription" rows="5" maxlength="3000" placeholder="描述预期功能、约束、真实测试和发布门槛。"></textarea></label></div>
  <fieldset class="work-dependency-field"><legend>前置依赖：勾选必须先完成的工作包</legend><div id="workEditDependencies" class="work-dependency-grid"></div><p>有未完成的前置依赖时，不能把工作包推进到“开发中 / 待验收 / 已完成”。循环依赖无法保存。</p></fieldset>
  <div class="work-form-actions"><button id="workDelete" type="button" hidden>移除工作包</button><button type="submit" class="work-submit">保存工作包</button></div>

@@ -45,6 +45,8 @@ export function normalizeWorkItem(raw){
   category:CATEGORIES.has(raw.category)?raw.category:'other',
   stage:STAGES.has(raw.stage)?raw.stage:'backlog',
   priority:WORK_PRIORITIES.includes(raw.priority)?raw.priority:'P2',
+  // Manual effort estimate: one unit is planning work, never a Codex API credit.
+  effortUnits:Number.isInteger(raw.effortUnits)&&raw.effortUnits>=1&&raw.effortUnits<=40?raw.effortUnits:3,
   dependsOn:dependencies,
   dueDate:validDate(raw.dueDate)?raw.dueDate:null,
   issueNumber:Number.isSafeInteger(raw.issueNumber)&&raw.issueNumber>0&&raw.issueNumber<100000000?raw.issueNumber:null,
@@ -135,7 +137,7 @@ export function issueDraft(item){
  const t=encodeURIComponent('[ATLAS / '+item.priority+'] '+item.title).slice(0,1000);
  const body=['## 目标',item.description||'请补充目标、范围与验收标准。','',
   '## 项目信息','- 仓库：AincFh/'+item.repo,'- 分类：'+item.category,
-  '- 优先级：'+item.priority,'- 负责人：'+(item.owner||'待分配'),'- 当前阶段：'+item.stage,
+  '- 优先级：'+item.priority,'- 估算工作量：'+item.effortUnits+' 单位','- 负责人：'+(item.owner||'待分配'),'- 当前阶段：'+item.stage,
   '- 计划日期：'+(item.dueDate||'未设定'),
   '- 前置工作包：'+(item.dependsOn.join(', ')||'无'),'',
   '## 验收','- [ ] 关键功能与测试用例','- [ ] 桌面/移动端真实使用验证',
