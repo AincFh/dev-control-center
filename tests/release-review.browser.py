@@ -22,6 +22,9 @@ data=[
  project("cozy-bistro-sim","success","published"),
  project("AincFh","unknown","unknown")
 ]
+data[1]["release"]={"state":"artifact","tag":"v1.3.0","publishedAt":STAMP,
+ "assetTypes":["apk"],"assetCount":1,
+ "url":"https://github.com/AincFh/QingJi/releases/tag/v1.3.0"}
 repos=[{"name":p["name"],"html_url":p["repositoryUrl"],"description":p["description"],
  "language":p["language"],"pushed_at":STAMP,"private":False,
  "stargazers_count":0} for p in data]
@@ -73,9 +76,10 @@ with socketserver.TCPServer(("127.0.0.1",0),Handler) as server:
   until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#releaseGrid .release-card"))==1)
   card=driver.find_element(By.CSS_SELECTOR,"#releaseGrid .release-card")
   assert card.get_attribute("data-repo")=="QingJi"
-  assert [x.text for x in card.find_elements(By.CSS_SELECTOR,".release-lane strong")]==["已观测","已观测","未知","未知","未知"]
+  assert [x.text for x in card.find_elements(By.CSS_SELECTOR,".release-lane strong")]==["已观测","已观测","已观测","未知","未知"]
   card.find_element(By.TAG_NAME,"summary").click()
-  assert "安装包" in card.find_element(By.CSS_SELECTOR,".release-detail-list").text
+  assert "APK" in card.find_element(By.CSS_SELECTOR,".release-detail-list").text
+  assert card.find_element(By.LINK_TEXT,"发行记录").get_attribute("href")=="https://github.com/AincFh/QingJi/releases/tag/v1.3.0"
   Select(driver.find_element(By.ID,"releaseDomain")).select_by_value("all")
   Select(driver.find_element(By.ID,"releaseState")).select_by_value("human")
   until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#releaseGrid .release-card"))==1)
