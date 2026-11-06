@@ -8,7 +8,7 @@ test('information architecture has twelve separate navigable views',()=>{
  assert.match(app,/window\.addEventListener\('hashchange',route\)/);
 });
 test('important functional widgets are preserved',()=>{
- for(const id of ['arcadeGrid','gameQAPassed','gameQAFailed','gameQAUnknown','gameQAStamp','gameQACards','gameQARunLink','arcadePlayable','arcadeSearch','arcadeGenres','discoveryGrid','discoverySearch','grid','query','sort','tabs','deliveryList','queueList','events','workstreamGrid','universeGrid','universeSearch','universeCanvas','universePrev','universeNext','missionCount','missionGameQAPass','missionGameQAFail','missionProbeGood','missionProbeBad','missionSiteChecks','missionProjects','missionTaskFeed','missionReviewDialog','missionReport','traceGrid','traceTotal','traceDeployed','traceQuery','traceIssues','traceExport','commandDialog','commandInput','commandResults','details','close','refresh','total','live','active','synced','connection'])assert.ok(html.includes('id="'+id+'"'),id);
+ for(const id of ['arcadeGrid','gameQAPassed','gameQAFailed','gameQAUnknown','gameQAStamp','gameQACards','gameQARunLink','arcadePlayable','arcadeSearch','arcadeGenres','discoveryGrid','discoverySearch','grid','query','sort','tabs','deliveryList','queueList','events','workstreamGrid','universeGrid','universeSearch','universeDomain','universeDomainTotals','universeCanvas','universePrev','universeNext','missionCount','missionGameQAPass','missionGameQAFail','missionProbeGood','missionProbeBad','missionSiteChecks','missionProjects','missionTaskFeed','missionReviewDialog','missionReport','traceGrid','traceTotal','traceDeployed','traceQuery','traceIssues','traceExport','commandDialog','commandInput','commandResults','details','close','refresh','total','live','active','synced','connection'])assert.ok(html.includes('id="'+id+'"'),id);
 });
 test('real website uses original bundled CSS without remote fonts',()=>{
  assert.match(html,/href="\.\/atlas-v3\.css"/);assert.doesNotMatch(css,/@import\s+url\(https?:/);
@@ -38,5 +38,14 @@ test('homepage prioritizes real non-game projects without removing the playable 
  assert.match(css,/\.mini-platform\{/);
  assert.match(css,/\.mini-mobile\{/);
  assert.ok(html.includes('当前外部星图聚焦游戏与模拟项目'));
+ assert.ok(html.includes('id="arcade"'));
+});
+
+test('GitHub universe expands beyond games and keeps game arcade a separate workspace',()=>{
+ assert.match(html,/id="universeDomain"/);
+ assert.match(html,/<option value="software" selected>软件与工具<\/option>/);
+ assert.match(html,/<option value="game">游戏与模拟<\/option>/);
+ assert.match(html,/AI、软件系统、Web/);
+ assert.match(css,/#universeDomain\{/);
  assert.ok(html.includes('id="arcade"'));
 });
