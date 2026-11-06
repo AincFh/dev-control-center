@@ -41,6 +41,14 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   assert driver.find_element(By.ID,"universeFeaturedToggle").get_attribute('aria-expanded')=='true'
   driver.find_element(By.ID,"universeFeaturedToggle").click()
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card"))==6
+  # A user can compare third-party apps and remove them without a login or token.
+  driver.find_element(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card:first-child .external-highlight-actions button[aria-pressed]").click()
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeCompareGrid .universe-compare-card"))==1)
+  driver.find_element(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card:nth-child(2) .external-highlight-actions button[aria-pressed]").click()
+  until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeCompareGrid .universe-compare-card"))==2)
+  assert driver.find_element(By.ID,"universeCompareCount").text=='2 / 4'
+  driver.find_element(By.ID,"universeCompareClear").click()
+  assert not driver.find_element(By.ID,"universeCompare").is_displayed()
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))>=9
   # Cross-domain family switch must be actual interactive filtering, not label-only navigation.
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeDomains button"))==3
