@@ -90,7 +90,7 @@ test('zero planned work is represented as empty, not fabricated quota usage',()=
  assert.equal(p.remaining,24);
 });
 test('invalid dependency graphs abort capacity calculation',()=>{
- assert.throws(()=>capacityPlan([make('cyclic01',{dependsOn:['cyclic01']})],10));
+ assert.throws(()=>capacityPlan([make('cyclic01',{dependsOn:['cyclic02']}),make('cyclic02',{dependsOn:['cyclic01']})],10));
  assert.throws(()=>capacityPlan([make('missing1',{dependsOn:['other01']})],10));
 });
 test('read-only capacity planning is deterministic and never mutates task status',()=>{
