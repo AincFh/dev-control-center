@@ -47,6 +47,9 @@ with socketserver.TCPServer(("127.0.0.1",0),Server) as server:
   driver.find_element(By.CSS_SELECTOR,"#universeFeaturedGrid .external-highlight-card:nth-child(2) .external-highlight-actions button[aria-pressed]").click()
   until(lambda:len(driver.find_elements(By.CSS_SELECTOR,"#universeCompareGrid .universe-compare-card"))==2)
   assert driver.find_element(By.ID,"universeCompareCount").text=='2 / 4'
+  assert driver.find_element(By.ID,"universeCompareExport").is_enabled()
+  driver.refresh()
+  until(lambda:driver.find_element(By.ID,"universeCompareCount").text=='2 / 4')
   driver.find_element(By.ID,"universeCompareClear").click()
   assert not driver.find_element(By.ID,"universeCompare").is_displayed()
   assert len(driver.find_elements(By.CSS_SELECTOR,"#universeCategories button"))>=9
