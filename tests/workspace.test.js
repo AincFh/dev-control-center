@@ -1,9 +1,9 @@
 import test from 'node:test';import assert from 'node:assert/strict';import{readFileSync}from'node:fs';
 const html=readFileSync('index.html','utf8'),css=readFileSync('atlas-v3.css','utf8'),app=readFileSync('app.js','utf8'),build=readFileSync('scripts/build-status.mjs','utf8');
 const arcade=readFileSync('arcade.js','utf8');
-const pages=['home','arcade','workstreams','projects','discovery','universe','incubator','workboard','utilities','mission','trace','delivery','pipeline','activity'];
-test('information architecture has fourteen navigable views, including workboard and developer utilities',()=>{
- for(const id of pages){assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,new RegExp('data-view-link="'+id+'"'));assert.match(app,new RegExp('(?:^|\\n) '+id+":\\['"));}
+const pages=['home','arcade','workstreams','projects','discovery','universe','incubator','workboard','utilities','api-lab','mission','trace','delivery','pipeline','activity'];
+test('information architecture has fifteen navigable views, including workboard and developer utilities',()=>{
+ for(const id of pages){assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,new RegExp('data-view-link="'+id+'"'));assert.match(app,new RegExp("(?:^|\\n) ['\\\"]?"+id+"['\\\"]?:\\['"));}
  assert.match(css,/\.view\.is-active\s*\{display:block\}/);
  assert.match(app,/window\.addEventListener\('hashchange',route\)/);
 });
