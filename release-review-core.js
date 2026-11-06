@@ -1,4 +1,5 @@
 // ATLAS · cross-domain release evidence. Public observations, never a ship approval.
+import {nativeArtifactProof} from './native-release-core.js';
 const PROBE_FAILURE=new Set(['resource_error','http_error','network_error','content_error']);
 const WEB_KINDS=new Set(['web','platform','game']);
 export const RELEASE_STATES=Object.freeze([
@@ -30,9 +31,13 @@ export function reviewRepository(project,{generatedAt=null,now=Date.now()}={}){
  const qa=p.runtimeQa||{};
  const qaCurrent=qa.isCurrent===true;
  const qaResult=qaCurrent?qa.status:'unknown';
+ const proof=nativeArtifactProof(p.release,category);
+ const releaseTag=typeof p.release?.tag==='string'&&/^[A-Za-z0-9._/@+-]{1,120}$/.test(p.release.tag)?p.release.tag:null;
+ const releaseUrl=releaseTag&&/^[A-Za-z0-9_.-]{1,100}$/.test(name)
+  ?'https://github.com/AincFh/'+encodeURIComponent(name)+'/releases/tag/'+encodeURIComponent(releaseTag):null;
  const knownBlock=p.maturity==='blocked';
  const ciStatus=fresh&&ci==='success'?'pass':fresh&&ci==='failure'?'fail':fresh&&ci==='running'?'running':'unknown';
- const deployment=web?(fresh&&site==='published'?'pass':fresh&&site==='error'?'fail':fresh&&site==='building'?'running':'unknown'):'unknown';
+ const deployment=web?(fresh&&site==='published'?'pass':fresh&&site==='error'?'fail':fresh&&site==='building'?'running':'unknown'):(fresh&&proof.verified?'pass':'unknown');
  const runtime=game
   ?(qaResult==='pass'?'pass':['fail','timeout'].includes(qaResult)?'fail':'unknown')
   :web?(fresh&&probe==='reachable'?'pass':fresh&&PROBE_FAILURE.has(probe)?'fail':'unknown'):'unknown';
@@ -41,7 +46,7 @@ export function reviewRepository(project,{generatedAt=null,now=Date.now()}={}){
   STEP('source','公开源码',name?'pass':'unknown',name?'仓库身份已建立；不代表功能或产权已验证':'缺少仓库身份'),
   STEP('ci','主分支 CI',ciStatus,ciStatus==='pass'?'最新公开快照显示构建通过':ciStatus==='fail'?'最新公开快照显示构建失败':ciStatus==='running'?'构建正在执行':'无新鲜的成功或失败证据'),
   STEP('ship',web?'网站部署':'发行产物',deployment,
-   web?(deployment==='pass'?'GitHub Pages 发布记录已核验':deployment==='fail'?'GitHub Pages 构建报错':deployment==='running'?'GitHub Pages 仍在部署':'尚无可核实的公开发布记录'):'APK / 安装包 / 桌面发行物未被此快照核验'),
+   web?(deployment==='pass'?'GitHub Pages 发布记录已核验':deployment==='fail'?'GitHub Pages 构建报错':deployment==='running'?'GitHub Pages 仍在部署':'尚无可核实的公开发布记录'):deployment==='pass'?'GitHub Release 已登记 '+proof.kinds.map(x=>x.toUpperCase()).join(' / ')+' 文件；签名与安装尚未验证':'无新鲜、适合该平台的 GitHub Release 发行物证据'),
   STEP('run',game?'浏览器实际操作':web?'网站资源探针':'设备 / 应用运行',runtime,
    game?(runtime==='pass'?'36 小时内有具名 Chromium 关键流程通过记录':runtime==='fail'?'36 小时内存在 Chromium 关键流程失败':'无当前具名浏览器操作证据')
    :web?(runtime==='pass'?'HTML 与部分同源资源可达；并非端到端验收':runtime==='fail'?'HTML 或静态资源探针检测到异常':'尚无新鲜的站点可达证据'):'未收集 APK 安装、桌面启动、真机或设备端操作证据'),
@@ -58,12 +63,12 @@ export function reviewRepository(project,{generatedAt=null,now=Date.now()}={}){
  else if(deployment==='fail')next='定位 GitHub Pages 部署失败原因并重新验收。';
  else if(!fresh)next='当前交付状态快照缺失或已过期，先刷新 Actions 证据。';
  else if(ciStatus!=='pass')next='补齐主分支 CI 的可核验通过记录。';
- else if(!web)next='核验安装产物、版本签名、真机安装与独立发布渠道。';
+ else if(!web)next=deployment==='pass'?'已找到发行文件；继续核验哈希、签名、真实设备安装及核心使用流程。':'查验 GitHub Releases 是否有匹配平台的发行文件，再验证签名与真实设备安装。';
  else if(deployment!=='pass')next='补齐与本仓库绑定的公开部署证据；不能把 CI 当上线。';
  else if(runtime!=='pass')next=game?'补齐最新真实浏览器关键流程操作验收。':'补齐站点资源及关键业务实际运行验证。';
  else next='自动证据覆盖仅限部分流程；继续完整产品、安全、性能与许可人工验收。';
  return{name,label:String(p.label||name),category,web,game,isFork:!!p.isFork,state,knownBlock,
-   fresh,passed:steps.filter(s=>s.status==='pass').length,steps,next,
+   fresh,passed:steps.filter(s=>s.status==='pass').length,steps,next,releaseTag,releaseUrl,releaseKinds:proof.kinds,
    sourceUrl:/^[a-zA-Z0-9_.-]+$/.test(name)?'https://github.com/AincFh/'+encodeURIComponent(name):null};
 }
 export function reviewPortfolio(projects=[],snapshot={},now=Date.now()){
@@ -97,6 +102,7 @@ export function releaseReviewMarkdown(portfolio,records=portfolio?.records||[]){
    '- 快照：'+(r.fresh?'新鲜':'缺失 / 过期')+(r.isFork?'；Fork，需独立核对上游许可':''),
    '- 下一步：'+r.next);
   for(const step of r.steps)lines.push('  - '+step.label+'：'+({pass:'有当前证据',fail:'明确失败',running:'执行中',unknown:'待核验'}[step.status]||'待核验')+' — '+step.detail);
+  if(r.releaseUrl)lines.push('- GitHub Release：'+r.releaseTag+'；匹配的发行文件类型：'+(r.releaseKinds.length?r.releaseKinds.join(', '):'无当前核验证据')+'；签名及安装未核验。','- 发行记录：'+r.releaseUrl);
   if(r.sourceUrl)lines.push('- 来源：'+r.sourceUrl);
   lines.push('');
  }
