@@ -74,7 +74,11 @@ function card(p){
  links.append(link(p.url,'⌘'));if(p.preview)links.append(link(p.preview,'↗'));
  if(p.ci?.url)links.append(link(p.ci.url,'◷'));
  const detail=n('button','···');detail.title='查看构建和任务详情';detail.setAttribute('aria-label','查看 '+p.label);
- detail.addEventListener('click',()=>detailPanel(p.name));links.append(detail);bottom.append(language,links);root.append(bottom);
+ detail.addEventListener('click',()=>detailPanel(p.name));links.append(detail);
+ const plan=n('button','＋');plan.title='为 '+p.label+' 创建工作包';plan.setAttribute('aria-label','为 '+p.label+' 创建工作包');
+ plan.addEventListener('click',()=>window.dispatchEvent(new CustomEvent('atlas:create-work',{
+  detail:{repo:p.name,category:p.category}})));links.append(plan);
+ bottom.append(language,links);root.append(bottom);
  return root;
 }
 function render(){
