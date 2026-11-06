@@ -41,3 +41,11 @@ test('homepage prioritizes real non-game projects without removing the playable 
  assert.ok(html.includes('id="universeDomains"'));
  assert.ok(html.includes('id="arcade"'));
 });
+
+test('external open-source app library integrates provenance and functional exploration',()=>{
+ for(const id of ['universeFeaturedShelf','universeFeaturedGrid','universeFeaturedToggle','universeFeaturedCount'])
+  assert.ok(html.includes('id="'+id+'"'),id);
+ assert.match(css,/\\.external-shelf-grid\\{/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.ok(html.includes('第三方'));
+});
