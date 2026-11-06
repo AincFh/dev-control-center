@@ -84,3 +84,11 @@ test('local developer utilities are navigable and genuinely interactive',()=>{
  assert.ok(css.includes('.utils-workspace{'));
  assert.ok(html.includes('data-view-link="utilities"'));
 });
+
+test('source-to-execution path connects a real third-party plan to dependency-aware local workboard',()=>{
+ const sector=readFileSync('sector-lab.js','utf8'),board=readFileSync('workboard.js','utf8'),bridge=readFileSync('external-workplan-core.js','utf8');
+ assert.ok(html.includes('id="sectorLabWorkboard"'));
+ assert.ok(sector.includes('atlas:import-domain-plan'));
+ assert.ok(board.includes('importExternalWorkPackages'));
+ assert.ok(bridge.includes('upsertWorkItem'));
+});
