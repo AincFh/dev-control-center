@@ -42,7 +42,7 @@ export async function fingerprintDist(dist,copied,version){
  }
  // Every linked stylesheet must share the deployment fingerprint; otherwise a
  // cached rail stylesheet can lag behind updated HTML/JS after Pages deploys.
- for(const asset of ['workboard.css','release-review.css']){
+ for(const asset of ['workboard.css','release-review.css','api-lab.css']){
   const before='href="./'+asset+'"';
   if(!html.includes(before))continue;
   if(!copied.includes(asset))throw new Error('Missing linked stylesheet: '+asset);
