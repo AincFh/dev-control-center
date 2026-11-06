@@ -1,10 +1,15 @@
-// Source-backed, attribution-aware GitHub game-universe catalog.
+// Source-backed GitHub cross-domain research catalog. Games are one family among software disciplines.
 // All rows are external references, NOT ATLAS-owned products or verified playable games.
 export const PAGE_SIZE=24;
 export const CATEGORY_COLORS={
  life:'#bcce9a',builder:'#9cc9bd',survival:'#99b8af',management:'#d7b994',
- industry:'#a7b8dc',story:'#d0aeca',arcade:'#e7be99',web3d:'#9cb6d0'
+ industry:'#a7b8dc',story:'#d0aeca',arcade:'#e7be99',web3d:'#9cb6d0',
+ system:'#8bb9dc',ai:'#a8a5e9',desktop:'#82b7c6',mobile:'#d2abce',web:'#7dbea2',
+ devtools:'#b4c3dc',automation:'#bbbc8a',data:'#8fb6d8',media:'#ddaba0',
+ education:'#c7b6dd',infra:'#98c6bc',design:'#d2b69a'
 };
+export const GAME_GENRES=new Set(['life','builder','survival','management','industry','story','arcade','web3d']);
+export const familyOf=genre=>GAME_GENRES.has(genre)?'game':'software';
 const VALID=/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 export function validRepoName(x){return typeof x==='string'&&x.length<=240&&VALID.test(x)}
 export function normalizeCatalog(data){
@@ -15,18 +20,18 @@ export function normalizeCatalog(data){
   if(!Array.isArray(row)||!validRepoName(row[0])||!cats.has(row[1]))continue;
   const key=row[0].toLowerCase();if(seen.has(key))continue;seen.add(key);
   const [owner,...name]=row[0].split('/');
-  items.push({name:row[0],owner,repo:name.join('/'),genre:row[1],genreName:cats.get(row[1]),external:true,license:'unreviewed'});
+  items.push({name:row[0],owner,repo:name.join('/'),genre:row[1],genreName:cats.get(row[1]),family:familyOf(row[1]),external:true,license:'unreviewed'});
  }
- return {categories:[...cats].map(([id,name])=>({id,name})),items,queries:Array.isArray(data.searches)?data.searches.filter(x=>x.ok).length:0,updated:data.compiledOn||null};
+ return {categories:[...cats].map(([id,name])=>({id,name,family:familyOf(id)})),items,queries:Array.isArray(data.searches)?data.searches.filter(x=>x.ok).length:0,updated:data.compiledOn||null};
 }
 export function balanceGenres(items){
  const buckets=new Map();for(const item of items){if(!buckets.has(item.genre))buckets.set(item.genre,[]);buckets.get(item.genre).push(item)}
  const out=[];let reading=true;while(reading){reading=false;for(const b of buckets.values())if(b.length){out.push(b.shift());reading=true}}
  return out;
 }
-export function filterCatalog(items,{query='',genre='all',savedOnly=false,bookmarks=new Set(),sort='balanced'}={}){
+export function filterCatalog(items,{query='',genre='all',family='all',savedOnly=false,bookmarks=new Set(),sort='balanced'}={}){
  const words=String(query).toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
- const allowed=items.filter(x=>(genre==='all'||x.genre===genre)&&(!savedOnly||bookmarks.has(x.name.toLowerCase()))&&words.every(w=>(x.name+' '+x.genreName).toLocaleLowerCase().includes(w)));
+ const allowed=items.filter(x=>(family==='all'||(x.family||familyOf(x.genre))===family)&&(genre==='all'||x.genre===genre)&&(!savedOnly||bookmarks.has(x.name.toLowerCase()))&&words.every(w=>(x.name+' '+x.genreName).toLocaleLowerCase().includes(w)));
  if(sort==='name')return allowed.sort((a,b)=>a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
  if(sort==='owner')return allowed.sort((a,b)=>a.owner.localeCompare(b.owner,'en',{sensitivity:'base'}));
  return balanceGenres(allowed);
@@ -37,5 +42,5 @@ export function pageOf(items,page=1,size=PAGE_SIZE){
 }
 export function statsOf(items,bookmarks=new Set()){
  const by={};for(const x of items)by[x.genre]=(by[x.genre]||0)+1;
- return {total:items.length,genreCount:Object.keys(by).length,saved:items.filter(x=>bookmarks.has(x.name.toLowerCase())).length,byGenre:by};
+ return {total:items.length,genreCount:Object.keys(by).length,saved:items.filter(x=>bookmarks.has(x.name.toLowerCase())).length,byGenre:by,byFamily:{game:items.filter(x=>(x.family||familyOf(x.genre))==='game').length,software:items.filter(x=>(x.family||familyOf(x.genre))==='software').length}};
 }
