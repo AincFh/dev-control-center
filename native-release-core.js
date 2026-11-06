@@ -37,7 +37,7 @@ export function nativeArtifactProof(release,category){
   return{verified:false,kinds:[]};
  const acceptable=category==='mobile'?new Set(['apk','aab','ipa'])
   :category==='system'?new Set(['iso','appimage','deb','rpm','exe','msi','msix'])
-  :new Set(ARTIFACT_KINDS);
+  :new Set(['appimage','msixbundle','msix','exe','msi','dmg','pkg','deb','rpm','flatpak','snap']);
  const kinds=[...new Set(release.assetTypes.filter(x=>typeof x==='string'&&acceptable.has(x)))];
  return{verified:kinds.length>0,kinds};
 }
