@@ -6,11 +6,15 @@ ATLAS 是多项目 **Developer Studio**，覆盖系统软件 / Web OS、全栈 W
 
 **已有的公开非游戏项目：** [AincFh OS](https://github.com/AincFh/AincFh)、[A.T. Field](https://github.com/AincFh/my-anime-blog)、[轻记 QingJi](https://github.com/AincFh/QingJi)、[Squiffy Fork](https://github.com/AincFh/squiffy) 和 ATLAS 控制中心本身。各项目实际完成度必须以其仓库、CI、真实功能与部署证据为准；Squiffy 保留上游作者和 Fork 属性。
 
-**跨领域 GitHub 研究索引已上线：** 在原有 1,772 条游戏/模拟来源基础上，2026-11-06 首批追加 GitHub 公共搜索返回并去重的 **465 条非游戏仓库参考**，共计 **2,237 条、20 个分类（其中 12 个非游戏领域）**。可以按软件/AI/工具、游戏与仿真、全部领域切换，并使用搜索、分类、关注与研发候选池。数字仅代表该版本的公开来源记录，不表示已经开发了同等数量的产品；许可证、资产、可运行性均需逐项核验。详见 [GitHub 星图](https://aincfh.github.io/dev-control-center/#universe)、[PR #36](https://github.com/AincFh/dev-control-center/pull/36)、[Issue #32](https://github.com/AincFh/dev-control-center/issues/32) 和 [跨领域路线图](docs/PORTFOLIO_ROADMAP.md)。
+**跨领域 GitHub 软件实验室已扩展：** 2026-11-06 的最新数据集包含 **4,191 条公开仓库参考、26 个研究分类（18 个非游戏方向）**。除原有系统、AI、桌面、移动、Web、数据、开发工具等方向，还新增笔记与协作、通讯、安全隐私、科学工程、财务商业和无障碍技术。精选 **36 个 GitHub 公开仓库核实的第三方软件档案**，可查看原作者简介、快照、实时 GitHub 详情，并进行最多四仓库对比及研发候选孵化。第三方项目不属于 ATLAS 已交付产品，仓库许可证字段仅供研究参考，不能替代源码/素材复用授权。详见 [GitHub 星图](https://aincfh.github.io/dev-control-center/#universe)、[PR #36](https://github.com/AincFh/dev-control-center/pull/36)、[Issue #32](https://github.com/AincFh/dev-control-center/issues/32) 和 [跨领域路线图](docs/PORTFOLIO_ROADMAP.md)。
 
 **后续实际产品开发：** 在现有 AincFh OS、A.T. Field、轻记 QingJi、ATLAS 工程控制台的基础上，继续投入 Windows 工具、AI Agents、跨平台应用、数据与创意生产等完整产品；相关新方向在正式立项和验收前不得标记为已交付。
 
 公开站点只展示 GitHub 公共信息，不公开内部仓库，不持有管理令牌。开发产物继续独立仓库化，并以 Issue → PR → CI → 产品测试 → 发布验收形成可追溯闭环。
+
+## 外部软件研究与比较
+
+进入 [GitHub 跨领域软件实验室](https://aincfh.github.io/dev-control-center/#universe)，优先浏览非游戏应用，筛选 18 个方向和 36 个有 GitHub 元信息快照的第三方实例。可对四个仓库进行主动实时比较；公开 API 达到限额时保留未知状态。精选档案与大量外部索引均不可冒充 ATLAS 自研产品。数据分类是 GitHub 主题检索归档，可能需人工纠正；正式开发需许可证和资产审核。
 
 ## 新增：在线游戏大厅
 
