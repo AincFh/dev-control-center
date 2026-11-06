@@ -495,7 +495,7 @@ export const DOMAIN_BLUEPRINTS=Object.freeze({
     "risk": "明确资产来源和内存预算"
   }
 });
-const validRepo=s=>typeof s==='string'&&/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(s)&&s.length<=240;
+const validRepo=s=>typeof s==='string'&&s.length<=240&&/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(s)&&s.split('/').every(part=>part!=='.'&&part!=='..');
 export function domainGroup(id){return DOMAIN_GROUPS.find(g=>g.categories.includes(id))?.id||null;}
 export function domainPlan(category,{repo=null,label=null}={}){
  const blueprint=DOMAIN_BLUEPRINTS[category];
