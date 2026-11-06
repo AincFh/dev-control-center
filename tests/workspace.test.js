@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import{readFileSync}from'node:fs';
 const html=readFileSync('index.html','utf8'),css=readFileSync('atlas-v3.css','utf8'),app=readFileSync('app.js','utf8'),build=readFileSync('scripts/build-status.mjs','utf8');
 const arcade=readFileSync('arcade.js','utf8');
-const pages=['home','arcade','workstreams','projects','discovery','universe','incubator','workboard','utilities','mission','trace','delivery','pipeline','activity'];
+const pages=['home','arcade','workstreams','projects','discovery','universe','incubator','workboard','utilities','data-studio','mission','trace','delivery','pipeline','activity'];
 test('information architecture has fourteen navigable views, including workboard and developer utilities',()=>{
  for(const id of pages){assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,new RegExp('data-view-link="'+id+'"'));assert.match(app,new RegExp('(?:^|\\n) '+id+":\\['"));}
  assert.match(css,/\.view\.is-active\s*\{display:block\}/);
@@ -91,4 +91,12 @@ test('source-to-execution path connects a real third-party plan to dependency-aw
  assert.ok(sector.includes('atlas:import-domain-plan'));
  assert.ok(board.includes('importExternalWorkPackages'));
  assert.ok(bridge.includes('upsertWorkItem'));
+});
+
+test('local CSV/JSON analytics workbench has a routed, usable and private UI',()=>{
+ for(const id of ['dataInput','dataImport','dataFile','dataSample','dataClear','dataStats','dataNumericSummary','dataFilterColumn','dataFilterOperator','dataFilterQuery','dataGroup','dataOperation','dataMetric','dataChart','dataTable','dataPrevious','dataNext','dataExportCsv','dataExportJson'])
+  assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(app.includes('initDataStudio()'));
+ assert.ok(css.includes('.data-bar-row{'));
+ assert.ok(html.includes('data-view-link="data-studio"'));
 });
