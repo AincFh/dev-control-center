@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": "2026-11-06T11:20:52Z",
-  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42209059521",
+  "generatedAt": "2026-11-06T12:06:42Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42214693564",
   "source": "real_chromium_public_games",
   "browser": "Chromium / Selenium / fresh profile per game",
   "results": [
@@ -10,7 +10,7 @@
       "id": "bistro",
       "repo": "cozy-bistro-sim",
       "status": "pass",
-      "elapsedMs": 28455,
+      "elapsedMs": 12574,
       "checks": [
         {
           "id": "interaction",
@@ -27,6 +27,18 @@
         {
           "id": "save",
           "label": "浏览器刷新后餐馆营业状态恢复",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "staff",
+          "label": "实际经营第二天、付费培训、支付等级工资并通过制作获得技能经验",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "staff-save",
+          "label": "浏览器刷新后等级、培训支出和真实工资保持一致",
           "status": "pass",
           "reason": ""
         },
@@ -49,8 +61,8 @@
         "bistro-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 63,
-        "loadEventMs": 64,
+        "domContentLoadedMs": 59,
+        "loadEventMs": 60,
         "resourceCount": 6
       }
     },
@@ -58,7 +70,7 @@
       "id": "paradise",
       "repo": "paradise-isle",
       "status": "pass",
-      "elapsedMs": 3994,
+      "elapsedMs": 4037,
       "checks": [
         {
           "id": "bootstrap",
@@ -97,8 +109,8 @@
         "paradise-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 84,
-        "loadEventMs": 88,
+        "domContentLoadedMs": 53,
+        "loadEventMs": 57,
         "resourceCount": 2
       }
     },
@@ -106,7 +118,7 @@
       "id": "wildlands",
       "repo": "wildlands-anglerfishing-world-3d",
       "status": "pass",
-      "elapsedMs": 17244,
+      "elapsedMs": 17633,
       "checks": [
         {
           "id": "webgl",
@@ -115,8 +127,14 @@
           "reason": ""
         },
         {
+          "id": "league",
+          "label": "实机进入湖泊并点击锦标赛报名，真实赛况 HUD 开始计分",
+          "status": "pass",
+          "reason": ""
+        },
+        {
           "id": "interaction",
-          "label": "真实按住并松开钓竿按钮完成抛投",
+          "label": "真实长按投竿使鱼漂落水并消耗锦标赛一次有效抛投",
           "status": "pass",
           "reason": ""
         },
@@ -139,16 +157,16 @@
         "wildlands-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 1141,
-        "loadEventMs": 3638,
-        "resourceCount": 43
+        "domContentLoadedMs": 951,
+        "loadEventMs": 3517,
+        "resourceCount": 44
       }
     },
     {
       "id": "fishing",
       "repo": "fishing-world-3d",
       "status": "pass",
-      "elapsedMs": 17974,
+      "elapsedMs": 10680,
       "checks": [
         {
           "id": "webgl",
@@ -181,8 +199,8 @@
         "fishing-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 8897,
-        "loadEventMs": 8898,
+        "domContentLoadedMs": 633,
+        "loadEventMs": 1128,
         "resourceCount": 8
       }
     },
@@ -190,7 +208,7 @@
       "id": "factory",
       "repo": "Midnight-Factory",
       "status": "pass",
-      "elapsedMs": 4801,
+      "elapsedMs": 4955,
       "checks": [
         {
           "id": "interaction",
@@ -235,8 +253,8 @@
         "factory-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 814,
-        "loadEventMs": 815,
+        "domContentLoadedMs": 112,
+        "loadEventMs": 557,
         "resourceCount": 6
       }
     },
@@ -244,7 +262,7 @@
       "id": "citylife",
       "repo": "City-of-Small-Chances",
       "status": "pass",
-      "elapsedMs": 57986,
+      "elapsedMs": 57734,
       "checks": [
         {
           "id": "webgl",
@@ -277,8 +295,8 @@
         "citylife-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 1197,
-        "loadEventMs": 4458,
+        "domContentLoadedMs": 934,
+        "loadEventMs": 4765,
         "resourceCount": 127
       }
     },
@@ -286,7 +304,7 @@
       "id": "mori",
       "repo": "Tamagochi---Open-Source-Game",
       "status": "pass",
-      "elapsedMs": 9347,
+      "elapsedMs": 13989,
       "checks": [
         {
           "id": "bootstrap",
@@ -331,8 +349,8 @@
         "mori-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 66,
-        "loadEventMs": 67,
+        "domContentLoadedMs": 72,
+        "loadEventMs": 75,
         "resourceCount": 9
       }
     },
@@ -340,7 +358,7 @@
       "id": "qube",
       "repo": "qubecraft",
       "status": "pass",
-      "elapsedMs": 37920,
+      "elapsedMs": 37897,
       "checks": [
         {
           "id": "bootstrap",
@@ -385,8 +403,8 @@
         "qube-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 865,
-        "loadEventMs": 1202,
+        "domContentLoadedMs": 851,
+        "loadEventMs": 1200,
         "resourceCount": 19
       }
     },
@@ -394,7 +412,7 @@
       "id": "cimulity",
       "repo": "cimulity",
       "status": "pass",
-      "elapsedMs": 6314,
+      "elapsedMs": 7739,
       "checks": [
         {
           "id": "bootstrap",
@@ -433,8 +451,8 @@
         "cimulity-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 432,
-        "loadEventMs": 675,
+        "domContentLoadedMs": 125,
+        "loadEventMs": 323,
         "resourceCount": 20
       }
     },
@@ -442,7 +460,7 @@
       "id": "spacefortress",
       "repo": "spacefortress",
       "status": "pass",
-      "elapsedMs": 49241,
+      "elapsedMs": 48940,
       "checks": [
         {
           "id": "bootstrap",
@@ -481,8 +499,8 @@
         "spacefortress-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 946,
-        "loadEventMs": 946,
+        "domContentLoadedMs": 622,
+        "loadEventMs": 622,
         "resourceCount": 138
       }
     }
