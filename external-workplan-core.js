@@ -42,7 +42,7 @@ export function importExternalWorkPackages(items,input,now=new Date().toISOStrin
  const known=new Map(items.map(x=>[x.id,x]));
  for(const task of proposed){
   const existing=known.get(task.id);
-  if(existing&&!existing.description.includes('第三方研究来源：'+input.repository))
+  if(existing&&!existing.description.includes('第三方研究来源：https://github.com/'+input.repository))
    return{items,added:0,reason:'same-id-conflict'};
  }
  const fresh=proposed.filter(x=>!known.has(x.id));
