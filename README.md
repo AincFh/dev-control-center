@@ -285,3 +285,12 @@ ATLAS 的研发总控现在读取每日公开 Chromium 游戏验收记录，按�
 42 类领域方案可指定 AincFh 自有仓库，生成许可审查 → 构建验证 → 功能实施 → 质量安全 → 发布维护的五阶段依赖工作包。稳定 ID 支持重复导入保留人工进度。该功能独立于第三方来源研究工作包导入；所有工作仍需要实际代码、CI、浏览器/真机和人工验收。
 
 详见 [研发蓝图执行交接](docs/BLUEPRINT_EXECUTION.md)。
+
+
+## Edition 23 · 公共 GitHub REST API 接口实验室
+
+[API 接口实验室](https://aincfh.github.io/dev-control-center/#api-lab) 是 ATLAS 第一套真正可操作的公开 HTTP 接口分析工具，而非开源项目介绍页。浏览器直接 GET GitHub REST 的八种固定公开端点：仓库概览、开放 Issues、PR、提交、Actions、Releases、语言组成和分支。使用者输入 owner/repo 或官方 GitHub 仓库链接；可选第二仓库并行执行同端点对比。
+
+真实响应按 HTTP 状态、速率限制、受控 JSON 路径树、最多 20 条结构化样本展示；本地搜索字段、取消请求、清空、导出 Markdown 检查记录及原始 JSON。未找到数据不能当作仓库没有记录；Issues 样本排除 GitHub 在 Issues API 返回的 PR 记录；两个仓库的样本数量不能当全量统计。
+
+安全边界：无 GitHub Token、无自定义 URL/Headers、无任意网络请求、无 POST/PUT/PATCH/DELETE；仅访问官方公共 REST API、限制响应 1 MB 并设置 12 秒超时。输入及报告只在本次浏览器内存中存在，下载为用户操作，不自动持久化或上传到 ATLAS 服务端。GitHub 403/429 有可能由匿名访问限额触发。实际 Chromium 测试使用模拟公开网络传输，验证的是真正页面交互与响应处理；并不把测试 fixture 当线上真实数据。
