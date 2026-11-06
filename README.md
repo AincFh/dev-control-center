@@ -6,7 +6,7 @@ ATLAS 是多项目 **Developer Studio**，覆盖系统软件 / Web OS、全栈 W
 
 **已有的公开非游戏项目：** [AincFh OS](https://github.com/AincFh/AincFh)、[A.T. Field](https://github.com/AincFh/my-anime-blog)、[轻记 QingJi](https://github.com/AincFh/QingJi)、[Squiffy Fork](https://github.com/AincFh/squiffy) 和 ATLAS 控制中心本身。各项目实际完成度必须以其仓库、CI、真实功能与部署证据为准；Squiffy 保留上游作者和 Fork 属性。
 
-**跨领域 GitHub 软件实验室已扩展：** 2026-11-06 的最新数据集包含 **4,191 条公开仓库参考、26 个研究分类（18 个非游戏方向）**。除原有系统、AI、桌面、移动、Web、数据、开发工具等方向，还新增笔记与协作、通讯、安全隐私、科学工程、财务商业和无障碍技术。精选 **36 个 GitHub 公开仓库核实的第三方软件档案**，可查看原作者简介、快照、实时 GitHub 详情，并进行最多四仓库对比及研发候选孵化。第三方项目不属于 ATLAS 已交付产品，仓库许可证字段仅供研究参考，不能替代源码/素材复用授权。详见 [GitHub 星图](https://aincfh.github.io/dev-control-center/#universe)、[PR #36](https://github.com/AincFh/dev-control-center/pull/36)、[Issue #32](https://github.com/AincFh/dev-control-center/issues/32) 和 [跨领域路线图](docs/PORTFOLIO_ROADMAP.md)。
+**全领域 GitHub 研发实验室已扩展：** 2026-11-06 的当前数据集包括 **5,132 条第三方公开仓库参考、42 个研究分类（34 个非游戏方向）**。除原有系统、AI、桌面、移动、Web、创作与游戏外，本轮拓展数据库、云原生、物联网、机器人、GIS、电子硬件、网络协议、浏览器扩展、终端、电子商务、质量测试、知识工程、办公、健康技术、能源和 MLOps。精选 **52 个 GitHub 仓库接口核实的外部软件档案**，支持来源查看、四仓库对比、研发候选与导出。所有 42 个方向均有**独立的工程蓝图**（上游许可→运行验证→核心开发→安全/质量→发布），可将真实来源绑定至蓝图生成 GitHub Issue 草稿和 Markdown 技术交接。索引与蓝图均不等于已开发完毕或已获复用授权。详见 [GitHub 星图](https://aincfh.github.io/dev-control-center/#universe)、[PR #36](https://github.com/AincFh/dev-control-center/pull/36)、[Issue #32](https://github.com/AincFh/dev-control-center/issues/32) 和 [跨领域路线图](docs/PORTFOLIO_ROADMAP.md)。
 
 **后续实际产品开发：** 在现有 AincFh OS、A.T. Field、轻记 QingJi、ATLAS 工程控制台的基础上，继续投入 Windows 工具、AI Agents、跨平台应用、数据与创意生产等完整产品；相关新方向在正式立项和验收前不得标记为已交付。
 
@@ -14,7 +14,7 @@ ATLAS 是多项目 **Developer Studio**，覆盖系统软件 / Web OS、全栈 W
 
 ## 外部软件研究与比较
 
-进入 [GitHub 跨领域软件实验室](https://aincfh.github.io/dev-control-center/#universe)，优先浏览非游戏应用，筛选 18 个方向和 36 个有 GitHub 元信息快照的第三方实例。可对四个仓库进行主动实时比较并保存选择、重新核验，支持导出保留来源与授权审核提示的 Markdown 研究交接报告；公开 API 达到限额时保留未知状态。精选档案与大量外部索引均不可冒充 ATLAS 自研产品。数据分类是 GitHub 主题检索归档，可能需人工纠正；正式开发需许可证和资产审核。
+进入 [GitHub 全领域研发实验室](https://aincfh.github.io/dev-control-center/#universe)，按系统与开发基础、AI 与工程科技、应用与创意产品、游戏与模拟四组浏览 42 个领域。可研究 52 个第三方软件精选档案，在 5,132 条索引中搜索/筛选/收藏，横向比较四个仓库并导出研究报告，还能从源仓库直接生成 5 阶段行业研发蓝图。跨领域项目具体开发均须独立立项并用 CI、真实操作、许可证和发布证据验收；公开 API 达到限额时保留未知状态。精选档案与大量外部索引均不可冒充 ATLAS 自研产品。数据分类是 GitHub 主题检索归档，可能需人工纠正；正式开发需许可证和资产审核。
 
 ## 新增：在线游戏大厅
 
