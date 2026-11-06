@@ -6,7 +6,9 @@ ATLAS 是多项目 **Developer Studio**，覆盖系统软件 / Web OS、全栈 W
 
 **已有的公开非游戏项目：** [AincFh OS](https://github.com/AincFh/AincFh)、[A.T. Field](https://github.com/AincFh/my-anime-blog)、[轻记 QingJi](https://github.com/AincFh/QingJi)、[Squiffy Fork](https://github.com/AincFh/squiffy) 和 ATLAS 控制中心本身。各项目实际完成度必须以其仓库、CI、真实功能与部署证据为准；Squiffy 保留上游作者和 Fork 属性。
 
-**后续扩展方向：** AI Agents 与工作流、Windows 工具与诊断、跨平台应用、数据分析与可视化、设计/内容生产、教育学习、基础设施及更多实验作品。参考索引不是已开发项目；现有 GitHub 星图仍以游戏/模拟来源为主，跨领域索引需另行搜集和验证。对应 [Issue #32](https://github.com/AincFh/dev-control-center/issues/32) 与 [跨领域路线图](docs/PORTFOLIO_ROADMAP.md)。
+**跨领域 GitHub 研究索引已上线：** 在原有 1,772 条游戏/模拟来源基础上，2026-11-06 首批追加 GitHub 公共搜索返回并去重的 **465 条非游戏仓库参考**，共计 **2,237 条、20 个分类（其中 12 个非游戏领域）**。可以按软件/AI/工具、游戏与仿真、全部领域切换，并使用搜索、分类、关注与研发候选池。数字仅代表该版本的公开来源记录，不表示已经开发了同等数量的产品；许可证、资产、可运行性均需逐项核验。详见 [GitHub 星图](https://aincfh.github.io/dev-control-center/#universe)、[PR #36](https://github.com/AincFh/dev-control-center/pull/36)、[Issue #32](https://github.com/AincFh/dev-control-center/issues/32) 和 [跨领域路线图](docs/PORTFOLIO_ROADMAP.md)。
+
+**后续实际产品开发：** 在现有 AincFh OS、A.T. Field、轻记 QingJi、ATLAS 工程控制台的基础上，继续投入 Windows 工具、AI Agents、跨平台应用、数据与创意生产等完整产品；相关新方向在正式立项和验收前不得标记为已交付。
 
 公开站点只展示 GitHub 公共信息，不公开内部仓库，不持有管理令牌。开发产物继续独立仓库化，并以 Issue → PR → CI → 产品测试 → 发布验收形成可追溯闭环。
 
@@ -25,7 +27,7 @@ https://aincfh.github.io/dev-control-center/
 
 ## 已实现
 
-- 公开仓库发现、搜索、分类筛选、排序、响应式项目详情；
+- 公开仓库发现、搜索、跨领域分类筛选（系统、AI、Windows、Android、SaaS、设计、开发工具、游戏等）、排序、响应式项目详情；
 - 开源游戏发现实验室：21 个经筛选来源、10 个 MIT Fork，按类型搜索筛选；清晰区分原创仓库、Fork 与仅参考；
 - 多项目工作台与人工维护的项目成熟度路线图（WILDLANDS、COZY BISTRO、AZURE COAST 等），每个项目独立显示实际 CI、任务和下一目标；
 - GitHub Actions 最近一次主分支运行状态，区分通过/失败/运行中/未知；
