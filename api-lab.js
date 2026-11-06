@@ -1,4 +1,5 @@
 import{API_LAB_ENDPOINTS,makePublicRequest,parseRateLimit,publicFacts,flattenResponse,comparePublicFacts,apiLabReport}from'./api-lab-core.js';
+import{initOpenApiWorkbench}from'./openapi.js';
 const $=id=>document.getElementById(id);
 const make=(tag,value='',cls='')=>{const e=document.createElement(tag);if(value!==null)e.textContent=String(value);if(cls)e.className=cls;return e;};
 const state={results:[null,null],controllers:[],requestId:0,running:false,filter:'',rawExpanded:[false,false]};
@@ -172,5 +173,6 @@ export function initApiLab(){
  };
  $('apiLabFilter').addEventListener('input',e=>{state.filter=e.target.value;render()});
  $('apiLabResult2').hidden=!$('apiLabCompareEnabled').checked;
+ initOpenApiWorkbench();
  render();
 }
