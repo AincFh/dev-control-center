@@ -45,6 +45,7 @@ function renderCards(){
   const intro=node('summary','查看判定与证据边界');
   const desc=node('ul',null,'release-detail-list');
   for(const step of record.steps)desc.append(node('li',step.label+'｜'+step.detail));
+  if(record.releaseTag)desc.append(node('li','GitHub Release：'+record.releaseTag+'；'+(record.releaseKinds.length?'匹配类型 '+record.releaseKinds.join(' / '):'没有已识别的该平台发行物')+'。版本签名与实际安装仍待核验。'));
   if(record.isFork)desc.append(node('li','此项目属于 Fork；代码和素材许可仍须按上游独立核验。'));
   if(!record.fresh)desc.append(node('li','主状态快照缺失或过期；不会将旧 CI / Pages 视为当前通过。'));
   why.append(intro,desc);card.append(why);
@@ -54,6 +55,7 @@ function renderCards(){
   if(record.sourceUrl){
    const a=node('a','查看仓库');a.href=record.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';controls.append(a);
   }
+  if(record.releaseUrl){const release=node('a','发行记录');release.href=record.releaseUrl;release.target='_blank';release.rel='noopener noreferrer';controls.append(release);}
   const btn=node('button','加入执行计划');btn.type='button';btn.setAttribute('aria-label','为 '+record.label+' 创建工作包');
   btn.addEventListener('click',()=>{window.dispatchEvent(new CustomEvent('atlas:create-work',{detail:{repo:record.name,category:record.category}}));});
   controls.append(btn);actions.append(controls);card.append(actions);box.append(card);

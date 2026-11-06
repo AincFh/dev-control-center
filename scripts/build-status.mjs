@@ -6,6 +6,7 @@ import {normalizePreview} from '../mission-core.js';
 import {traceForRepo,normalizeTraceRun} from '../trace-core.js';
 import {planDeploymentChecks,normalizeDeploymentEvidence,applyDeploymentEvidence} from '../deploy-core.js';
 import {siteEvidence} from '../site-core.js';
+import {normalizeGitHubRelease} from '../native-release-core.js';
 import {probeSite} from '../site-probe-core.js';
 import {deploymentVersion,fingerprintDist} from './asset-version.mjs';
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -21,6 +22,15 @@ async function get(uri){
 }
 async function optional(fn,repo,kind,fallback){
  try{return await fn()}catch(e){errors.push({repository:repo,source:kind,httpStatus:Number.isInteger(e.code)?e.code:null});return fallback;}
+}
+async function readRelease(root,name){
+ try{return normalizeGitHubRelease(await get(root+'/releases/latest'),name)}
+ catch(e){
+  // Many active repositories have no published Release. A GitHub 404 means
+  // absent evidence, not an API failure, and must not inflate error metrics.
+  if(e.code!==404)errors.push({repository:name,source:'latest_release',httpStatus:Number.isInteger(e.code)?e.code:null});
+  return normalizeGitHubRelease(null,name);
+ }
 }
 async function listRepos(){
  const list=[];
@@ -41,11 +51,12 @@ async function mapLimited(items,limit,fn){
 }
 async function describe(r){
  const root=safeRepositoryPath(OWNER,r.name),branch=r.default_branch||'main',skip=currentRepo===OWNER+'/'+r.name?exclude:null;
- const [runs,issues,prs,pages]=await Promise.all([
+ const [runs,issues,prs,pages,release]=await Promise.all([
   optional(()=>get(root+'/actions/runs?per_page=12&branch='+encodeURIComponent(branch)),r.name,'actions',null),
   optional(()=>get(root+'/issues?state=open&per_page=100'),r.name,'issues',null),
   optional(()=>get(root+'/pulls?state=open&per_page=100'),r.name,'pull_requests',null),
-  optional(()=>get(root+'/pages'),r.name,'pages',null)
+  optional(()=>get(root+'/pages'),r.name,'pages',null),
+  readRelease(root,r.name)
  ]);
  const [closedPRs,prRuns]=await Promise.all([
   optional(()=>get(root+'/pulls?state=closed&sort=updated&direction=desc&per_page=12'),r.name,'recent_closed_prs',null),
@@ -79,6 +90,7 @@ async function describe(r){
   issuePreview:Array.isArray(issues)?normalizePreview(issues,'issue',r.name,OWNER):null,
   prPreview:Array.isArray(prs)?normalizePreview(prs,'pull',r.name,OWNER):null,
   fork:!!r.fork,archived:!!r.archived,
+  release,
   trace,
   countsTruncated:!!(issues?.length>=100||prs?.length>=100),
   site,probe
