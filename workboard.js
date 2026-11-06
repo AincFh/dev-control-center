@@ -167,19 +167,21 @@ function renderSuggestions(){
  }
 }
 function closeDialog(){if($('workEditor').open)$('workEditor').close();editing=null}
-function edit(id=null){
+function edit(id=null,defaults={}){
  editing=id;
  const item=items.find(x=>x.id===id)||null;
  $('workEditorHeading').textContent=item?'编辑工作包':'创建工作包';
  const names=repoNames();
- selectOptions($('workEditRepo'),names.map(x=>[x,x]),item?.repo||activeRepo!=='all'&&names.includes(activeRepo)?item?.repo||activeRepo:names[0]||'dev-control-center');
+ const defaultRepo=item?.repo||defaults.repo||
+  (activeRepo!=='all'&&names.includes(activeRepo)?activeRepo:null)||names[0]||'dev-control-center';
+ selectOptions($('workEditRepo'),names.map(x=>[x,x]),defaultRepo);
  if(!names.length){
   const o=el('option','dev-control-center');o.value='dev-control-center';$('workEditRepo').append(o);
  }
  $('workEditTitle').value=item?.title||'';
  $('workEditDescription').value=item?.description||'';
  $('workEditOwner').value=item?.owner||'';
- selectOptions($('workEditCategory'),WORK_CATEGORIES.map(x=>[x.id,x.label]),item?.category||'web');
+ selectOptions($('workEditCategory'),WORK_CATEGORIES.map(x=>[x.id,x.label]),item?.category||defaults.category||'web');
  selectOptions($('workEditPriority'),WORK_PRIORITIES.map(x=>[x,x]),item?.priority||'P2');
  selectOptions($('workEditStage'),WORK_STAGES.map(x=>[x.id,x.label]),item?.stage||'backlog');
  $('workEditDate').value=item?.dueDate||'';
@@ -264,6 +266,12 @@ export function initWorkboard(){
  $('workDelete').onclick=remove;
  $('workEditor').addEventListener('click',event=>{if(event.target===$('workEditor'))closeDialog()});
  $('workCreate').disabled=false;
+ window.addEventListener('atlas:create-work',event=>{
+  const repo=event.detail?.repo;
+  if(typeof repo!=='string'||!repoNames().includes(repo))return;
+  location.hash='#workboard';
+  edit(null,{repo,category:event.detail?.category});
+ });
  render();
  return function updateWorkboard(p){projects=Array.isArray(p)?p:[];render()};
 }
