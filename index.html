@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f6f4">
 <meta name="description" content="ATLAS — 面向系统软件、Web 应用、移动端、开发工具与游戏的跨领域开发工作空间，追踪真实 GitHub 交付状态。">
 <title>ATLAS · 创造者工作台</title>
-<link rel="icon" type="image/svg+xml" href="./favicon.svg"><link rel="stylesheet" href="./atlas-v3.css"><link rel="stylesheet" href="./workboard.css">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg"><link rel="stylesheet" href="./atlas-v3.css"><link rel="stylesheet" href="./workboard.css"><link rel="stylesheet" href="./release-review.css">
 </head><body><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="svg-defs">
 <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.7"/><rect x="14" y="3" width="7" height="7" rx="1.7"/><rect x="3" y="14" width="7" height="7" rx="1.7"/><rect x="14" y="14" width="7" height="7" rx="1.7"/></symbol>
 <symbol id="i-game" viewBox="0 0 24 24"><path d="M7 8h10a4 4 0 0 1 3.9 3.1l1 5.4a2.5 2.5 0 0 1-3.9 2.5l-3.4-2.6H9.4L6 19a2.5 2.5 0 0 1-3.9-2.5l1-5.4A4 4 0 0 1 7 8Z"/><path d="M7 12v5M4.5 14.5h5M16 12.5h.01M19 15h.01"/></symbol>
@@ -243,6 +243,14 @@
  <header class="view-header"><span class="eyebrow">OPERATIONS 01 / DELIVERY</span><div class="view-heading-row"><div><h1>交付健康<span>.</span></h1><p>以 GitHub Actions 为依据，区分构建成功、部署完成与产品真正可用。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg></div></div></header>
  <div class="deliverygrid"><article class="deliverypane"><div class="deliverytop"><div><span class="eyebrow">BUILD & RELEASE STATUS</span><strong id="healthSummary">加载中</strong></div><span class="mini-status">LIVE DATA</span></div><div id="deliveryList" aria-live="polite"></div><p class="healthnote" id="healthNote">等待状态快照</p></article>
  <article class="deliverypane queuepane"><div class="deliverytop"><div><span class="eyebrow">DEVELOPMENT TASKS</span><strong>需要处理的任务</strong></div><a class="more" href="https://github.com/issues" target="_blank" rel="noopener">GitHub Issues ↗</a></div><div id="queueList" aria-live="polite"></div><div class="queuefooter"><p>Issue → 开发分支 → PR → 自动测试 → 验收。此界面只读，写入仍通过授权 GitHub 工具完成。</p><a href="https://github.com/AincFh/dev-control-center/issues/new/choose" target="_blank" rel="noopener">新建研发任务 ↗</a></div></article></div>
+ <section class="release-review" aria-label="跨领域发布证据审查">
+  <div class="release-head"><div><span class="eyebrow">RELEASE EVIDENCE / ALL PRODUCT TYPES</span><h2>跨领域交付审查<span>.</span></h2><p>系统、移动应用、工具、Web 与游戏分别验证。GitHub CI、站点部署、运行测试和完整人工验收是不同阶段；任何自动结果均不代表正式发行获批。</p></div><button type="button" id="releaseReport" class="release-export">导出当前审查报告 .md</button></div>
+  <div id="releaseOverview" class="release-overview" aria-label="发布证据统计"></div>
+  <div class="release-controls"><input type="search" id="releaseSearch" placeholder="按项目、仓库或下一步搜索" aria-label="搜索跨领域发布审查"><select id="releaseDomain" aria-label="筛选产品领域"></select><select id="releaseState" aria-label="筛选证据审查阶段"></select></div>
+  <span id="releaseCount" class="release-count" role="status" aria-live="polite">正在校验仓库证据…</span>
+  <div id="releaseGrid" class="release-grid" aria-live="polite"><div class="release-empty">正在读取 GitHub 公开状态快照…</div></div>
+  <p id="releaseFreshness" class="release-freshness" role="status">状态快照尚未载入。</p>
+ </section>
 </section>
 <section class="view" id="pipeline" aria-label="构建流程">
  <header class="view-header"><span class="eyebrow">OPERATIONS 02 / PROCESS</span><div class="view-heading-row"><div><h1>从代码到作品<span>.</span></h1><p>发布不是按下按钮，而是一条可复核的完整质量流程。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg></div></div></header>
