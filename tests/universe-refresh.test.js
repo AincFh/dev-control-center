@@ -23,3 +23,13 @@ test('scheduled refresh retains new software topics without losing legacy game t
  assert.ok(jobs.some(x=>x.genre==='devtools'&&x.q==='topic:developer-tools'));
  assert.ok(jobs.some(x=>x.genre==='game'&&x.q==='game simulation'));
 });
+
+test('scheduled GitHub refresh scans all disciplines before repeating categories',()=>{
+ const topics=Array.from({length:18},(_,i)=>({genre:'group'+i,q:'topic:source-'+i,ok:true}));
+ const mixed=[...topics,...Array.from({length:72},(_,i)=>({genre:'game',q:'game '+i,ok:true}))];
+ const jobs=workload(mixed,{secondPages:9,day:7,maxBaseQueries:30});
+ assert.equal(jobs.filter(x=>x.page===1).length,30);
+ assert.equal(new Set(jobs.filter(x=>x.page===1).map(x=>x.genre)).size,19);
+ assert.equal(jobs.filter(x=>x.page===2).length,9);
+ assert.equal(new Set(jobs.filter(x=>x.page===2).map(x=>x.genre)).size,9);
+});
