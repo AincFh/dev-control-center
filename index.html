@@ -37,9 +37,10 @@
 <a class="nav" href="#projects" data-view-link="projects" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-folder"></use></svg><span>全部仓库</span></a>
 <a class="nav" href="#arcade" data-view-link="arcade" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-game"></use></svg><span>游戏大厅</span><small class="nav-counter">PLAY</small></a>
 <a class="nav" href="#discovery" data-view-link="discovery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>发现实验室</span></a>
-<a class="nav" href="#universe" data-view-link="universe"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>GitHub 星图</span><small class="nav-counter">1K+</small></a>
+<a class="nav" href="#universe" data-view-link="universe"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg><span>GitHub 星图</span><small class="nav-counter">5K+</small></a>
 <a class="nav" href="#incubator" data-view-link="incubator"><svg class="i" aria-hidden="true"><use href="#i-layers"></use></svg><span>项目孵化</span><small class="nav-counter" id="candidateCount" hidden>0</small></a>
 <a class="nav" href="#workboard" data-view-link="workboard"><svg class="i" aria-hidden="true"><use href="#i-grid"></use></svg><span>执行工作台</span><small class="nav-counter" id="workNavCount" hidden>0</small></a>
+<a class="nav" href="#utilities" data-view-link="utilities"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg><span>开发工具工坊</span><small class="nav-counter">LOCAL</small></a>
 <a class="nav" href="#mission" data-view-link="mission"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>研发总控</span><small class="nav-counter" id="missionNavCount" hidden>0</small></a>
 <a class="nav" href="#trace" data-view-link="trace"><svg class="i" aria-hidden="true"><use href="#i-flow"></use></svg><span>开发链路</span></a>
 <a class="nav" href="#delivery" data-view-link="delivery" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-pulse"></use></svg><span>交付健康</span></a>
@@ -119,6 +120,27 @@
  <p class="discovery-intro">收藏、研究与 Fork 是不同阶段。所有原始作品保留作者及许可证信息；未完成许可核验的作品只作调研。</p>
  <div class="discovery-filters"><label class="discovery-search"><svg class="i" aria-hidden="true"><use href="#i-search"></use></svg><input id="discoverySearch" type="search" placeholder="寻找生活养成、建造、沙盒、工厂…" aria-label="搜索 GitHub 游戏实验室" autocomplete="off"></label><div id="discoveryGenres" class="discovery-genres" aria-label="游戏类型筛选"></div></div>
  <div class="results-count" id="discoveryCount">正在整理游戏项目…</div><div id="discoveryGrid" class="discovery-grid" aria-live="polite"></div><p class="footnote">上游试玩链接不等于我们已经发布；Fork 不代表原创。未核验许可的源码或资产不会直接复制到本平台。</p>
+</section>
+<section class="view" id="utilities" aria-label="浏览器本地开发工具工坊">
+ <header class="view-header"><span class="eyebrow">ATLAS / LOCAL DEVELOPER WORKSHOP</span><div class="view-heading-row"><div><h1>开发工具工坊<span>.</span></h1><p>七个实际可运行的开发辅助工具。输入和计算仅在当前浏览器完成，不依赖外部 API，也不保存文本内容。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-code"></use></svg></div></div></header>
+ <div class="utils-hero"><div><span class="eyebrow">REAL TOOLS / NOT PLACEHOLDERS</span><h2>从数据修复到文本分析，<em>直接在这里完成。</em></h2><p>JSON 校验、CSV 表格解析、双版本差异、URL / Base64 编解码、SHA-256 和文本统计，均是可操作的本地程序。</p></div><div class="utils-hero-counter"><strong>07</strong><span>LOCAL UTILITIES</span></div></div>
+ <div id="utilsTabs" class="utils-tabs" role="group" aria-label="切换开发工具"></div>
+ <div class="utils-workspace">
+  <div class="utils-editor">
+   <div class="utils-editor-header"><div><span class="eyebrow">INPUT / LOCAL ONLY</span><h2 id="utilsCurrentTitle">JSON 校验 / 格式化</h2><p id="utilsCurrentDescription">文本将在本地处理</p></div><span class="utils-local-sign">LOCAL</span></div>
+   <label class="utils-field">原始输入<textarea id="utilsInputA" rows="11" spellcheck="false" placeholder="输入需要处理的数据" aria-label="待处理文本"></textarea></label>
+   <label class="utils-field" id="utilsInputBWrap" hidden>新版本文本<textarea id="utilsInputB" rows="8" spellcheck="false" placeholder="输入新版本文本" aria-label="文本差异的新版"></textarea></label>
+   <small id="utilsInputHint" class="utils-input-hint">所有内容仅在浏览器本地处理。</small>
+   <div class="utils-actions"><label>操作模式<select id="utilsMode" aria-label="选择当前工具的操作方式"></select></label><button id="utilsRun" type="button">执行处理</button><button id="utilsClear" type="button">清空输入</button></div>
+  </div>
+  <div class="utils-results">
+   <div class="utils-result-header"><div><span class="eyebrow">RESULT / VERIFIABLE OUTPUT</span><h2>处理结果</h2></div><button id="utilsDownload" type="button" disabled>导出结果</button></div>
+   <div id="utilsResultSummary" class="utils-result-summary">等待执行</div>
+   <div class="utils-output" id="utilsOutput" role="region" aria-label="本地工具计算结果" aria-live="polite"><div class="utils-empty">结果将在此处显示。不会自动发送或保存。</div></div>
+   <p id="utilsStatus" class="utils-status" role="status" aria-live="polite">选择工具并输入内容后执行。</p>
+  </div>
+ </div>
+ <p class="utils-disclaimer">**隐私与限制：** 本工作台不会向 ATLAS 服务端上传输入或保留历史。SHA-256 摘要需要浏览器安全上下文的 Web Crypto；浏览器本地工具不等同于完整 IDE、编译器、专业 CSV ETL 或文件加密服务。大数据量会被限制以避免冻结页面。</p>
 </section>
 <section class="view" id="universe" aria-label="GitHub 千项探索星图">
  <header class="view-header"><span class="eyebrow">ATLAS / EXTERNAL GITHUB UNIVERSE</span><div class="view-heading-row"><div><h1>GitHub 星图<span>.</span></h1><p>探索系统、AI、Windows 软件、移动应用、开发工具、内容创作与游戏等真实 GitHub 仓库，筛选并推进产品研发。</p></div><div class="view-header-mark"><svg class="i" aria-hidden="true"><use href="#i-compass"></use></svg></div></div></header>

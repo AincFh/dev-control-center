@@ -16,6 +16,12 @@ ATLAS 是多项目 **Developer Studio**，覆盖系统软件 / Web OS、全栈 W
 
 进入 [GitHub 全领域研发实验室](https://aincfh.github.io/dev-control-center/#universe)，按系统与开发基础、AI 与工程科技、应用与创意产品、游戏与模拟四组浏览 42 个领域。可研究 52 个第三方软件精选档案，在 5,132 条索引中搜索/筛选/收藏，横向比较四个仓库并导出研究报告，还能从源仓库直接生成 5 阶段行业研发蓝图。跨领域项目具体开发均须独立立项并用 CI、真实操作、许可证和发布证据验收；公开 API 达到限额时保留未知状态。精选档案与大量外部索引均不可冒充 ATLAS 自研产品。数据分类是 GitHub 主题检索归档，可能需人工纠正；正式开发需许可证和资产审核。
 
+## 新增：可运行的非游戏开发工具工坊
+
+[直接打开开发工具工坊](https://aincfh.github.io/dev-control-center/#utilities)：包含 **7 项真正可操作的本地工具**：JSON 校验/格式化、CSV→JSON、逐行文本差异比较、Unicode Base64 编解码、URL 编解码、SHA-256 字符串摘要与文本统计。这些能力使用浏览器内置 API 和确定性的纯函数实现，输入与结果不会上传后端、不保存至 localStorage；支持输出下载。大文本、异常 CSV、无效 Base64 和 SHA-256 安全上下文都有明确的错误/容量门禁。
+
+对应 developer-utils-core.js、developer-utils.js、tests/developer-utils.test.js 及 Selenium 实际 Chromium 桌面/移动测试 tests/utilities.browser.py。这是一组实际可用的小型工程工具，不等于完整 IDE、Windows 原生程序或第三方软件本身。
+
 ## 新增：在线游戏大厅
 
 访问 [ATLAS 游戏大厅](https://aincfh.github.io/dev-control-center/#arcade) —— 汇总多个独立游戏仓库。提供类型筛选、关键词搜索、仅看可试玩、浏览器本地收藏，以及直达每款游戏的源码和在线运行入口。所有入口都基于实际 GitHub Pages 部署记录核验；未发布或未通过 Playtest 的项目只给出源代码链接，不提供虚假的可玩按钮。游戏封面仅有注明的真实仓库截图，其余是主题动效，不冒充游戏实拍。
