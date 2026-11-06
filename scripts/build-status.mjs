@@ -87,7 +87,7 @@ async function describe(r){
 // Copy the actual relative module dependency graph, not a manually curated
 // list. A stale list once excluded arcade.js: CI was green, Pages deployed,
 // but app.js failed at runtime because the ES module returned 404.
-export async function copyFrontendModules(root,dest,entrypoints=['index.html','atlas-v3.css','style.css','app.js','favicon.svg']){
+export async function copyFrontendModules(root,dest,entrypoints=['index.html','atlas-v3.css','workboard.css','style.css','app.js','favicon.svg']){
  const pending=[...entrypoints],copied=new Set();
  while(pending.length){
   const filename=pending.shift();
@@ -124,6 +124,7 @@ async function main(){
  const copied=await copyFrontendModules(ROOT,path.join(ROOT,'dist'));
  if(!copied.includes('arcade.js'))throw Error('Game arcade module missing from generated Pages artifact');
  if(!copied.includes('atlas-v3.css'))throw Error('V3 workspace stylesheet missing from generated Pages artifact');
+ if(!copied.includes('workboard.css')||!copied.includes('workboard.js')||!copied.includes('workboard-core.js'))throw Error('Cross-domain workboard asset missing from published import graph');
  if(!copied.includes('universe.js')||!copied.includes('universe-core.js')||!copied.includes('studio-motion.js'))throw Error('Galaxy discovery or motion module missing');
  await copyFile(path.join(ROOT,'data','github-universe.json'),path.join(ROOT,'dist','data','github-universe.json'));
  await copyFile(path.join(ROOT,'data','game-runtime.json'),path.join(ROOT,'dist','data','game-runtime.json'));
