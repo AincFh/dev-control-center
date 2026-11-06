@@ -376,6 +376,10 @@ html.atlas-restricted-selection textarea{
 .universe-search input{font-size:11px;border:0;outline:0;min-width:0;flex:1;background:transparent;color:var(--ink)}
 .universe-search input::placeholder{color:var(--muted2)}
 #universeSort{height:43px;border-radius:10px;border:1px solid var(--line-dark);background:var(--surface);color:var(--muted);padding:0 12px;font-size:11px}
+#universeDomain{height:43px;min-width:138px;border-radius:10px;border:1px solid var(--line-dark);background:var(--surface);color:var(--ink);padding:0 12px;font-size:11px;font-weight:700;cursor:pointer}
+.universe-scope-totals{margin:8px 0 12px;font-size:12px;letter-spacing:.2px;color:#c1e4ce;font-weight:650}
+@media(max-width:600px){#universeDomain,#universeSort{flex:1 1 135px;max-width:100%}}
+
 .universe-filter-save,.universe-random{height:43px;border-radius:10px;border:1px solid var(--line-dark);padding:0 14px;background:var(--surface);font-size:11px;font-weight:680;color:var(--muted)}
 .universe-filter-save.selected{background:var(--accent-soft);color:var(--accent-dark);border-color:#6f9d8270}
 .universe-random{background:#244b45;border-color:#244b45;color:#f1f8f1}
