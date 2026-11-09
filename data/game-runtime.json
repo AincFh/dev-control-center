@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": "2026-11-08T10:47:05Z",
-  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42472310942",
+  "generatedAt": "2026-11-09T11:58:25Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/42612877250",
   "source": "real_chromium_public_games",
   "browser": "Chromium / Selenium / fresh profile per game",
   "results": [
@@ -10,7 +10,7 @@
       "id": "bistro",
       "repo": "cozy-bistro-sim",
       "status": "pass",
-      "elapsedMs": 12508,
+      "elapsedMs": 19770,
       "checks": [
         {
           "id": "interaction",
@@ -61,8 +61,8 @@
         "bistro-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 68,
-        "loadEventMs": 68,
+        "domContentLoadedMs": 47,
+        "loadEventMs": 47,
         "resourceCount": 6
       }
     },
@@ -70,7 +70,7 @@
       "id": "paradise",
       "repo": "paradise-isle",
       "status": "pass",
-      "elapsedMs": 4820,
+      "elapsedMs": 2957,
       "checks": [
         {
           "id": "bootstrap",
@@ -109,35 +109,64 @@
         "paradise-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 65,
-        "loadEventMs": 66,
+        "domContentLoadedMs": 42,
+        "loadEventMs": 43,
         "resourceCount": 2
       }
     },
     {
       "id": "wildlands",
       "repo": "wildlands-anglerfishing-world-3d",
-      "status": "timeout",
-      "elapsedMs": 86381,
+      "status": "pass",
+      "elapsedMs": 10900,
       "checks": [
         {
           "id": "webgl",
           "label": "真实 Three.js WebGL 湖泊与鱼群启动",
-          "status": "timeout",
-          "reason": "TimeoutException: Message: "
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "league",
+          "label": "实机进入湖泊并点击锦标赛报名，真实赛况 HUD 开始计分",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "真实长按投竿使鱼漂落水并消耗锦标赛一次有效抛投",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
         }
       ],
-      "message": "TimeoutException: Message:  | {\"mode\": null, \"route\": \"/wildlands-anglerfishing-world-3d/next/\", \"screen\": null, \"title\": \"WILDLANDS / 山野钓行 · NEXT\", \"viewport\": [1280, 697]}",
+      "message": "",
       "screenshots": [
-        "wildlands-failure.png"
+        "wildlands-game.png",
+        "wildlands-mobile.png"
       ],
-      "navigation": null
+      "navigation": {
+        "domContentLoadedMs": 688,
+        "loadEventMs": 3144,
+        "resourceCount": 45
+      }
     },
     {
       "id": "fishing",
       "repo": "fishing-world-3d",
       "status": "pass",
-      "elapsedMs": 11708,
+      "elapsedMs": 10622,
       "checks": [
         {
           "id": "webgl",
@@ -170,8 +199,8 @@
         "fishing-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 593,
-        "loadEventMs": 1064,
+        "domContentLoadedMs": 4849,
+        "loadEventMs": 4850,
         "resourceCount": 8
       }
     },
@@ -179,7 +208,7 @@
       "id": "factory",
       "repo": "Midnight-Factory",
       "status": "pass",
-      "elapsedMs": 4495,
+      "elapsedMs": 3449,
       "checks": [
         {
           "id": "interaction",
@@ -224,8 +253,8 @@
         "factory-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 550,
-        "loadEventMs": 551,
+        "domContentLoadedMs": 370,
+        "loadEventMs": 604,
         "resourceCount": 6
       }
     },
@@ -233,7 +262,7 @@
       "id": "citylife",
       "repo": "City-of-Small-Chances",
       "status": "pass",
-      "elapsedMs": 63650,
+      "elapsedMs": 36716,
       "checks": [
         {
           "id": "webgl",
@@ -266,8 +295,8 @@
         "citylife-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 1210,
-        "loadEventMs": 4951,
+        "domContentLoadedMs": 841,
+        "loadEventMs": 3195,
         "resourceCount": 127
       }
     },
@@ -275,7 +304,7 @@
       "id": "mori",
       "repo": "Tamagochi---Open-Source-Game",
       "status": "pass",
-      "elapsedMs": 17029,
+      "elapsedMs": 6748,
       "checks": [
         {
           "id": "bootstrap",
@@ -320,8 +349,8 @@
         "mori-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 95,
-        "loadEventMs": 97,
+        "domContentLoadedMs": 228,
+        "loadEventMs": 229,
         "resourceCount": 9
       }
     },
@@ -329,7 +358,7 @@
       "id": "qube",
       "repo": "qubecraft",
       "status": "pass",
-      "elapsedMs": 38568,
+      "elapsedMs": 33976,
       "checks": [
         {
           "id": "bootstrap",
@@ -374,8 +403,8 @@
         "qube-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 822,
-        "loadEventMs": 1145,
+        "domContentLoadedMs": 695,
+        "loadEventMs": 901,
         "resourceCount": 19
       }
     },
@@ -383,7 +412,7 @@
       "id": "cimulity",
       "repo": "cimulity",
       "status": "pass",
-      "elapsedMs": 6176,
+      "elapsedMs": 5340,
       "checks": [
         {
           "id": "bootstrap",
@@ -422,16 +451,16 @@
         "cimulity-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 600,
-        "loadEventMs": 647,
+        "domContentLoadedMs": 388,
+        "loadEventMs": 388,
         "resourceCount": 20
       }
     },
     {
       "id": "spacefortress",
       "repo": "spacefortress",
-      "status": "timeout",
-      "elapsedMs": 234132,
+      "status": "pass",
+      "elapsedMs": 12312,
       "checks": [
         {
           "id": "bootstrap",
@@ -448,16 +477,32 @@
         {
           "id": "save",
           "label": "真实使用浏览器存储保存殖民地并收到成功确认",
-          "status": "timeout",
-          "reason": "TimeoutException: Message: "
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
         }
       ],
-      "message": "TimeoutException: Message:  | {\"mode\": null, \"route\": \"/spacefortress/\", \"screen\": null, \"title\": \"SPACEFORTRESS — Kepler’s Rest\", \"viewport\": [1280, 697]}",
+      "message": "",
       "screenshots": [
         "spacefortress-game.png",
-        "spacefortress-failure.png"
+        "spacefortress-mobile.png"
       ],
-      "navigation": null
+      "navigation": {
+        "domContentLoadedMs": 1101,
+        "loadEventMs": 1101,
+        "resourceCount": 138
+      }
     }
   ],
   "note": "Real browser interactions on public Pages; not comprehensive gameplay, performance or full product certification."
