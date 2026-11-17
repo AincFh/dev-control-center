@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "owner": "AincFh",
-  "generatedAt": "2026-11-16T11:55:19Z",
-  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/43861545120",
+  "generatedAt": "2026-11-17T12:17:20Z",
+  "runUrl": "https://github.com/AincFh/dev-control-center/actions/runs/44081333717",
   "source": "real_chromium_public_games",
   "browser": "Chromium / Selenium / fresh profile per game",
   "results": [
@@ -10,7 +10,7 @@
       "id": "bistro",
       "repo": "cozy-bistro-sim",
       "status": "pass",
-      "elapsedMs": 13818,
+      "elapsedMs": 18850,
       "checks": [
         {
           "id": "interaction",
@@ -61,8 +61,8 @@
         "bistro-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 32,
-        "loadEventMs": 32,
+        "domContentLoadedMs": 42,
+        "loadEventMs": 43,
         "resourceCount": 6
       }
     },
@@ -70,7 +70,7 @@
       "id": "paradise",
       "repo": "paradise-isle",
       "status": "pass",
-      "elapsedMs": 2733,
+      "elapsedMs": 3162,
       "checks": [
         {
           "id": "bootstrap",
@@ -109,8 +109,8 @@
         "paradise-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 34,
-        "loadEventMs": 35,
+        "domContentLoadedMs": 57,
+        "loadEventMs": 58,
         "resourceCount": 2
       }
     },
@@ -118,7 +118,7 @@
       "id": "wildlands",
       "repo": "wildlands-anglerfishing-world-3d",
       "status": "pass",
-      "elapsedMs": 11276,
+      "elapsedMs": 12782,
       "checks": [
         {
           "id": "webgl",
@@ -157,8 +157,8 @@
         "wildlands-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 891,
-        "loadEventMs": 2461,
+        "domContentLoadedMs": 902,
+        "loadEventMs": 3663,
         "resourceCount": 45
       }
     },
@@ -166,7 +166,7 @@
       "id": "fishing",
       "repo": "fishing-world-3d",
       "status": "pass",
-      "elapsedMs": 9760,
+      "elapsedMs": 10508,
       "checks": [
         {
           "id": "webgl",
@@ -199,8 +199,8 @@
         "fishing-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 4709,
-        "loadEventMs": 4711,
+        "domContentLoadedMs": 4835,
+        "loadEventMs": 4836,
         "resourceCount": 8
       }
     },
@@ -208,7 +208,7 @@
       "id": "factory",
       "repo": "Midnight-Factory",
       "status": "pass",
-      "elapsedMs": 3015,
+      "elapsedMs": 3608,
       "checks": [
         {
           "id": "interaction",
@@ -253,8 +253,8 @@
         "factory-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 269,
-        "loadEventMs": 417,
+        "domContentLoadedMs": 398,
+        "loadEventMs": 930,
         "resourceCount": 6
       }
     },
@@ -262,7 +262,7 @@
       "id": "citylife",
       "repo": "City-of-Small-Chances",
       "status": "pass",
-      "elapsedMs": 36765,
+      "elapsedMs": 36985,
       "checks": [
         {
           "id": "webgl",
@@ -295,8 +295,8 @@
         "citylife-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 725,
-        "loadEventMs": 2826,
+        "domContentLoadedMs": 807,
+        "loadEventMs": 3020,
         "resourceCount": 127
       }
     },
@@ -304,7 +304,7 @@
       "id": "mori",
       "repo": "Tamagochi---Open-Source-Game",
       "status": "pass",
-      "elapsedMs": 5895,
+      "elapsedMs": 5778,
       "checks": [
         {
           "id": "bootstrap",
@@ -349,8 +349,8 @@
         "mori-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 59,
-        "loadEventMs": 59,
+        "domContentLoadedMs": 116,
+        "loadEventMs": 117,
         "resourceCount": 9
       }
     },
@@ -358,7 +358,7 @@
       "id": "qube",
       "repo": "qubecraft",
       "status": "pass",
-      "elapsedMs": 32849,
+      "elapsedMs": 34159,
       "checks": [
         {
           "id": "bootstrap",
@@ -403,8 +403,8 @@
         "qube-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 451,
-        "loadEventMs": 620,
+        "domContentLoadedMs": 591,
+        "loadEventMs": 791,
         "resourceCount": 19
       }
     },
@@ -412,7 +412,7 @@
       "id": "cimulity",
       "repo": "cimulity",
       "status": "pass",
-      "elapsedMs": 4152,
+      "elapsedMs": 4043,
       "checks": [
         {
           "id": "bootstrap",
@@ -451,29 +451,58 @@
         "cimulity-mobile.png"
       ],
       "navigation": {
-        "domContentLoadedMs": 247,
-        "loadEventMs": 820,
+        "domContentLoadedMs": 279,
+        "loadEventMs": 556,
         "resourceCount": 20
       }
     },
     {
       "id": "spacefortress",
       "repo": "spacefortress",
-      "status": "timeout",
-      "elapsedMs": 40715,
+      "status": "pass",
+      "elapsedMs": 12845,
       "checks": [
         {
           "id": "bootstrap",
           "label": "实际启动等距殖民地 Canvas、资源状态及地点信息",
-          "status": "timeout",
-          "reason": "TimeoutException: Message: "
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "interaction",
+          "label": "真实打开殖民地面板与操作手册并正确关闭",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "save",
+          "label": "真实使用浏览器存储保存殖民地并收到成功确认",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "mobile",
+          "label": "390px 手机视口没有水平溢出",
+          "status": "pass",
+          "reason": ""
+        },
+        {
+          "id": "console",
+          "label": "没有未捕获的第一方脚本错误",
+          "status": "pass",
+          "reason": ""
         }
       ],
-      "message": "TimeoutException: Message:  | {\"mode\": null, \"route\": \"/spacefortress/\", \"screen\": null, \"title\": \"SPACEFORTRESS — Kepler’s Rest\", \"viewport\": [1280, 697]}",
+      "message": "",
       "screenshots": [
-        "spacefortress-failure.png"
+        "spacefortress-game.png",
+        "spacefortress-mobile.png"
       ],
-      "navigation": null
+      "navigation": {
+        "domContentLoadedMs": 920,
+        "loadEventMs": 920,
+        "resourceCount": 138
+      }
     }
   ],
   "note": "Real browser interactions on public Pages; not comprehensive gameplay, performance or full product certification."
